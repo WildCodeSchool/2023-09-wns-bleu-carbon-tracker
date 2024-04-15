@@ -1,27 +1,52 @@
 import Link from 'next/link';
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import Typography from '@/components/commons/typography/Typography';
-// import { useRouter } from 'next/router';
 
 export default function navbar() {
-  // const router = useRouter();
+  const router = useRouter();
 
-  const [hoveredImage, setHoveredImage] = useState<string | null>(null);
+  const navLink = [
+    {
+      name: 'home',
+      link: '/',
+      img: '/icons/home-icon.png',
+      imgHover: '/icons/home-icon-hover.png',
+    },
+    {
+      name: 'activities',
+      link: '/activity-entries/list',
+      img: '/icons/co2-icon.png',
+      imgHover: '/icons/co2-icon-hover.png',
+    },
+    {
+      name: 'new-activity',
+      link: '/activity-entries/new',
+      img: '/icons/write-icon.png',
+      imgHover: '/icons/write-icon-hover.png',
+    },
+    {
+      name: 'donation',
+      link: '',
+      img: '/icons/donation-icon.png',
+      imgHover: '/icons/donation-icon-hover.png',
+    },
+    {
+      name: 'logout',
+      link: '/auth/login',
+      img: '/icons/logout-icon.png',
+      imgHover: '/icons/logout-icon-hover.png',
+    },
+  ];
 
-  const handleMouseEnter = (image: string) => {
-    setHoveredImage(image);
-  };
-
-  const handleMouseLeave = () => {
-    setHoveredImage(null);
-  };
+  const [hoveredLink, setHoveredLink] = useState('');
 
   return (
     <>
-      <div className='flex items-center justify-center h-screen'>
+      <div className='flex items-center justify-center h-screen ml-5 mr-5'>
         <div className='flex flex-col h-[95vh] bg-black text-white w-36 rounded-3xl'>
           <div className='logo flex items-center justify-center relative mt-5'>
-            <Link href='/' className='logo'>
+            <Link href='/'>
               <svg
                 width='100'
                 height='100'
@@ -39,98 +64,25 @@ export default function navbar() {
             </Link>
           </div>
           <div className='nav-links flex flex-col flex-grow items-center justify-around pl-6'>
-            <Link
-              href='/'
-              className='nav-link flex justify-around hover:bg-white hover:rounded-s-full w-full pt-2 pb-2'
-              onMouseEnter={() =>
-                handleMouseEnter('/icons/home-icon-hover.png')
-              }
-              onMouseLeave={handleMouseLeave}
-            >
-              <img
-                src={
-                  hoveredImage === '/icons/home-icon-hover.png'
-                    ? hoveredImage
-                    : '/icons/home-icon.png'
-                }
-                alt='Home'
-                className='w-10 mr-5'
-              />
-            </Link>
-            <Link
-              href='/'
-              className='nav-link flex justify-around hover:bg-white hover:rounded-s-full w-full pt-2 pb-2'
-              onMouseEnter={() => handleMouseEnter('/icons/co2-icon-hover.png')}
-              onMouseLeave={handleMouseLeave}
-            >
-              <img
-                src={
-                  hoveredImage === '/icons/co2-icon-hover.png'
-                    ? hoveredImage
-                    : '/icons/co2-icon.png'
-                }
-                alt='Activities'
-                className='w-10 mr-5'
-              />
-            </Link>
-            <Link
-              href='/'
-              className='nav-link flex justify-around hover:bg-white hover:rounded-s-full w-full pt-2 pb-2'
-              onMouseEnter={() =>
-                handleMouseEnter('/icons/write-icon-hover.png')
-              }
-              onMouseLeave={handleMouseLeave}
-            >
-              <img
-                src={
-                  hoveredImage === '/icons/write-icon-hover.png'
-                    ? hoveredImage
-                    : '/icons/write-icon.png'
-                }
-                alt='Add activity'
-                className='w-10 mr-5'
-              />
-            </Link>
-            <Link
-              href='/'
-              className='nav-link flex justify-around hover:bg-white hover:rounded-s-full w-full pt-2 pb-2'
-              onMouseEnter={() =>
-                handleMouseEnter('/icons/donation-icon-hover.png')
-              }
-              onMouseLeave={handleMouseLeave}
-            >
-              <img
-                src={
-                  hoveredImage === '/icons/donation-icon-hover.png'
-                    ? hoveredImage
-                    : '/icons/donation-icon.png'
-                }
-                alt='Donation'
-                className='w-10 mr-5'
-              />
-            </Link>
-            <Link
-              href='/'
-              className='nav-link flex justify-around hover:bg-white hover:rounded-s-full w-full pt-2 pb-2'
-              onMouseEnter={() =>
-                handleMouseEnter('/icons/logout-icon-hover.png')
-              }
-              onMouseLeave={handleMouseLeave}
-            >
-              <img
-                src={
-                  hoveredImage === '/icons/logout-icon-hover.png'
-                    ? hoveredImage
-                    : '/icons/logout-icon.png'
-                }
-                alt='Logout'
-                className='w-10 mr-5'
-              />
-            </Link>
+            {navLink.map(({ link, name, img, imgHover }) => (
+              <Link
+                key={name}
+                href={link}
+                className={`${router.pathname === link ? 'bg-white rounded-s-full' : ''} nav-link flex justify-around w-full pt-2 pb-2 hover:bg-white hover:rounded-s-full`}
+                onMouseEnter={() => setHoveredLink(name)}
+                onMouseLeave={() => setHoveredLink('')}
+              >
+                <img
+                  src={`${router.pathname === link || hoveredLink === name ? imgHover : img}`}
+                  alt={name}
+                  className='w-10 mr-5'
+                />
+              </Link>
+            ))}
             <Link href='/' className='nav-link flex justify-around'>
               <label
                 tabIndex={0}
-                className='btn btn-ghost btn-circle avatar w-full mr-5'
+                className='btn btn-ghost btn-circle avatar w-full pr-5'
               >
                 <div className='w-12 rounded-full'>
                   <img src='/icons/avatar.svg' alt='profil picture' />

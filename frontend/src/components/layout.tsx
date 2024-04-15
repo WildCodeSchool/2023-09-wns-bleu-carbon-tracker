@@ -16,8 +16,10 @@ export default function layout({ children, title }: LayoutProps) {
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
-      <Navbar />
-      <main className='main-content'>{children}</main>
+      <div className='flex h-screen'>
+        <Navbar />
+        <main className='main-content flex-1 overflow-y-auto'>{children}</main>
+      </div>
     </>
   );
 }

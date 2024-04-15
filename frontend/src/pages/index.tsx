@@ -1,5 +1,5 @@
-import Layout from '@/components/Layout';
+import Layout from '@/components/layout';
 
 export default function Home() {
-  return <Layout title='Carbon Tracker'></Layout>;
+  return <Layout title='Carbon Tracker'>Hello</Layout>;
 }

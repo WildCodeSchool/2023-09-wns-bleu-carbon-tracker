@@ -192,7 +192,6 @@ export type UserWithoutPassword = {
   updatedAt: Scalars['DateTimeISO'];
 };
 
-
 export type CreateActivityEntryMutationVariables = Exact<{
   data: InputCreate;
 }>;
