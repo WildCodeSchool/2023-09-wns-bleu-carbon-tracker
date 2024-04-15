@@ -53,7 +53,7 @@ export default function Login() {
           dernières activitées!
         </Typography>
         <form onSubmit={handleSubmit} className='py-4'>
-          <div className='w-[300px]'>
+          <div className='w-[450px]'>
             <InputLabel
               name='email'
               label='email'
@@ -64,7 +64,7 @@ export default function Login() {
               required
             />
           </div>
-          <div className='mt-4 w-[300px]'>
+          <div className='mt-4 w-[450px]'>
             <InputLabel
               name='password'
               label='mot de passe'
@@ -100,7 +100,7 @@ export default function Login() {
           onClick={() => router.push('/auth/signup')}
         >
           <Typography variant='paragraph' className='cursor-default'>
-            Pas encore inscris ?
+            Pas encore inscrit ?
           </Typography>
           <Typography
             variant='paragraph'
