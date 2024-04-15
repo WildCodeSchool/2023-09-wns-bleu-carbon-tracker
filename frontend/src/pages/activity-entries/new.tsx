@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { FormEvent } from 'react';
+import Layout from '@/components/layout';
 import { CREATE_ACTIVITY_ENTRY } from '@/graphql/activity-entry/mutations/activity-entry.mutations';
 import {
   CategoriesQuery,
@@ -43,43 +44,45 @@ export default function NewActivityEntry() {
   };
 
   return (
-    <main className='p-24'>
-      <form onSubmit={handleSubmit}>
-        <h1>Créer une nouvelle activité</h1>
-        <div className='py-8'>
-          <div className='pb-4'>
-            <select
-              className='select select-bordered w-full max-w-sm'
-              id='category'
-              name='category'
-              required
-            >
-              {categories.map((cat) => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.name}
-                </option>
-              ))}
-            </select>
+    <Layout title='Liste des activités'>
+      <main className='p-24'>
+        <form onSubmit={handleSubmit}>
+          <h1>Créer une nouvelle activité</h1>
+          <div className='py-8'>
+            <div className='pb-4'>
+              <select
+                className='select select-bordered w-full max-w-sm'
+                id='category'
+                name='category'
+                required
+              >
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className='pb-4'>
+              <input
+                className='input input-bordered w-full max-w-xs'
+                type='text'
+                name='name'
+                placeholder='Le nom de mon activité'
+              />
+            </div>
+            <div className='pb-4'>
+              <input
+                className='input input-bordered w-full max-w-xs'
+                type='text'
+                name='input'
+                placeholder='La dépense carbone'
+              />
+            </div>
+            <input className='btn' type='submit' />
           </div>
-          <div className='pb-4'>
-            <input
-              className='input input-bordered w-full max-w-xs'
-              type='text'
-              name='name'
-              placeholder='Le nom de mon activité'
-            />
-          </div>
-          <div className='pb-4'>
-            <input
-              className='input input-bordered w-full max-w-xs'
-              type='text'
-              name='input'
-              placeholder='La dépense carbone'
-            />
-          </div>
-          <input className='btn' type='submit' />
-        </div>
-      </form>
-    </main>
+        </form>
+      </main>
+    </Layout>
   );
 }

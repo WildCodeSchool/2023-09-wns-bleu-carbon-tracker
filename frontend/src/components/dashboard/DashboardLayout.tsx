@@ -4,8 +4,7 @@ import LastActivitiesListWidget from './lastActivitiesList/LastActivitiesListWid
 
 export default function DashboardLayout() {
   return (
-    <div className='flex h-screen text-black bg-white'>
-      <div className='w-[90px]'>nav</div>
+    <div className='flex h-screen text-black'>
       <div className='w-7/12 h-full'>
         <div className='h-[44%]  p-3'>
           <div className='dashboardWidget h-full'>
