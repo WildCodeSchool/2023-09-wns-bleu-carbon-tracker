@@ -1,0 +1,18 @@
+2024/04/17 12:35:34 [emerg] 1#1: host not found in upstream "server" in /etc/nginx/nginx.conf:10
+2024/04/17 12:35:43 [emerg] 1#1: host not found in upstream "server" in /etc/nginx/nginx.conf:10
+2024/04/17 12:35:52 [emerg] 1#1: host not found in upstream "server" in /etc/nginx/nginx.conf:10
+2024/04/17 12:36:00 [emerg] 1#1: host not found in upstream "server" in /etc/nginx/nginx.conf:10
+2024/04/17 12:36:09 [emerg] 1#1: host not found in upstream "server" in /etc/nginx/nginx.conf:10
+2024/04/17 12:36:19 [emerg] 1#1: host not found in upstream "server" in /etc/nginx/nginx.conf:10
+2024/04/17 12:36:31 [emerg] 1#1: host not found in upstream "server" in /etc/nginx/nginx.conf:10
+2024/04/17 12:36:46 [emerg] 1#1: host not found in upstream "server" in /etc/nginx/nginx.conf:10
+2024/04/17 12:37:07 [emerg] 1#1: host not found in upstream "server" in /etc/nginx/nginx.conf:10
+2024/04/17 12:37:29 [emerg] 1#1: host not found in upstream "server" in /etc/nginx/nginx.conf:10
+2024/04/17 12:37:38 [emerg] 1#1: host not found in upstream "server" in /etc/nginx/nginx.conf:10
+2024/04/17 12:37:47 [emerg] 1#1: host not found in upstream "server" in /etc/nginx/nginx.conf:10
+2024/04/17 12:37:56 [emerg] 1#1: host not found in upstream "server" in /etc/nginx/nginx.conf:10
+2024/04/17 12:38:05 [emerg] 1#1: host not found in upstream "server" in /etc/nginx/nginx.conf:10
+2024/04/17 12:41:39 [error] 24#24: *1 rewrite or internal redirection cycle while internally redirecting to "/index.html", client: 172.19.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8000"
+2024/04/17 12:47:33 [error] 24#24: *4 rewrite or internal redirection cycle while internally redirecting to "/index.html", client: 172.19.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8000"
+2024/04/17 12:47:33 [error] 24#24: *5 rewrite or internal redirection cycle while internally redirecting to "/index.html", client: 172.19.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8000", referrer: "http://localhost:8000/"
+2024/04/17 12:47:39 [error] 24#24: *6 rewrite or internal redirection cycle while internally redirecting to "/index.html", client: 172.19.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:8000", referrer: "http://localhost:8000/"

@@ -8,10 +8,10 @@
   "scripts": {
     "dev": "docker compose up --build",
     "prod": "docker compose -f docker-compose.production.yml up --build",
+    "staging": "GATEWAY_PORT=81 docker compose -f docker-compose.production.yml up --build",
     "precommit": "lint-staged",
     "husky-install": "husky install",
-    "prepare": "husky install",
-    "e2e": "docker compose -f docker-compose.e2e-tests.yml up --build"
+    "prepare": "husky install"
   },
   "lint-staged": {
     "frontend/src/**/*.{js,jsx,ts,tsx}": [
