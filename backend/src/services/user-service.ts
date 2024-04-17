@@ -9,6 +9,12 @@ export default class UserService {
     return user;
   }
 
+  static async readById(id: string): Promise<User | null> {
+    const userRepository = db.getRepository(User);
+    const user = await userRepository.findOne({ where: { id } });
+    return user;
+  }
+
   static async create(infos: InputRegister): Promise<User> {
     const existingUser = await this.readByMail(infos.email);
 

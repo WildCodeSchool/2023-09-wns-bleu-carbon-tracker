@@ -16,6 +16,7 @@ import customAuthChecker from './lib/auth-checker';
 import UserService from './services/user-service';
 import CategoryResolver from './resolvers/category/category-resolvers';
 import ActivityEntryResolver from './resolvers/activity-entry/activity-entry-resolvers';
+import DonationResolver from './resolvers/donation/donation-resolver';
 
 export interface MyContext {
   req: express.Request;
@@ -37,6 +38,7 @@ async function main() {
       UserResolver,
       CategoryResolver,
       ActivityEntryResolver,
+      DonationResolver,
     ],
     validate: false,
     authChecker: customAuthChecker,
