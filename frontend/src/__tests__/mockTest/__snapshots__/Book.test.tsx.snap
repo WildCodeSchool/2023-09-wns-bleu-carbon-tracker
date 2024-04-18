@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Liste des livres récupération de liste et affichage des éléments 1`] = `
+<body>
+  <div>
+    <main
+      class="flex flex-col items-center justify-between p-2"
+    >
+      <ul
+        class="list-decimal"
+      >
+        <li>
+          Ceci est un test
+        </li>
+      </ul>
+    </main>
+  </div>
+</body>
+`;
