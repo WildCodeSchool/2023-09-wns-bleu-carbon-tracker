@@ -16,10 +16,7 @@ const logoutLink = onError((err) => {
     !window.location.pathname.includes('/login')
   ) {
     if (errorCode === 'UNAUTHENTICATED') {
-      alert(
-        "Vous n'êtes pas connecté ou votre session a expiré. Merci de vous reconnecter.",
-      );
-      window.location.href = `/login?redirectURLAfterLogin=${window.location.href}`;
+      // TODO
     } else if (errorCode === 'UNAUTHORIZED') {
       alert(
         "Vous n'avez pas les permissions nécéssaires pour consulter cette partie du site ou effectuer cette action. Vous allez etre déconnecté. Merci de vous reconnecter avec un compte possédant les permissions adéquates.",
@@ -40,7 +37,6 @@ const client = new ApolloClient({
       fetchPolicy: 'cache-first',
     },
   },
-  link: logoutLink.concat(httpLink),
 });
 
 export default client;
