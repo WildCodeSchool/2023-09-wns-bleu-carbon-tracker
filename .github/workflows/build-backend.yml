@@ -1,9 +1,16 @@
 name: build and push production server to dockerhub
 
 on:
-  push:
-    branches:
-      - develop
+  workflow_call:
+    inputs:
+      image_name:
+        type: string
+        required: true
+    secrets:
+      DOCKERHUB_USERNAME:
+        required: true
+      DOCKERHUB_TOKEN:
+        required: true
 
 jobs:
   build-and-push-server:
@@ -24,4 +31,6 @@ jobs:
           push: true
           context: "{{defaultContext}}:backend"
           file: "Dockerfile.production"
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/carbon-tracker-api
+          tags: ${{ inputs.image_name }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
