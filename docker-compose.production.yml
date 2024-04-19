@@ -40,7 +40,7 @@ services:
         context: gateway
         dockerfile: Dockerfile.production
       ports:
-        - ${GATEWAY_PORT-80}:80
+        - ${GATEWAY_PORTs}:80
 
 volumes:
   prodDB:
