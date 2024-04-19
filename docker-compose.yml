@@ -1,4 +1,27 @@
+version: '3'
+
 services:
+  backend:
+    depends_on:
+      db: 
+        condition: service_healthy
+    env_file:
+      - backend/.env
+    build: backend
+    ports:
+    - 4001:4001
+    volumes:
+    - ./backend/src:/app/src
+
+  frontend:
+    build: frontend
+    ports: 
+    - 3000:3000
+    env_file:
+      - frontend/.env
+    volumes:
+      - ./frontend/src:/app/src 
+
   db:
     image: postgres:15-alpine
     environment:
@@ -8,43 +31,5 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
-  backend:
-    depends_on:
-      db:
-        condition: service_healthy
-    build: backend
     ports:
-      - 4001:4001
-    volumes:
-      - ./backend/src:/app/src
-    env_file:
-      - ./global.env
-    healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "curl -f http://backend:4001/graphql?query=%7B__typename%7D -H 'Apollo-Require-Preflight: true' || exit 1",
-        ]
-      interval: 10s
-      timeout: 30s
-      retries: 5
-
-  frontend:
-    build: frontend
-    ports:
-      - 3000:3000
-    volumes:
-      - ./frontend/src:/app/src 
-      - ./frontend/public:/app/public
-    env_file:
-      - ./global.env
-    depends_on:
-      backend:
-        condition: service_healthy
-
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
+      - 5432:5432

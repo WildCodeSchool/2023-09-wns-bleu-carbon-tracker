@@ -1,6 +1,5 @@
 import { ReactNode } from 'react';
 import Image from 'next/image';
-import img from '../../../public/login-img.webp';
 
 interface AuthLayoutProps {
   children: ReactNode;
@@ -12,7 +11,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
       <div className='justify-end items-center h-full w-1/2 pr-10 hidden lg:flex'>
         <div>
           <Image
-            src={img}
+            src='/login-img.webp'
             alt='User on computer with carbon footprint tracking app'
             width={500}
             height={500}

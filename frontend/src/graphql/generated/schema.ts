@@ -83,6 +83,7 @@ export type Message = {
 export type Mutation = {
   __typename?: 'Mutation';
   createActivityEntry: ActivityEntry;
+  createDonation: Donation;
   deleteActivityEntry: Scalars['String'];
   register: UserWithoutPassword;
   updateActivityEntry: ActivityEntry;
@@ -93,6 +94,11 @@ export type MutationCreateActivityEntryArgs = {
   data: InputCreate;
 };
 
+
+export type MutationCreateDonationArgs = {
+  amount: Scalars['Int'];
+  userId: Scalars['String'];
+};
 
 export type MutationDeleteActivityEntryArgs = {
   activityEntryId: Scalars['Float'];
@@ -130,6 +136,7 @@ export type Query = {
   activityEntries: Array<ActivityEntry>;
   categories: Array<Category>;
   getActivityEntryById: ActivityEntry;
+  getTotalDonations: Scalars['Int'];
   login: Message;
   logout: Message;
   tags: Array<Book>;

@@ -1,6 +1,7 @@
 services:
   testDB:
     image: postgres:15-alpine
+    restart: always
     environment:
       - POSTGRES_PASSWORD=postgres
     healthcheck:
@@ -26,6 +27,11 @@ services:
       - ./.env
     environment:
       - DB_HOST=testDB
+    healthcheck:
+      test: 'curl --fail --request GET -H ''content-type:application/json'' --url ''http://localhost:4001/graphql?query=%7B__typename%7D'''
+      interval: 1s
+      timeout: 2s
+      retries: 30
 
   frontend:
     build: ../frontend
@@ -35,3 +41,6 @@ services:
       - ../frontend/src:/app/src 
     env_file:
       - ./.env
+    depends_on:
+          backend:
+            condition: service_healthy
