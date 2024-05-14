@@ -7,11 +7,15 @@ import {
   CategoriesQueryVariables,
   CreateActivityEntryMutation,
   CreateActivityEntryMutationVariables,
+  ActivityEntriesQuery,
+  ActivityEntriesQueryVariables,
+  useActivityEntriesQuery,
 } from '@/graphql/generated/schema';
 import LIST_CATEGORIES from '@/graphql/category/queries/category.queries';
 import Typography from '@/components/commons/typography/Typography';
 import Button from '@/components/commons/buttons/Button';
 import InputLabel from '@/components/commons/inputs/InputLabel';
+import { LIST_ACTIVITY_ENTRIES } from '@/graphql/activity-entry/queries/activity-entry.queries';
 
 interface MyModalProps {
   onClose: () => void;
@@ -32,6 +36,8 @@ const AddActivityModal: React.FC<MyModalProps> = ({ onClose }) => {
   );
   const categories = data?.categories || [];
 
+  const { refetch: refetchActivities } = useActivityEntriesQuery();
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
@@ -42,8 +48,12 @@ const AddActivityModal: React.FC<MyModalProps> = ({ onClose }) => {
     try {
       await createActivityEntry({
         variables: { data: { ...formJSON } },
+        onCompleted: async () => {
+          await refetchActivities();
+          await router.push('/activity-entries/list');
+          onClose();
+        },
       });
-      router.push(`/activity-entries/list`);
     } catch (error) {
       console.error('Une erreur est survenue:', error);
     }
