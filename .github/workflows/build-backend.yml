@@ -1,4 +1,4 @@
-name: build and push production server to dockerhub
+name: build and push develop server to dockerhub
 
 on:
   workflow_call:
@@ -30,7 +30,7 @@ jobs:
         with:
           push: true
           context: "{{defaultContext}}:backend"
-          file: "Dockerfile.production"
+          file: "Dockerfile.develop"
           tags: ${{ inputs.image_name }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
