@@ -7,15 +7,12 @@ import {
   CategoriesQueryVariables,
   CreateActivityEntryMutation,
   CreateActivityEntryMutationVariables,
-  ActivityEntriesQuery,
-  ActivityEntriesQueryVariables,
   useActivityEntriesQuery,
 } from '@/graphql/generated/schema';
 import LIST_CATEGORIES from '@/graphql/category/queries/category.queries';
 import Typography from '@/components/commons/typography/Typography';
 import Button from '@/components/commons/buttons/Button';
 import InputLabel from '@/components/commons/inputs/InputLabel';
-import { LIST_ACTIVITY_ENTRIES } from '@/graphql/activity-entry/queries/activity-entry.queries';
 
 interface MyModalProps {
   onClose: () => void;
