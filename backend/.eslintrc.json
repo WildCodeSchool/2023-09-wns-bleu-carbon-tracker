@@ -1,0 +1,34 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./backend/tsconfig.json"
+  },
+  "extends": [
+    "airbnb-base",
+    "airbnb-typescript/base",
+    "plugin:prettier/recommended",
+    "plugin:import/typescript",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "plugins": ["@typescript-eslint", "import", "prettier"],
+  "rules": {
+    "prettier/prettier": ["error", {"endOfLine": "auto"}],
+    "no-console": "off",
+    "no-restricted-syntax": [
+      "error",
+      {
+        "selector": "CallExpression[callee.object.name='console'][callee.property.name!=/^(error|warn|info)$/]",
+        "message": "You can only call the error(), warn(), and info() methods from the console object"
+      }
+    ],
+    "linebreak-style": 0,
+    "class-methods-use-this": "off",
+    "import/no-extraneous-dependencies": "off",
+    "import/no-cycle": "off",
+    "no-promise-executor-return": "off"
+  }
+}
