@@ -79,7 +79,11 @@ export default function navbar() {
                 />
               </Link>
             ))}
-            <Link href='/' className='nav-link flex justify-around'>
+            <Link
+              key={'profile'}
+              href={'/profile'}
+              className='nav-link flex justify-around'
+            >
               <label
                 tabIndex={0}
                 className='btn btn-ghost btn-circle avatar w-full pr-5'
