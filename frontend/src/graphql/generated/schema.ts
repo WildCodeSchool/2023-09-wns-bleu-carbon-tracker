@@ -54,7 +54,8 @@ export type Donation = {
   amount: Scalars['Float'];
   createdAt: Scalars['DateTimeISO'];
   id: Scalars['Int'];
-  user: Array<User>;
+  isAnonymous: Scalars['Boolean'];
+  user: User;
 };
 
 export type InputCreate = {
@@ -102,7 +103,7 @@ export type MutationCreateActivityEntryArgs = {
 
 export type MutationCreateDonationArgs = {
   amount: Scalars['Int'];
-  userId: Scalars['String'];
+  isAnonymous?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type MutationDeleteActivityEntryArgs = {
@@ -139,7 +140,8 @@ export type Query = {
   activityEntries: Array<ActivityEntry>;
   categories: Array<Category>;
   getActivityEntryById: ActivityEntry;
-  getTotalDonations: Scalars['Int'];
+  getLastDonations: Array<Donation>;
+  getPot: Scalars['Int'];
   login: Message;
   logout: Message;
   tags: Array<Book>;
@@ -273,7 +275,7 @@ export type CategoriesQuery = {
 
 export type CreateDonationMutationVariables = Exact<{
   amount: Scalars['Int'];
-  userId: Scalars['String'];
+  isAnonymous?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 export type CreateDonationMutation = {
@@ -281,16 +283,26 @@ export type CreateDonationMutation = {
   createDonation: {
     __typename?: 'Donation';
     amount: number;
-    createdAt: any;
-    id: number;
+    isAnonymous: boolean;
   };
 };
 
-export type GetCagnotteQueryVariables = Exact<{ [key: string]: never }>;
+export type GetPotQueryVariables = Exact<{ [key: string]: never }>;
 
-export type GetCagnotteQuery = {
+export type GetPotQuery = { __typename?: 'Query'; getPot: number };
+
+export type GetLastDonationsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetLastDonationsQuery = {
   __typename?: 'Query';
-  getTotalDonations: number;
+  getLastDonations: Array<{
+    __typename?: 'Donation';
+    amount: number;
+    createdAt: any;
+    id: number;
+    isAnonymous: boolean;
+    user: { __typename?: 'User'; email: string; name?: string | null };
+  }>;
 };
 
 export type GetBooksQueryVariables = Exact<{ [key: string]: never }>;
@@ -665,11 +677,10 @@ export type CategoriesQueryResult = Apollo.QueryResult<
   CategoriesQueryVariables
 >;
 export const CreateDonationDocument = gql`
-  mutation CreateDonation($amount: Int!, $userId: String!) {
-    createDonation(amount: $amount, userId: $userId) {
+  mutation CreateDonation($amount: Int!, $isAnonymous: Boolean) {
+    createDonation(amount: $amount, isAnonymous: $isAnonymous) {
       amount
-      createdAt
-      id
+      isAnonymous
     }
   }
 `;
@@ -692,7 +703,7 @@ export type CreateDonationMutationFn = Apollo.MutationFunction<
  * const [createDonationMutation, { data, loading, error }] = useCreateDonationMutation({
  *   variables: {
  *      amount: // value for 'amount'
- *      userId: // value for 'userId'
+ *      isAnonymous: // value for 'isAnonymous'
  *   },
  * });
  */
@@ -717,58 +728,114 @@ export type CreateDonationMutationOptions = Apollo.BaseMutationOptions<
   CreateDonationMutation,
   CreateDonationMutationVariables
 >;
-export const GetCagnotteDocument = gql`
-  query GetCagnotte {
-    getTotalDonations
+export const GetPotDocument = gql`
+  query GetPot {
+    getPot
   }
 `;
 
 /**
- * __useGetCagnotteQuery__
+ * __useGetPotQuery__
  *
- * To run a query within a React component, call `useGetCagnotteQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetCagnotteQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetPotQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPotQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetCagnotteQuery({
+ * const { data, loading, error } = useGetPotQuery({
  *   variables: {
  *   },
  * });
  */
-export function useGetCagnotteQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    GetCagnotteQuery,
-    GetCagnotteQueryVariables
-  >,
+export function useGetPotQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetPotQuery, GetPotQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetCagnotteQuery, GetCagnotteQueryVariables>(
-    GetCagnotteDocument,
+  return Apollo.useQuery<GetPotQuery, GetPotQueryVariables>(
+    GetPotDocument,
     options,
   );
 }
-export function useGetCagnotteLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetCagnotteQuery,
-    GetCagnotteQueryVariables
-  >,
+export function useGetPotLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetPotQuery, GetPotQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<GetCagnotteQuery, GetCagnotteQueryVariables>(
-    GetCagnotteDocument,
+  return Apollo.useLazyQuery<GetPotQuery, GetPotQueryVariables>(
+    GetPotDocument,
     options,
   );
 }
-export type GetCagnotteQueryHookResult = ReturnType<typeof useGetCagnotteQuery>;
-export type GetCagnotteLazyQueryHookResult = ReturnType<
-  typeof useGetCagnotteLazyQuery
+export type GetPotQueryHookResult = ReturnType<typeof useGetPotQuery>;
+export type GetPotLazyQueryHookResult = ReturnType<typeof useGetPotLazyQuery>;
+export type GetPotQueryResult = Apollo.QueryResult<
+  GetPotQuery,
+  GetPotQueryVariables
 >;
-export type GetCagnotteQueryResult = Apollo.QueryResult<
-  GetCagnotteQuery,
-  GetCagnotteQueryVariables
+export const GetLastDonationsDocument = gql`
+  query GetLastDonations {
+    getLastDonations {
+      amount
+      createdAt
+      id
+      isAnonymous
+      user {
+        email
+        name
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetLastDonationsQuery__
+ *
+ * To run a query within a React component, call `useGetLastDonationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLastDonationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLastDonationsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetLastDonationsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetLastDonationsQuery,
+    GetLastDonationsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetLastDonationsQuery, GetLastDonationsQueryVariables>(
+    GetLastDonationsDocument,
+    options,
+  );
+}
+export function useGetLastDonationsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetLastDonationsQuery,
+    GetLastDonationsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    GetLastDonationsQuery,
+    GetLastDonationsQueryVariables
+  >(GetLastDonationsDocument, options);
+}
+export type GetLastDonationsQueryHookResult = ReturnType<
+  typeof useGetLastDonationsQuery
+>;
+export type GetLastDonationsLazyQueryHookResult = ReturnType<
+  typeof useGetLastDonationsLazyQuery
+>;
+export type GetLastDonationsQueryResult = Apollo.QueryResult<
+  GetLastDonationsQuery,
+  GetLastDonationsQueryVariables
 >;
 export const GetBooksDocument = gql`
   query GetBooks {

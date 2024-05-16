@@ -1,11 +1,10 @@
 import { gql } from '@apollo/client';
 
 const CREATE_DONATION = gql`
-  mutation CreateDonation($amount: Int!, $userId: String!) {
-    createDonation(amount: $amount, userId: $userId) {
+  mutation CreateDonation($amount: Int!, $isAnonymous: Boolean) {
+    createDonation(amount: $amount, isAnonymous: $isAnonymous) {
       amount
-      createdAt
-      id
+      isAnonymous
     }
   }
 `;

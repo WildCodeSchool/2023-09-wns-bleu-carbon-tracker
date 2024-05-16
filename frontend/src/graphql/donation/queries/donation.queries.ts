@@ -1,9 +1,22 @@
 import { gql } from '@apollo/client';
 
-const GET_CAGNOTTE = gql`
-  query GetCagnotte {
-    getTotalDonations
+export const GET_POT = gql`
+  query GetPot {
+    getPot
   }
 `;
 
-export default GET_CAGNOTTE;
+export const GET_LAST_DONATIONS = gql`
+  query GetLastDonations {
+    getLastDonations {
+      amount
+      createdAt
+      id
+      isAnonymous
+      user {
+        email
+        name
+      }
+    }
+  }
+`;
