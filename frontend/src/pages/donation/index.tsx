@@ -1,3 +1,4 @@
+import Layout from '@/components/layout';
 import {
   useCreateDonationMutation,
   useGetLastDonationsQuery,
@@ -39,14 +40,16 @@ export default function DonationSection() {
   };
 
   return (
-    <main className='p-20'>
-      <DonationForm handleSubmitNewDonation={handleSubmitNewDonation} />
-      <DonationSummary
-        pot={pot}
-        isPotLoading={isPotLoading}
-        lastDonations={lastDonations}
-        isLastDonationsLoading={isLastDonationsLoading}
-      />
-    </main>
+    <Layout title='Liste des activités'>
+      <main className='p-20'>
+        <DonationForm handleSubmitNewDonation={handleSubmitNewDonation} />
+        <DonationSummary
+          pot={pot}
+          isPotLoading={isPotLoading}
+          lastDonations={lastDonations}
+          isLastDonationsLoading={isLastDonationsLoading}
+        />
+      </main>
+    </Layout>
   );
 }

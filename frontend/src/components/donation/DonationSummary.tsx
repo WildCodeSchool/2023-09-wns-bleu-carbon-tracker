@@ -3,7 +3,6 @@ import {
   GetLastDonationsQuery,
   GetPotQuery,
 } from '@/graphql/generated/schema';
-import Section from '../commons/layouts/Section';
 import Typography from '../commons/typography/Typography';
 
 type DonationSummaryProps = {
@@ -46,7 +45,7 @@ export default function DonationSummary({
   if (isPotLoading && isLastDonationsLoading) return null;
 
   return (
-    <Section className='mt-4 flex'>
+    <section className='mt-4 flex dashboardWidget'>
       <div className='flex flex-col'>
         <Typography variant='subheading' className='font-semibold'>
           Cagnotte Globale
@@ -78,6 +77,6 @@ export default function DonationSummary({
           </div>
         </div>
       </div>
-    </Section>
+    </section>
   );
 }

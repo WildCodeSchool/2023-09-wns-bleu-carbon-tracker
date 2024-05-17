@@ -83,7 +83,7 @@ export default function navbar() {
             </button>
             <Link
               key='donation'
-              href=''
+              href='/donation'
               className={`${router.pathname === '' ? 'bg-white rounded-s-full' : ''} nav-link flex justify-around w-full pt-2 pb-2 hover:bg-white hover:rounded-s-full`}
               onMouseEnter={() => setHoveredLink('donation')}
               onMouseLeave={() => setHoveredLink('')}
