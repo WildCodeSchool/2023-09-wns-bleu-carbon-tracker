@@ -5,6 +5,7 @@ WORKDIR /app
 COPY package.json package.json
 
 RUN npm i
+RUN apk --update --no-cache add curl
 
 COPY ./.env ./.env
 COPY ./tsconfig.json ./tsconfig.json
