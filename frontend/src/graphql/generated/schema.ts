@@ -236,7 +236,7 @@ export type DeleteActivityEntryMutation = { __typename?: 'Mutation', deleteActiv
 export type ActivityEntriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ActivityEntriesQuery = { __typename?: 'Query', activityEntries: Array<{ __typename?: 'ActivityEntry', id: number, name: string, input: number, createdAt: any, spendedAt: string, category: { __typename?: 'Category', name: string } }> };
+export type ActivityEntriesQuery = { __typename?: 'Query', activityEntries: Array<{ __typename?: 'ActivityEntry', id: number, name: string, input: number, createdAt: any, spendedAt: string, category: { __typename?: 'Category', id: number, name: string } }> };
 
 export type GetActivityEntryByIdQueryVariables = Exact<{
   activityEntryId: Scalars['Int'];
@@ -407,6 +407,7 @@ export const ActivityEntriesDocument = gql`
     name
     input
     category {
+      id
       name
     }
     createdAt
