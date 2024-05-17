@@ -64,6 +64,11 @@ body {
   font-weight: 400;
 }
 
+.poppins-semiBold {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+}
+
 .poppins-bold {
   font-family: 'Poppins', sans-serif;
   font-weight: 700;
@@ -72,14 +77,6 @@ body {
 .dashboardWidget {
   @apply bg-light_grey rounded-xl shadow-xl p-7
 }
-
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(196, 196, 196, 0.5);
-  backdrop-filter: blur(5px);
-  z-index: 20;
+.dashboardWidgetWhite{
+  @apply bg-white rounded-xl shadow-xl p-7
 }

@@ -1,48 +1,36 @@
-import React, { FormEvent } from 'react';
-import { useMutation, useQuery } from '@apollo/client';
-import { CREATE_ACTIVITY_ENTRY } from '@/graphql/activity-entry/mutations/activity-entry.mutations';
+import { FormEvent } from 'react';
+import { EntryData } from '@/types';
+import InputLabel from '../commons/inputs/InputLabel';
+import Button from '../commons/buttons/Button';
 import {
-  CategoriesQuery,
-  CategoriesQueryVariables,
-  CreateActivityEntryMutation,
-  CreateActivityEntryMutationVariables,
   useActivityEntriesQuery,
+  useCategoriesQuery,
+  useUpdateActivityEntryMutation,
 } from '@/graphql/generated/schema';
-import LIST_CATEGORIES from '@/graphql/category/queries/category.queries';
-import Typography from '@/components/commons/typography/Typography';
-import Button from '@/components/commons/buttons/Button';
-import InputLabel from '@/components/commons/inputs/InputLabel';
+import Typography from '../commons/typography/Typography';
+import isoToDate from '@/utils/isoToDate';
 
-interface MyModalProps {
+type Props = {
   onClose: () => void;
-}
+  entryData: EntryData;
+};
 
-const AddActivityModal: React.FC<MyModalProps> = ({ onClose }) => {
-  const [createActivityEntry] = useMutation<
-    CreateActivityEntryMutation,
-    CreateActivityEntryMutationVariables
-  >(CREATE_ACTIVITY_ENTRY);
-
-  const { data } = useQuery<CategoriesQuery, CategoriesQueryVariables>(
-    LIST_CATEGORIES,
-    {
-      fetchPolicy: 'no-cache',
-    },
-  );
-  const categories = data?.categories || [];
-
+export default function UpdateActivityModal({ entryData, onClose }: Props) {
+  const { data } = useCategoriesQuery();
   const { refetch: refetchActivities } = useActivityEntriesQuery();
 
+  const [undateActivity] = useUpdateActivityEntryMutation();
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     const formJSON: any = Object.fromEntries(formData.entries());
     formJSON.input = parseFloat(formJSON.input);
-    formJSON.category = { id: parseInt(formJSON.category, 10) };
-
+    formJSON.category = {
+      id: parseInt(formJSON.category, 10),
+    };
     try {
-      await createActivityEntry({
-        variables: { data: { ...formJSON } },
+      await undateActivity({
+        variables: { data: { ...formJSON }, activityEntryId: entryData.id },
         onCompleted: async () => {
           await refetchActivities();
           onClose();
@@ -52,11 +40,10 @@ const AddActivityModal: React.FC<MyModalProps> = ({ onClose }) => {
       console.error('Une erreur est survenue:', error);
     }
   };
-
   return (
     <div className='modal-box w-11/12 max-w-5xl absolute z-50 top-2/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
       <Typography variant='heading' className='pb-2 text-black'>
-        Ajouter une dépense carbone
+        Modifier une dépense carbone
       </Typography>
       <form method='dialog' onSubmit={handleSubmit} className='m-4'>
         <button
@@ -75,12 +62,12 @@ const AddActivityModal: React.FC<MyModalProps> = ({ onClose }) => {
             id='category'
             name='category'
             required
-            defaultValue=''
+            defaultValue={entryData.category.id}
           >
             <option value='' disabled>
-              --Sélectionner une catégorie--
+              Selectionner une catégorie
             </option>
-            {categories.map((cat) => (
+            {(data?.categories ?? []).map((cat) => (
               <option key={cat.id} value={cat.id}>
                 {cat.name}
               </option>
@@ -89,6 +76,7 @@ const AddActivityModal: React.FC<MyModalProps> = ({ onClose }) => {
         </div>
         <div className='pb-5'>
           <InputLabel
+            defaultValue={entryData.name}
             name='name'
             label="Nom de l'activité"
             placeholder='Mon trajet en voiture pour me rendre au travail'
@@ -101,6 +89,7 @@ const AddActivityModal: React.FC<MyModalProps> = ({ onClose }) => {
         <div className='flex flex-row justify-start'>
           <div className='pb-5 w-4/12 mr-5'>
             <InputLabel
+              defaultValue={entryData.input}
               name='input'
               label='Dépense carbone (en kg/CO2e)'
               placeholder='10'
@@ -112,11 +101,11 @@ const AddActivityModal: React.FC<MyModalProps> = ({ onClose }) => {
           </div>
           <div className='pb-5 w-4/12'>
             <InputLabel
+              defaultValue={isoToDate(entryData.spendedAt)}
               name='spendedAt'
               label='Date de la dépense'
               type='date'
               sizes='xl'
-              required
             />
           </div>
         </div>
@@ -129,6 +118,4 @@ const AddActivityModal: React.FC<MyModalProps> = ({ onClose }) => {
       </form>
     </div>
   );
-};
-
-export default AddActivityModal;
+}

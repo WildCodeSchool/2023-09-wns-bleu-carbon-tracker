@@ -25,7 +25,7 @@ export default function ActivityEntryWidgetSample({ entryData }: Props) {
         </div>
         <div>
           <Typography className='text-xs text-dark_green text-left'>
-            {getDateFormated(entryData.createdAt)}
+            {getDateFormated(entryData.spendedAt)}
           </Typography>
         </div>
       </div>
