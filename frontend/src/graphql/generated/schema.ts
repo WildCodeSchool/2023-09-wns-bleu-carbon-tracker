@@ -229,10 +229,8 @@ export type DeleteActivityEntryMutationVariables = Exact<{
   activityEntryId: Scalars['Float'];
 }>;
 
-export type DeleteActivityEntryMutation = {
-  __typename?: 'Mutation';
-  deleteActivityEntry: string;
-};
+
+export type DeleteActivityEntryMutation = { __typename?: 'Mutation', deleteActivityEntry: string };
 
 export type ActivityEntriesQueryVariables = Exact<{ [key: string]: never }>;
 
@@ -245,7 +243,7 @@ export type ActivityEntriesQuery = {
     input: number;
     createdAt: any;
     spendedAt: string;
-    category: { __typename?: 'Category'; name: string };
+    category: { __typename?: 'Category'; id: number, name: string };
   }>;
 };
 
@@ -271,48 +269,27 @@ export type CategoriesQuery = {
   categories: Array<{ __typename?: 'Category'; id: number; name: string }>;
 };
 
-export type CreateDonationMutationVariables = Exact<{
-  amount: Scalars['Int'];
-  isAnonymous?: InputMaybe<Scalars['Boolean']>;
-}>;
+export type GetBooksQueryVariables = Exact<{ [key: string]: never; }>;
 
-export type CreateDonationMutation = {
-  __typename?: 'Mutation';
-  createDonation: {
-    __typename?: 'Donation';
-    amount: number;
-    isAnonymous: boolean;
-  };
-};
 
-export type GetPotQueryVariables = Exact<{ [key: string]: never }>;
-
-export type GetPotQuery = { __typename?: 'Query'; getPot: number };
-
-export type GetLastDonationsQueryVariables = Exact<{ [key: string]: never }>;
-
-export type GetLastDonationsQuery = {
+export type GetBooksQuery = {
   __typename?: 'Query';
-  getLastDonations: Array<{
-    __typename?: 'Donation';
-    amount: number;
-    createdAt: any;
+  tags: Array<{
+    __typename?: 'Book';
+    author: string;
     id: number;
-    isAnonymous: boolean;
-    user: { __typename?: 'User'; email: string; name?: string | null };
+    title: string;
   }>;
 };
-
-export type GetBooksQueryVariables = Exact<{ [key: string]: never }>;
-
-export type GetBooksQuery = { __typename?: 'Query', tags: Array<{ __typename?: 'Book', author: string, id: number, title: string }> };
 
 export type RegisterMutationVariables = Exact<{
   infos: InputRegister;
 }>;
 
-
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserWithoutPassword', id: string, email: string } };
+export type RegisterMutation = {
+  __typename?: 'Mutation';
+  register: { __typename?: 'UserWithoutPassword'; id: string; email: string };
+};
 
 export type LoginQueryVariables = Exact<{
   infos: InputLogin;
@@ -479,19 +456,20 @@ export type DeleteActivityEntryMutationOptions = Apollo.BaseMutationOptions<
   DeleteActivityEntryMutationVariables
 >;
 export const ActivityEntriesDocument = gql`
-  query ActivityEntries {
-    activityEntries {
+    query ActivityEntries {
+  activityEntries {
+    id
+    name
+    input
+    category {
       id
       name
-      input
-      category {
-        name
-      }
-      createdAt
-      spendedAt
     }
+    createdAt
+    spendedAt
   }
-`;
+}
+    `;
 
 /**
  * __useActivityEntriesQuery__

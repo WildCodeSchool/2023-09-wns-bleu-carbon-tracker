@@ -8,13 +8,18 @@ export default function LastActivitiesListWidget() {
   const { data, loading } = useActivityEntriesQuery();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
 
   if (loading) return 'Chargement';
-  const lastActivities = data?.activityEntries.slice(0, 12);
+
+  const lastActivitiesSorted = (data?.activityEntries ?? [])
+    .toSorted((a, b) => {
+      return new Date(b.spendedAt).getTime() - new Date(a.spendedAt).getTime();
+    })
+    .slice(0, 12);
+
   return (
     <div className='dashboardWidget flex flex-col  h-full'>
       <div className='mb-6 flex justify-between align-center'>
@@ -24,7 +29,7 @@ export default function LastActivitiesListWidget() {
         </button>
       </div>
       <div className='flex flex-col overflow-auto'>
-        {lastActivities?.map((entry) => {
+        {(lastActivitiesSorted ?? []).map((entry) => {
           return <ActivityEntryWidgetSample key={entry.id} entryData={entry} />;
         })}
       </div>

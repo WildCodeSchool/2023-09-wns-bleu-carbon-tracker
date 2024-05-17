@@ -16,7 +16,8 @@ module.exports = {
         "very_light_grey": "#F5F5F5",
         "medium_blue": "#204660",
         "medium_green": "#31a531",
-        "light_blue": "#9CC3DE"
+        "light_blue": "#9CC3DE",
+        "medium_orange": "#F59520"
       },
       borderWidth: {
         DEFAULT: '1px',
