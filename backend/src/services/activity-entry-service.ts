@@ -9,6 +9,7 @@ export default class ActivityEntryService {
     input: number;
     category: Category;
     user: User;
+    spendedAt: string;
   }): Promise<ActivityEntry> {
     const activityEntryRepository = db.getRepository(ActivityEntry);
     const newActivityEntry = activityEntryRepository.create({
@@ -16,6 +17,7 @@ export default class ActivityEntryService {
       input: infos.input,
       category: infos.category,
       user: infos.user,
+      spendedAt: infos.spendedAt,
     });
 
     await activityEntryRepository.save(newActivityEntry);

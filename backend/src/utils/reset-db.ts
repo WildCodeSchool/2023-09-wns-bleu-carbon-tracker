@@ -46,6 +46,7 @@ async function main() {
     input: 20,
     category: await category1,
     user: await user1,
+    spendedAt: new Date().toISOString(),
   });
 
   await ActivityEntryService.create({
@@ -53,6 +54,7 @@ async function main() {
     input: 30,
     category: await category2,
     user: await user1,
+    spendedAt: new Date().toISOString(),
   });
 
   await ActivityEntryService.create({
@@ -60,12 +62,14 @@ async function main() {
     input: 55,
     category: await category3,
     user: await user1,
+    spendedAt: new Date().toISOString(),
   });
   await ActivityEntryService.create({
     name: 'Trajet Lyon Paris',
     input: 23,
     category: await category1,
     user: await user1,
+    spendedAt: new Date().toISOString(),
   });
 
   await ActivityEntryService.create({
@@ -73,6 +77,7 @@ async function main() {
     input: 5,
     category: await category2,
     user: await user1,
+    spendedAt: new Date().toISOString(),
   });
 
   await ActivityEntryService.create({
@@ -80,18 +85,21 @@ async function main() {
     input: 55,
     category: await category3,
     user: await user1,
+    spendedAt: new Date().toISOString(),
   });
   await ActivityEntryService.create({
     name: 'Electricité mois de mars',
     input: 55,
     category: await category3,
     user: await user1,
+    spendedAt: new Date().toISOString(),
   });
   await ActivityEntryService.create({
     name: 'Trajet Lyon Paris',
     input: 23,
     category: await category1,
     user: await user1,
+    spendedAt: new Date().toISOString(),
   });
 
   await ActivityEntryService.create({
@@ -99,6 +107,7 @@ async function main() {
     input: 5,
     category: await category2,
     user: await user1,
+    spendedAt: new Date().toISOString(),
   });
 
   await ActivityEntryService.create({
@@ -106,12 +115,14 @@ async function main() {
     input: 55,
     category: await category3,
     user: await user1,
+    spendedAt: new Date().toISOString(),
   });
   await ActivityEntryService.create({
     name: 'Trajet Lyon Paris',
     input: 23,
     category: await category1,
     user: await user1,
+    spendedAt: new Date().toISOString(),
   });
 
   await ActivityEntryService.create({
@@ -119,6 +130,7 @@ async function main() {
     input: 5,
     category: await category2,
     user: await user1,
+    spendedAt: new Date().toISOString(),
   });
 
   await ActivityEntryService.create({
@@ -126,6 +138,7 @@ async function main() {
     input: 55,
     category: await category3,
     user: await user1,
+    spendedAt: new Date().toISOString(),
   });
   await db.destroy();
   console.info('♻️ Database successfully reset!');

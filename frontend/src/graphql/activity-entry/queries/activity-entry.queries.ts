@@ -7,9 +7,11 @@ export const LIST_ACTIVITY_ENTRIES = gql`
       name
       input
       category {
+        id
         name
       }
       createdAt
+      spendedAt
     }
   }
 `;
