@@ -292,6 +292,13 @@ export type LogoutQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type LogoutQuery = { __typename?: 'Query', logout: { __typename?: 'Message', message: string, success: boolean } };
 
+export type GetUserbyIdQueryVariables = Exact<{
+  userByIdId: Scalars['String'];
+}>;
+
+
+export type GetUserbyIdQuery = { __typename?: 'Query', userById?: { __typename?: 'User', name?: string | null, email: string, picture?: string | null } | null };
+
 
 export const CreateActivityEntryDocument = gql`
     mutation CreateActivityEntry($data: InputCreate!) {
@@ -758,3 +765,40 @@ export function useLogoutLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Log
 export type LogoutQueryHookResult = ReturnType<typeof useLogoutQuery>;
 export type LogoutLazyQueryHookResult = ReturnType<typeof useLogoutLazyQuery>;
 export type LogoutQueryResult = Apollo.QueryResult<LogoutQuery, LogoutQueryVariables>;
+export const GetUserbyIdDocument = gql`
+    query GetUserbyId($userByIdId: String!) {
+  userById(id: $userByIdId) {
+    name
+    email
+    picture
+  }
+}
+    `;
+
+/**
+ * __useGetUserbyIdQuery__
+ *
+ * To run a query within a React component, call `useGetUserbyIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserbyIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserbyIdQuery({
+ *   variables: {
+ *      userByIdId: // value for 'userByIdId'
+ *   },
+ * });
+ */
+export function useGetUserbyIdQuery(baseOptions: Apollo.QueryHookOptions<GetUserbyIdQuery, GetUserbyIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUserbyIdQuery, GetUserbyIdQueryVariables>(GetUserbyIdDocument, options);
+      }
+export function useGetUserbyIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserbyIdQuery, GetUserbyIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserbyIdQuery, GetUserbyIdQueryVariables>(GetUserbyIdDocument, options);
+        }
+export type GetUserbyIdQueryHookResult = ReturnType<typeof useGetUserbyIdQuery>;
+export type GetUserbyIdLazyQueryHookResult = ReturnType<typeof useGetUserbyIdLazyQuery>;
+export type GetUserbyIdQueryResult = Apollo.QueryResult<GetUserbyIdQuery, GetUserbyIdQueryVariables>;

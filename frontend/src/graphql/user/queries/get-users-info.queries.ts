@@ -1,18 +1,13 @@
 import { gql } from '@apollo/client';
 
-const USERBYID = gql`
+const USER_BY_ID = gql`
   query GetUserbyId($userByIdId: String!) {
     userById(id: $userByIdId) {
       name
       email
-      posts {
-        id
-      }
-      donations {
-        amount
-      }
+      picture
     }
   }
 `;
 
-export default USERBYID;
+export default USER_BY_ID;
