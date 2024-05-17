@@ -2,7 +2,6 @@ import { ChangeEvent, useState } from 'react';
 import Button from '../commons/buttons/Button';
 import InputCheckbox from '../commons/inputs/InputCheckbox';
 import InputLabel from '../commons/inputs/InputLabel';
-import Section from '../commons/layouts/Section';
 import Typography from '../commons/typography/Typography';
 
 export default function DonationForm({
@@ -22,7 +21,7 @@ export default function DonationForm({
   };
 
   return (
-    <Section>
+    <section className='dashboardWidget'>
       <Typography variant='heading'>Faire un don</Typography>
       <Typography className='pt-4 w-2/3'>
         Le lorem ipsum est, en imprimerie, une suite de mots sans signification
@@ -50,6 +49,6 @@ export default function DonationForm({
       <Button className='mt-4' onClick={handleButtonClick}>
         Soumettre mon don
       </Button>
-    </Section>
+    </section>
   );
 }
