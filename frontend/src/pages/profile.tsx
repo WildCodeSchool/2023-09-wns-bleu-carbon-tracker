@@ -45,20 +45,32 @@ export default function Profile() {
   return (
     <Layout title='Profile'>
       <div className='container max-w-md p-4'>
-        <h1 className='mb-5 poppins-bold'>Mon profile</h1>
-        <p className='mb-10'>editer, modifier mon profile</p>
+        <h1 className='mt-3 font-poppins text-xl font-bold pb-2 text-black'>
+          Mon profil
+        </h1>
+        <p className='mb-5 text-sm font-medium leading-6 text-gray-900'>
+          editer, modifier mon profile
+        </p>
         <div className='dashboardWidget mb-3'>
-          <h2 className='mb-5 '>Changer ma photo de profile</h2>
+          <h2 className='mb-5 font-poppins font-semibold text-sm'>
+            Changer ma photo de profil
+          </h2>
           <div className='flex'>
-            <div className='w-20 rounded-full'>
+            <div className='w-20 rounded-full mr-3'>
               <img src='/icons/avatar.svg' alt='profil picture' />
             </div>
-            <button>Télécharger</button>
+            <div className='flex items-end'>
+              <button className='rounded-xl bg-medium_green text-sm font-semibold cursor-pointer text-white shadow-sm transition-colors duration-300 ease-in-out p-2 hover:bg-light_green'>
+                Télécharger
+              </button>
+            </div>
           </div>
         </div>
         <form onSubmit={handleSubmit} className='space-y-6'>
           <div className='flex flex-col dashboardWidget'>
-            <h2 className='mb-5'>Changer mon mot de passe</h2>
+            <h2 className='mb-5 font-poppins font-semibold text-sm'>
+              Changer mon mot de passe
+            </h2>
             <label
               htmlFor='password'
               className='text-sm font-medium text-gray-700'
@@ -92,7 +104,7 @@ export default function Profile() {
 
           <button
             type='submit'
-            className='w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+            className='rounded-xl bg-medium_green text-sm font-semibold cursor-pointer text-white shadow-sm transition-colors duration-300 ease-in-out hover:bg-light_green px-4 py-2.5 mt-2'
           >
             Sauvegarder
           </button>

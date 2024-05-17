@@ -1,8 +1,7 @@
 import '@/styles/globals.css';
 import type { AppProps } from 'next/app';
 import dynamic from 'next/dynamic';
-import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
-import { useMemo } from 'react';
+import { ApolloProvider } from '@apollo/client';
 import AlertProvider from '@/contexts/AlertContext';
 import client from '@/graphql/client';
 

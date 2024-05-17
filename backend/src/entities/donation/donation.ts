@@ -24,7 +24,11 @@ export default class Donation extends BaseEntity {
   @Field()
   amount: number;
 
-  @Field(() => [User])
+  @Column({ default: false })
+  @Field(() => Boolean)
+  isAnonymous: boolean;
+
+  @Field(() => User)
   @ManyToOne(() => User, (user) => user.donations)
   user: User;
 }

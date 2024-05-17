@@ -48,7 +48,8 @@ export type Donation = {
   amount: Scalars['Float'];
   createdAt: Scalars['DateTimeISO'];
   id: Scalars['Int'];
-  user: Array<User>;
+  isAnonymous: Scalars['Boolean'];
+  user: User;
 };
 
 export type InputCreate = {
@@ -98,7 +99,7 @@ export type MutationCreateActivityEntryArgs = {
 
 export type MutationCreateDonationArgs = {
   amount: Scalars['Int'];
-  userId: Scalars['String'];
+  isAnonymous?: InputMaybe<Scalars['Boolean']>;
 };
 
 
@@ -138,7 +139,8 @@ export type Query = {
   activityEntries: Array<ActivityEntry>;
   categories: Array<Category>;
   getActivityEntryById: ActivityEntry;
-  getTotalDonations: Scalars['Int'];
+  getLastDonations: Array<Donation>;
+  getPot: Scalars['Int'];
   login: Message;
   logout: Message;
   tags: Array<Book>;
@@ -247,6 +249,24 @@ export type CategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type CategoriesQuery = { __typename?: 'Query', categories: Array<{ __typename?: 'Category', id: number, name: string }> };
+
+export type CreateDonationMutationVariables = Exact<{
+  amount: Scalars['Int'];
+  isAnonymous?: InputMaybe<Scalars['Boolean']>;
+}>;
+
+
+export type CreateDonationMutation = { __typename?: 'Mutation', createDonation: { __typename?: 'Donation', amount: number, isAnonymous: boolean } };
+
+export type GetPotQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetPotQuery = { __typename?: 'Query', getPot: number };
+
+export type GetLastDonationsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetLastDonationsQuery = { __typename?: 'Query', getLastDonations: Array<{ __typename?: 'Donation', amount: number, createdAt: any, id: number, isAnonymous: boolean, user: { __typename?: 'User', email: string, name?: string | null } }> };
 
 export type GetBooksQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -489,6 +509,114 @@ export function useCategoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
 export type CategoriesQueryHookResult = ReturnType<typeof useCategoriesQuery>;
 export type CategoriesLazyQueryHookResult = ReturnType<typeof useCategoriesLazyQuery>;
 export type CategoriesQueryResult = Apollo.QueryResult<CategoriesQuery, CategoriesQueryVariables>;
+export const CreateDonationDocument = gql`
+    mutation CreateDonation($amount: Int!, $isAnonymous: Boolean) {
+  createDonation(amount: $amount, isAnonymous: $isAnonymous) {
+    amount
+    isAnonymous
+  }
+}
+    `;
+export type CreateDonationMutationFn = Apollo.MutationFunction<CreateDonationMutation, CreateDonationMutationVariables>;
+
+/**
+ * __useCreateDonationMutation__
+ *
+ * To run a mutation, you first call `useCreateDonationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateDonationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createDonationMutation, { data, loading, error }] = useCreateDonationMutation({
+ *   variables: {
+ *      amount: // value for 'amount'
+ *      isAnonymous: // value for 'isAnonymous'
+ *   },
+ * });
+ */
+export function useCreateDonationMutation(baseOptions?: Apollo.MutationHookOptions<CreateDonationMutation, CreateDonationMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateDonationMutation, CreateDonationMutationVariables>(CreateDonationDocument, options);
+      }
+export type CreateDonationMutationHookResult = ReturnType<typeof useCreateDonationMutation>;
+export type CreateDonationMutationResult = Apollo.MutationResult<CreateDonationMutation>;
+export type CreateDonationMutationOptions = Apollo.BaseMutationOptions<CreateDonationMutation, CreateDonationMutationVariables>;
+export const GetPotDocument = gql`
+    query GetPot {
+  getPot
+}
+    `;
+
+/**
+ * __useGetPotQuery__
+ *
+ * To run a query within a React component, call `useGetPotQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPotQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPotQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetPotQuery(baseOptions?: Apollo.QueryHookOptions<GetPotQuery, GetPotQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetPotQuery, GetPotQueryVariables>(GetPotDocument, options);
+      }
+export function useGetPotLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPotQuery, GetPotQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetPotQuery, GetPotQueryVariables>(GetPotDocument, options);
+        }
+export type GetPotQueryHookResult = ReturnType<typeof useGetPotQuery>;
+export type GetPotLazyQueryHookResult = ReturnType<typeof useGetPotLazyQuery>;
+export type GetPotQueryResult = Apollo.QueryResult<GetPotQuery, GetPotQueryVariables>;
+export const GetLastDonationsDocument = gql`
+    query GetLastDonations {
+  getLastDonations {
+    amount
+    createdAt
+    id
+    isAnonymous
+    user {
+      email
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetLastDonationsQuery__
+ *
+ * To run a query within a React component, call `useGetLastDonationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLastDonationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLastDonationsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetLastDonationsQuery(baseOptions?: Apollo.QueryHookOptions<GetLastDonationsQuery, GetLastDonationsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetLastDonationsQuery, GetLastDonationsQueryVariables>(GetLastDonationsDocument, options);
+      }
+export function useGetLastDonationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLastDonationsQuery, GetLastDonationsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetLastDonationsQuery, GetLastDonationsQueryVariables>(GetLastDonationsDocument, options);
+        }
+export type GetLastDonationsQueryHookResult = ReturnType<typeof useGetLastDonationsQuery>;
+export type GetLastDonationsLazyQueryHookResult = ReturnType<typeof useGetLastDonationsLazyQuery>;
+export type GetLastDonationsQueryResult = Apollo.QueryResult<GetLastDonationsQuery, GetLastDonationsQueryVariables>;
 export const GetBooksDocument = gql`
     query GetBooks {
   tags {
