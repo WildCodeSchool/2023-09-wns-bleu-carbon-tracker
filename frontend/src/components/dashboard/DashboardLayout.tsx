@@ -1,7 +1,6 @@
-import ListBooks from '../example/Book';
-import Title from '../example/Title';
 import LastActivitiesListWidget from './lastActivitiesList/LastActivitiesListWidget';
 import LastPostWidget from './lastPost/LastPostWidget';
+import Typography from '@/components/commons/typography/Typography';
 
 export default function DashboardLayout() {
   return (
@@ -9,14 +8,13 @@ export default function DashboardLayout() {
       <div className='w-7/12 h-full'>
         <div className='h-[44%]  p-3'>
           <div className='dashboardWidget h-full'>
-            <h1>Bienvenuey</h1>
-            Voici un résumé de vos dépenses mensuelles
-            <ListBooks />
-            <Title />
+            <Typography variant='heading'>Dépenses du mois</Typography>
           </div>
         </div>
         <div className='h-[28%]  p-3'>
-          <div className='dashboardWidget h-full'>Dépenses annuelles</div>
+          <div className='dashboardWidget h-full'>
+            <Typography variant='heading'>Dépenses annuelles</Typography>
+          </div>
         </div>
         <div className='h-[28%]  p-3'>
           <LastPostWidget />
