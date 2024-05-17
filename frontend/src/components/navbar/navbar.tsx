@@ -71,7 +71,6 @@ export default function navbar() {
 
             <button
               className={`${isModalOpen ? 'bg-white rounded-s-full' : ''} nav-link flex justify-around w-full pt-2 pb-2 hover:bg-white hover:rounded-s-full`}
-              onClick={toggleModal}
               onMouseEnter={() => setHoveredLink('new-activity')}
               onMouseLeave={() => setHoveredLink('')}
             >
