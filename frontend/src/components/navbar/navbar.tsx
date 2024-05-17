@@ -68,6 +68,7 @@ export default function navbar() {
                 />
               </Link>
             ))}
+
             <button
               className={`${isModalOpen ? 'bg-white rounded-s-full' : ''} nav-link flex justify-around w-full pt-2 pb-2 hover:bg-white hover:rounded-s-full`}
               onClick={toggleModal}
@@ -106,9 +107,11 @@ export default function navbar() {
                 className='w-10 mr-5'
               />
             </Link>
+
             <Link
-              href='/'
-              className='nav-link flex justify-around w-full pt-2 pb-2'
+              key={'profile'}
+              href={'/profile'}
+              className='nav-link flex justify-around'
             >
               <label
                 tabIndex={0}
