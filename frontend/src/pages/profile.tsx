@@ -42,7 +42,7 @@ export default function Profile() {
         </p>
         <div className='dashboardWidget mb-3'>
           <h2 className='mb-5 font-poppins font-semibold text-sm'>
-            Changer ma photo de profil
+            Changer ma photo de profi
           </h2>
           <div className='flex mb-5'>
             <div className='w-20 rounded-full mr-3'>
