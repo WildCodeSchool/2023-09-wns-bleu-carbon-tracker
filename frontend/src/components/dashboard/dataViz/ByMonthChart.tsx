@@ -5,7 +5,6 @@ import { EntryData } from '@/types';
 
 defaults.maintainAspectRatio = false;
 defaults.responsive = true;
-
 defaults.plugins.legend.display = false;
 defaults.plugins.title.display = false;
 
