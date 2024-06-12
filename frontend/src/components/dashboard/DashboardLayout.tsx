@@ -1,3 +1,4 @@
+import Typography from '../commons/typography/Typography';
 import ListBooks from '../example/Book';
 import Title from '../example/Title';
 import ByMonthChart from './dataViz/ByMonthChart';
