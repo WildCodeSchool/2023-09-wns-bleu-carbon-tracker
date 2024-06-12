@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useUser } from '../contexts/UserContext';
 
 import Layout from '@/components/layout';
 import {
@@ -10,8 +11,7 @@ export default function Profile() {
   const [userData, setUserData] = useState<GetUserbyIdQuery['userById'] | null>(
     null,
   );
-
-  // Définir une fonction asynchrone à l'intérieur de useEffect
+  const { user } = useUser();
   const fetchData = async () => {
     try {
       const { data } = await useGetUserbyIdQuery({
@@ -102,7 +102,7 @@ export default function Profile() {
             type='submit'
             className='rounded-xl bg-medium_green text-sm font-semibold cursor-pointer text-white shadow-sm transition-colors duration-300 ease-in-out hover:bg-light_green px-4 py-2.5 mt-2'
           >
-            Sauvegarder
+            {user?.email}
           </button>
         </form>
       </div>

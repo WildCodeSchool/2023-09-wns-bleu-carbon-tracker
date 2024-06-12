@@ -4,13 +4,16 @@ import dynamic from 'next/dynamic';
 import { ApolloProvider } from '@apollo/client';
 import AlertProvider from '@/contexts/AlertContext';
 import client from '@/graphql/client';
+import { UserProvider } from '@/contexts/UserContext';
 
 export function App({ Component, pageProps }: AppProps) {
   return (
     <ApolloProvider client={client}>
-      <AlertProvider>
-        <Component {...pageProps} />
-      </AlertProvider>
+      <UserProvider>
+        <AlertProvider>
+          <Component {...pageProps} />
+        </AlertProvider>
+      </UserProvider>
     </ApolloProvider>
   );
 }
