@@ -12,12 +12,13 @@ export default function DashboardLayout() {
       <div className='w-7/12 h-full'>
         <div className='h-[44%]  p-3'>
           <div className='dashboardWidget h-full'>
-            <h1 className=''>
-              <span className='poppins-bold text-xl'>Bonjour</span>{' '}
-              <span className='poppins-regular'>
-                Voici la répartition de tes émissons de CO2 par catégories{' '}
+            <h1 className='poppins-bold text-xl'>
+              Bienvenue{' '}
+              <span className='poppins-regular text-sm'>
+                Voici la répartition de tes émissons de CO2 par catégories
               </span>
             </h1>
+
             <CategoryChart />
             <ListBooks />
             <Title />
