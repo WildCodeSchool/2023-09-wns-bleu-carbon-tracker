@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-const REGISTER = gql`
+export const REGISTER = gql`
   mutation Register($infos: InputRegister!) {
     register(infos: $infos) {
       id
@@ -9,4 +9,12 @@ const REGISTER = gql`
   }
 `;
 
-export default REGISTER;
+export const UPDATE_USER_NAME = gql`
+  mutation UpdateUserName($infos: InputUpdateUserName!) {
+    updateUserName(infos: $infos) {
+      id
+      name
+      email
+    }
+  }
+`;

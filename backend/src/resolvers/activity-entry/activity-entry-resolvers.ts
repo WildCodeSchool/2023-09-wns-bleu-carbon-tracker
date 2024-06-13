@@ -21,7 +21,7 @@ export default class ActivityEntryResolver {
   @Query(() => [ActivityEntry])
   async activityEntries(
     @Arg('categoryId', () => Int, { nullable: true }) categoryId?: number,
-    @Arg('userId', () => Int, { nullable: true }) userId?: string,
+    @Arg('userId', () => String, { nullable: true }) userId?: string,
     @Arg('name', { nullable: true }) name?: string,
   ) {
     return ActivityEntry.find({

@@ -24,7 +24,7 @@ export default class Category extends BaseEntity {
   @Field()
   name: string;
 
-  @Field(() => ActivityEntry)
+  @Field(() => [ActivityEntry])
   @OneToMany(() => ActivityEntry, (activityEntry) => activityEntry.category)
   activityEntries: ActivityEntry[];
 }

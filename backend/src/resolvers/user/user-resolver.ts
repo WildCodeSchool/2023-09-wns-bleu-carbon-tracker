@@ -10,6 +10,7 @@ import Message from '../../entities/user/message';
 import InputLogin from '../../entities/user/input-login';
 import { MyContext } from '../..';
 import UserService from '../../services/user-service';
+import InputUpdateUserName from '../../entities/user/input-update-name';
 
 @Resolver(User)
 export default class UserResolver {
@@ -28,6 +29,15 @@ export default class UserResolver {
   @Query(() => User, { nullable: true })
   async userById(@Arg('id') id: string) {
     return UserService.readById(id);
+  }
+
+  @Query(() => User, { nullable: true })
+  async userByName(@Arg('name') name: string) {
+    const userRepository = db.getRepository(User);
+    return userRepository.findOne({
+      where: { name },
+      relations: ['donations', 'activityEntries', 'activityEntries.category'],
+    });
   }
 
   @Query(() => Message)
@@ -85,5 +95,22 @@ export default class UserResolver {
     });
 
     return newUser;
+  }
+
+  @Authorized()
+  @Mutation(() => UserWithoutPassword)
+  async updateUserName(@Arg('infos') infos: InputUpdateUserName) {
+    const userRepository = db.getRepository(User);
+    const user = await userRepository.findOne({ where: { id: infos.id } });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    user.name = infos.name;
+    await userRepository.save(user);
+
+    const { password, ...userWithoutPassword } = user;
+    return userWithoutPassword;
   }
 }

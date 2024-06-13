@@ -63,13 +63,13 @@ export default class User {
   @Field({ nullable: true })
   picture?: string;
 
-  @Field(() => [Donation])
+  @Field(() => [Donation], { nullable: true })
   @OneToMany(() => Donation, (donation) => donation.user)
-  donations: Donation[];
+  donations?: Donation[];
 
-  @Field(() => [User])
+  @Field(() => [ActivityEntry], { nullable: true })
   @OneToMany(() => ActivityEntry, (activityEntry) => activityEntry.user)
-  activityEntries: ActivityEntry[];
+  activityEntries?: ActivityEntry[];
 
   @Field(() => [Post])
   @OneToMany(() => Post, (post) => post.user)
