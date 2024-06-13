@@ -1,35 +1,35 @@
-import { useState } from 'react';
+// import { useState } from 'react';
 import { useUser } from '../contexts/UserContext';
 
 import Layout from '@/components/layout';
-import {
-  GetUserbyIdQuery,
-  useGetUserbyIdQuery,
-} from '@/graphql/generated/schema';
+// import {
+//   GetUserbyIdQuery,
+//   useGetUserbyIdQuery,
+// } from '@/graphql/generated/schema';
 
 export default function Profile() {
-  const [userData, setUserData] = useState<GetUserbyIdQuery['userById'] | null>(
-    null,
-  );
+  // const [userData, setUserData] = useState<GetUserbyIdQuery['userById'] | null>(
+  //   null,
+  // );
   const { user } = useUser();
-  const fetchData = async () => {
-    try {
-      const { data } = await useGetUserbyIdQuery({
-        variables: {
-          userByIdId: '0d9b89a7-7dd7-462b-8adf-3bd07119f764',
-        },
-      });
-      if (data) {
-        setUserData(data.userById);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  // const fetchData = async () => {
+  //   try {
+  //     const { data } = await useGetUserbyIdQuery({
+  //       variables: {
+  //         userByIdId: '0d9b89a7-7dd7-462b-8adf-3bd07119f764',
+  //       },
+  //     });
+  //     if (data) {
+  //       setUserData(data.userById);
+  //     }
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
 
-  fetchData();
+  // fetchData();
   // eslint-disable-next-line no-restricted-syntax
-  console.log(userData);
+  console.log(user);
 
   return (
     <Layout title='Profile'>
@@ -46,7 +46,10 @@ export default function Profile() {
           </h2>
           <div className='flex mb-5'>
             <div className='w-20 rounded-full mr-3'>
-              <img src='/icons/avatar.svg' alt='profil picture' />
+              <img
+                src={user?.picture ? user.picture : '/icons/avatar.svg'}
+                alt='profil picture'
+              />
             </div>
             <div className='flex items-end'>
               <button className='rounded-xl bg-medium_green text-sm font-semibold cursor-pointer text-white shadow-sm transition-colors duration-300 ease-in-out p-2 hover:bg-light_green'>
@@ -54,8 +57,8 @@ export default function Profile() {
               </button>
             </div>
           </div>
-          {userData?.name ? (
-            <p>{userData.name}</p>
+          {user?.name ? (
+            <p>{user.name}</p>
           ) : (
             <div>
               <p>Veuillez saisir votre Nom</p>
