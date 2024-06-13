@@ -20,10 +20,13 @@ export default class ActivityEntryResolver {
   @Authorized()
   @Query(() => [ActivityEntry])
   async activityEntries(
+    @Ctx() ctx: MyContext,
     @Arg('categoryId', () => Int, { nullable: true }) categoryId?: number,
-    @Arg('userId', () => Int, { nullable: true }) userId?: string,
     @Arg('name', { nullable: true }) name?: string,
   ) {
+    if (!ctx.user) {
+      throw new Error('You must be authenticated to access activities.');
+    }
     return ActivityEntry.find({
       relations: { category: true, user: true },
       where: {
@@ -32,7 +35,7 @@ export default class ActivityEntryResolver {
           id: categoryId,
         },
         user: {
-          id: userId,
+          id: ctx.user?.id,
         },
       },
     });
@@ -40,7 +43,13 @@ export default class ActivityEntryResolver {
 
   @Authorized()
   @Query(() => ActivityEntry)
-  async getActivityEntryById(@Arg('activityEntryId', () => Int) id: number) {
+  async getActivityEntryById(
+    @Ctx() ctx: MyContext,
+    @Arg('activityEntryId', () => Int) id: number,
+  ) {
+    if (!ctx.user) {
+      throw new Error('You must be authenticated to access activities.');
+    }
     const activityEntry = await ActivityEntry.findOne({
       where: { id },
       relations: { category: true, user: true },
