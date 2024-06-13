@@ -43,7 +43,7 @@ export default function ListActivities() {
     (selectedCategories ?? []).length > 0 ||
     (selectedDate.from !== '' && selectedDate.to !== '');
 
-  const RECOMMENDED_CO2_EMISSION = 2000;
+  const RECOMMENDED_CO2_EMISSION = 2300;
   const totalCo2Sum = data?.activityEntries.reduce((acc, entry) => {
     return acc + Number(entry.input);
   }, 0);
