@@ -5,6 +5,7 @@ import Button from '../commons/buttons/Button';
 import {
   useActivityEntriesQuery,
   useCategoriesQuery,
+  useGetSumByCategoryQuery,
   useUpdateActivityEntryMutation,
 } from '@/graphql/generated/schema';
 import Typography from '../commons/typography/Typography';
@@ -18,6 +19,7 @@ type Props = {
 export default function UpdateActivityModal({ entryData, onClose }: Props) {
   const { data } = useCategoriesQuery();
   const { refetch: refetchActivities } = useActivityEntriesQuery();
+  const { refetch: refetchTotals } = useGetSumByCategoryQuery();
 
   const [undateActivity] = useUpdateActivityEntryMutation();
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -33,6 +35,7 @@ export default function UpdateActivityModal({ entryData, onClose }: Props) {
         variables: { data: { ...formJSON }, activityEntryId: entryData.id },
         onCompleted: async () => {
           await refetchActivities();
+          await refetchTotals();
           onClose();
         },
       });
