@@ -23,7 +23,7 @@ export type ActivityEntry = {
   id: Scalars['Int'];
   input: Scalars['Float'];
   name: Scalars['String'];
-  spendedAt: Scalars['String'];
+  spendedAt: Scalars['DateTimeISO'];
   updatedAt: Scalars['DateTimeISO'];
   user: User;
 };
@@ -168,6 +168,8 @@ export type Query = {
   getLastDonations: Array<Donation>;
   getPostById?: Maybe<Post>;
   getPot: Scalars['Int'];
+  getSumByCategory: Array<SumByCategory>;
+  getSumByMonth: Array<SumByMonth>;
   login: Message;
   logout: Message;
   tags: Array<Book>;
@@ -180,7 +182,6 @@ export type Query = {
 export type QueryActivityEntriesArgs = {
   categoryId?: InputMaybe<Scalars['Int']>;
   name?: InputMaybe<Scalars['String']>;
-  userId?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -216,6 +217,19 @@ export type QueryUserByEmailArgs = {
 
 export type QueryUserByIdArgs = {
   id: Scalars['String'];
+};
+
+export type SumByCategory = {
+  __typename?: 'SumByCategory';
+  categoryId: Scalars['Float'];
+  categoryName: Scalars['String'];
+  sumKgCO2: Scalars['Float'];
+};
+
+export type SumByMonth = {
+  __typename?: 'SumByMonth';
+  month: Scalars['String'];
+  sumKgCO2: Scalars['Float'];
 };
 
 export type User = {
@@ -268,7 +282,7 @@ export type DeleteActivityEntryMutation = { __typename?: 'Mutation', deleteActiv
 export type ActivityEntriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ActivityEntriesQuery = { __typename?: 'Query', activityEntries: Array<{ __typename?: 'ActivityEntry', id: number, name: string, input: number, createdAt: any, spendedAt: string, category: { __typename?: 'Category', id: number, name: string } }> };
+export type ActivityEntriesQuery = { __typename?: 'Query', activityEntries: Array<{ __typename?: 'ActivityEntry', id: number, name: string, input: number, createdAt: any, spendedAt: any, category: { __typename?: 'Category', id: number, name: string } }> };
 
 export type GetActivityEntryByIdQueryVariables = Exact<{
   activityEntryId: Scalars['Int'];
@@ -304,6 +318,16 @@ export type GetBooksQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetBooksQuery = { __typename?: 'Query', tags: Array<{ __typename?: 'Book', author: string, id: number, title: string }> };
+
+export type GetSumByCategoryQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetSumByCategoryQuery = { __typename?: 'Query', getSumByCategory: Array<{ __typename?: 'SumByCategory', categoryName: string, sumKgCO2: number, categoryId: number }> };
+
+export type GetSumByMonthQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetSumByMonthQuery = { __typename?: 'Query', getSumByMonth: Array<{ __typename?: 'SumByMonth', month: string, sumKgCO2: number }> };
 
 export type RegisterMutationVariables = Exact<{
   infos: InputRegister;
@@ -693,6 +717,77 @@ export function useGetBooksLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<G
 export type GetBooksQueryHookResult = ReturnType<typeof useGetBooksQuery>;
 export type GetBooksLazyQueryHookResult = ReturnType<typeof useGetBooksLazyQuery>;
 export type GetBooksQueryResult = Apollo.QueryResult<GetBooksQuery, GetBooksQueryVariables>;
+export const GetSumByCategoryDocument = gql`
+    query GetSumByCategory {
+  getSumByCategory {
+    categoryName
+    sumKgCO2
+    categoryId
+  }
+}
+    `;
+
+/**
+ * __useGetSumByCategoryQuery__
+ *
+ * To run a query within a React component, call `useGetSumByCategoryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSumByCategoryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetSumByCategoryQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetSumByCategoryQuery(baseOptions?: Apollo.QueryHookOptions<GetSumByCategoryQuery, GetSumByCategoryQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetSumByCategoryQuery, GetSumByCategoryQueryVariables>(GetSumByCategoryDocument, options);
+      }
+export function useGetSumByCategoryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetSumByCategoryQuery, GetSumByCategoryQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetSumByCategoryQuery, GetSumByCategoryQueryVariables>(GetSumByCategoryDocument, options);
+        }
+export type GetSumByCategoryQueryHookResult = ReturnType<typeof useGetSumByCategoryQuery>;
+export type GetSumByCategoryLazyQueryHookResult = ReturnType<typeof useGetSumByCategoryLazyQuery>;
+export type GetSumByCategoryQueryResult = Apollo.QueryResult<GetSumByCategoryQuery, GetSumByCategoryQueryVariables>;
+export const GetSumByMonthDocument = gql`
+    query GetSumByMonth {
+  getSumByMonth {
+    month
+    sumKgCO2
+  }
+}
+    `;
+
+/**
+ * __useGetSumByMonthQuery__
+ *
+ * To run a query within a React component, call `useGetSumByMonthQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSumByMonthQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetSumByMonthQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetSumByMonthQuery(baseOptions?: Apollo.QueryHookOptions<GetSumByMonthQuery, GetSumByMonthQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetSumByMonthQuery, GetSumByMonthQueryVariables>(GetSumByMonthDocument, options);
+      }
+export function useGetSumByMonthLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetSumByMonthQuery, GetSumByMonthQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetSumByMonthQuery, GetSumByMonthQueryVariables>(GetSumByMonthDocument, options);
+        }
+export type GetSumByMonthQueryHookResult = ReturnType<typeof useGetSumByMonthQuery>;
+export type GetSumByMonthLazyQueryHookResult = ReturnType<typeof useGetSumByMonthLazyQuery>;
+export type GetSumByMonthQueryResult = Apollo.QueryResult<GetSumByMonthQuery, GetSumByMonthQueryVariables>;
 export const RegisterDocument = gql`
     mutation Register($infos: InputRegister!) {
   register(infos: $infos) {

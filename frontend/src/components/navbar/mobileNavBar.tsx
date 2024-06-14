@@ -1,9 +1,28 @@
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useLazyQuery } from '@apollo/client';
 import { Menu, X } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import Typography from '@/components/commons/typography/Typography';
+import { LogoutQuery, LogoutQueryVariables } from '@/graphql/generated/schema';
+import { LOGOUT } from '@/graphql/user/queries/auth.queries';
 
 const Links = () => {
+  const router = useRouter();
+  const [logout] = useLazyQuery<LogoutQuery, LogoutQueryVariables>(LOGOUT);
+
+  const handleLogout = () => {
+    logout()
+      .then((response) => {
+        if (response.data) {
+          router.push('/auth/login');
+        }
+      })
+      .catch((err) => {
+        console.error('Logout failed', err);
+      });
+  };
+
   return (
     <div className='w-full mt-5'>
       <Link href='/' className='block p-2 max-w-fit'>
@@ -21,9 +40,9 @@ const Links = () => {
       <Link href='/' className='block p-2 max-w-fit'>
         <Typography variant='paragraph'>Profil</Typography>
       </Link>
-      <Link href='/auth/login' className='block p-2 max-w-fit'>
+      <button className='block p-2 max-w-fit' onClick={handleLogout}>
         <Typography variant='paragraph'>Déconnexion</Typography>
-      </Link>
+      </button>
     </div>
   );
 };
