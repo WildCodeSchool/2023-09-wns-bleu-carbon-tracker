@@ -1,7 +1,7 @@
 import { Field, InputType } from 'type-graphql';
 
 @InputType()
-export default class InputCreate {
+export default class InputCreatePost {
   @Field()
   title: string;
 
