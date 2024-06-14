@@ -1,4 +1,5 @@
-// import { useState } from 'react';
+// import { useState } from 'react'
+import axios from 'axios';
 import { useUser } from '../contexts/UserContext';
 
 import Layout from '@/components/layout';
@@ -52,6 +53,23 @@ export default function Profile() {
               />
             </div>
             <div className='flex items-end'>
+              <input
+                type='file'
+                onChange={(e) => {
+                  const form = new FormData();
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    form.append('file', file);
+                    axios
+                      .post('http://localhost:8000/uploads', file)
+                      .then((res) => {
+                        // eslint-disable-next-line no-restricted-syntax
+                        console.log(res.data);
+                      })
+                      .catch(console.error);
+                  }
+                }}
+              />
               <button className='rounded-xl bg-medium_green text-sm font-semibold cursor-pointer text-white shadow-sm transition-colors duration-300 ease-in-out p-2 hover:bg-light_green'>
                 Télécharger
               </button>
