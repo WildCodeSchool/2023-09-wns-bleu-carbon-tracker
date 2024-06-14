@@ -5,6 +5,7 @@ import {
   useActivityEntriesQuery,
   useCreateActivityEntryMutation,
   useDeleteActivityEntryMutation,
+  useGetSumByCategoryQuery,
 } from '@/graphql/generated/schema';
 import Typography from '../commons/typography/Typography';
 import InputCheckbox from '../commons/inputs/InputCheckbox';
@@ -20,9 +21,13 @@ import AddActivityModal from '../modal/AddActivityModal';
 import UpdateActivityModal from '../modal/UpdateActivityModal';
 
 export default function ListActivities() {
-  const { data, loading } = useActivityEntriesQuery();
+  const {
+    data,
+    loading,
+    refetch: refetchActivities,
+  } = useActivityEntriesQuery();
 
-  const { refetch: refetchActivities } = useActivityEntriesQuery();
+  const { data: totals, refetch: refetchTotals } = useGetSumByCategoryQuery();
   const [createActivity] = useCreateActivityEntryMutation();
   const [deleteActivity] = useDeleteActivityEntryMutation();
   const [selectedEntries, setSelectedEntries] = useState<EntryData[]>([]);
@@ -44,8 +49,8 @@ export default function ListActivities() {
     (selectedDate.from !== '' && selectedDate.to !== '');
 
   const RECOMMENDED_CO2_EMISSION = 2300;
-  const totalCo2Sum = data?.activityEntries.reduce((acc, entry) => {
-    return acc + Number(entry.input);
+  const totalCo2Sum = totals?.getSumByCategory.reduce((acc, cat) => {
+    return acc + Number(cat.sumKgCO2);
   }, 0);
 
   const percentOfRecommendedEmissions = Math.round(
@@ -135,6 +140,7 @@ export default function ListActivities() {
         }),
       );
       await refetchActivities();
+      await refetchTotals();
       setSelectedEntries([]);
     } catch (err) {
       // console.log(err);
@@ -155,6 +161,7 @@ export default function ListActivities() {
         }),
       );
       await refetchActivities();
+      await refetchTotals();
       setSelectedEntries([]);
     } catch (error) {
       // console.log(error);

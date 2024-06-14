@@ -2,8 +2,7 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { defaults } from 'chart.js/auto';
 import { Doughnut } from 'react-chartjs-2';
-import { useActivityEntriesQuery } from '@/graphql/generated/schema';
-import { EntryData } from '@/types';
+import { useGetSumByCategoryQuery } from '@/graphql/generated/schema';
 import CAT_COLOR_MAP from '@/utils/categoryColors';
 
 // defaults.maintainAspectRatio = false;
@@ -12,45 +11,24 @@ defaults.plugins.legend.display = false;
 defaults.plugins.title.display = false;
 
 export default function CategoryChart() {
-  const { data: entries } = useActivityEntriesQuery();
+  const { data, loading, refetch: refetchTotals } = useGetSumByCategoryQuery();
+  refetchTotals();
 
-  const totalsByCategories = (entries?.activityEntries ?? []).reduce(
-    (
-      acc: {
-        label: string;
-        value: number;
-        color: string;
-        percentage?: number;
-      }[],
-      entry: EntryData,
-    ) => {
-      const isCategorySetted = acc.find(
-        (item) => item.label === entry.category.name,
-      );
-      if (isCategorySetted) {
-        isCategorySetted.value += entry.input;
-      } else {
-        acc.push({
-          label: entry.category.name,
-          value: entry.input ?? 0,
-          color: CAT_COLOR_MAP[entry.category.name.toLowerCase()],
-        });
-      }
-      return acc;
-    },
-    [],
+  const totalCO2 = (data?.getSumByCategory ?? []).reduce(
+    (sum, cat) => sum + cat.sumKgCO2,
+    0,
   );
-  const totalCO2 = totalsByCategories.reduce((sum, cat) => sum + cat.value, 0);
-  totalsByCategories.forEach((cat) => {
-    cat.percentage = (cat.value / totalCO2) * 100;
-  });
 
   const dataByCat = {
-    labels: totalsByCategories.map((cat) => cat.label),
+    labels: data?.getSumByCategory.map((cat) => cat.categoryName),
     datasets: [
       {
-        data: totalsByCategories.map((cat) => cat.percentage),
-        backgroundColor: totalsByCategories.map((cat) => cat.color),
+        data: data?.getSumByCategory.map(
+          (cat) => (cat.sumKgCO2 / totalCO2) * 100,
+        ),
+        backgroundColor: data?.getSumByCategory.map(
+          (cat) => CAT_COLOR_MAP[cat.categoryName.toLocaleLowerCase()],
+        ),
         borderRadius: 5,
       },
     ],
@@ -70,29 +48,39 @@ export default function CategoryChart() {
     },
   };
   return (
-    <div className='flex w-full h-full justify-between pb-3 pt-3'>
-      <div className='w-[70%] flex justify-center'>
-        <Doughnut data={dataByCat} options={options} />
-      </div>
-      <div className='w-[20%] flex flex-col justify-around'>
-        {totalsByCategories.map((cat) => {
-          return (
-            <div className='flex items-center gap-2' key={cat.label}>
-              <div>
-                <img
-                  src={`${cat.label.toLocaleLowerCase()}.svg`}
-                  alt={cat.label}
-                  width={35}
-                  height={35}
-                />
-              </div>
-              <div className='text-medium_blue poppins-semiBold text-lg'>
-                {cat.value} <span>kgCO2</span>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
+    <>
+      {loading ? (
+        'Chargement'
+      ) : (
+        <div className='flex w-full h-full justify-between pb-3 pt-3'>
+          <div className='w-[70%] flex justify-center'>
+            {data?.getSumByCategory.length === 0 ? (
+              'Aucune données enregistrés'
+            ) : (
+              <Doughnut data={dataByCat} options={options} />
+            )}
+          </div>
+          <div className='w-[20%] flex flex-col justify-around'>
+            {data?.getSumByCategory.map((cat) => {
+              return (
+                <div className='flex items-center gap-2' key={cat.categoryName}>
+                  <div>
+                    <img
+                      src={`${cat.categoryName.toLocaleLowerCase()}.svg`}
+                      alt={cat.categoryName}
+                      width={35}
+                      height={35}
+                    />
+                  </div>
+                  <div className='text-medium_blue poppins-semiBold text-lg'>
+                    {cat.sumKgCO2} <span>kgCO2</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </>
   );
 }
