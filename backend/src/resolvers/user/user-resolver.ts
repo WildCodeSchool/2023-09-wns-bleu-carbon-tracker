@@ -39,7 +39,7 @@ export default class UserResolver {
     }
 
     const isPasswordValid = await argon2.verify(user.password, infos.password);
-    const m = new Message();
+    const result = new Message();
     if (isPasswordValid) {
       const token = await new SignJWT({ email: user.email })
         .setProtectedHeader({ alg: 'HS256', typ: 'jwt' })
@@ -49,13 +49,14 @@ export default class UserResolver {
       const cookies = new Cookies(ctx.req, ctx.res);
       cookies.set('token', token, { httpOnly: true });
 
-      m.message = 'Welcome!';
-      m.success = true;
+      result.message = 'Welcome!';
+      result.success = true;
+      result.user = user;
     } else {
-      m.message = 'Vérifiez vos informations...';
-      m.success = false;
+      result.message = 'Vérifiez vos informations...';
+      result.success = false;
     }
-    return m;
+    return result;
   }
 
   @Query(() => Message)

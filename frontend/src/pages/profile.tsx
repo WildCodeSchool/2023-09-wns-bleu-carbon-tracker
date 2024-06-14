@@ -1,35 +1,36 @@
-import { useState } from 'react';
+// import { useState } from 'react'
+import axios from 'axios';
+import { useUser } from '../contexts/UserContext';
 
 import Layout from '@/components/layout';
-import {
-  GetUserbyIdQuery,
-  useGetUserbyIdQuery,
-} from '@/graphql/generated/schema';
+// import {
+//   GetUserbyIdQuery,
+//   useGetUserbyIdQuery,
+// } from '@/graphql/generated/schema';
 
 export default function Profile() {
-  const [userData, setUserData] = useState<GetUserbyIdQuery['userById'] | null>(
-    null,
-  );
+  // const [userData, setUserData] = useState<GetUserbyIdQuery['userById'] | null>(
+  //   null,
+  // );
+  const { user } = useUser();
+  // const fetchData = async () => {
+  //   try {
+  //     const { data } = await useGetUserbyIdQuery({
+  //       variables: {
+  //         userByIdId: '0d9b89a7-7dd7-462b-8adf-3bd07119f764',
+  //       },
+  //     });
+  //     if (data) {
+  //       setUserData(data.userById);
+  //     }
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
 
-  // Définir une fonction asynchrone à l'intérieur de useEffect
-  const fetchData = async () => {
-    try {
-      const { data } = await useGetUserbyIdQuery({
-        variables: {
-          userByIdId: '0d9b89a7-7dd7-462b-8adf-3bd07119f764',
-        },
-      });
-      if (data) {
-        setUserData(data.userById);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  fetchData();
+  // fetchData();
   // eslint-disable-next-line no-restricted-syntax
-  console.log(userData);
+  console.log(user);
 
   return (
     <Layout title='Profile'>
@@ -42,20 +43,40 @@ export default function Profile() {
         </p>
         <div className='dashboardWidget mb-3'>
           <h2 className='mb-5 font-poppins font-semibold text-sm'>
-            Changer ma photo de profil
+            Changer ma photo de profi
           </h2>
           <div className='flex mb-5'>
             <div className='w-20 rounded-full mr-3'>
-              <img src='/icons/avatar.svg' alt='profil picture' />
+              <img
+                src={user?.picture ? user.picture : '/icons/avatar.svg'}
+                alt='profil picture'
+              />
             </div>
             <div className='flex items-end'>
+              <input
+                type='file'
+                onChange={(e) => {
+                  const form = new FormData();
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    form.append('file', file);
+                    axios
+                      .post('http://localhost:8000/uploads', file)
+                      .then((res) => {
+                        // eslint-disable-next-line no-restricted-syntax
+                        console.log(res.data);
+                      })
+                      .catch(console.error);
+                  }
+                }}
+              />
               <button className='rounded-xl bg-medium_green text-sm font-semibold cursor-pointer text-white shadow-sm transition-colors duration-300 ease-in-out p-2 hover:bg-light_green'>
                 Télécharger
               </button>
             </div>
           </div>
-          {userData?.name ? (
-            <p>{userData.name}</p>
+          {user?.name ? (
+            <p>{user.name}</p>
           ) : (
             <div>
               <p>Veuillez saisir votre Nom</p>
@@ -102,7 +123,7 @@ export default function Profile() {
             type='submit'
             className='rounded-xl bg-medium_green text-sm font-semibold cursor-pointer text-white shadow-sm transition-colors duration-300 ease-in-out hover:bg-light_green px-4 py-2.5 mt-2'
           >
-            Sauvegarder
+            {user?.email}
           </button>
         </form>
       </div>
