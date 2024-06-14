@@ -18,6 +18,6 @@ COPY ./public ./public
 ARG NEXT_PUBLIC_GRAPHQL_SERVER_URL
 ENV NEXT_PUBLIC_GRAPHQL_SERVER_URL ${NEXT_PUBLIC_GRAPHQL_SERVER_URL}
 
-RUN npm run build
+RUN npm run build & npm run codegen
 
 CMD npm start
