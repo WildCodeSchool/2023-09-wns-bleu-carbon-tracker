@@ -21,7 +21,8 @@ export default function DashboardLayout() {
     loading: loadingByMonth,
     refetch: refetchTotalsByMonth,
   } = useGetSumByMonthQuery();
-
+  refetchTotalsByMonth();
+  refetchTotalsByCategories();
   return (
     <div className='flex h-screen text-black'>
       <div className='w-7/12 h-full'>
@@ -57,9 +58,9 @@ export default function DashboardLayout() {
       </div>
       <div className='w-5/12 p-3  h-full'>
         <LastActivitiesListWidget
-          handleRefetch={async () => {
-            await refetchTotalsByCategories();
-            await refetchTotalsByMonth();
+          handleRefetch={() => {
+            refetchTotalsByCategories();
+            refetchTotalsByMonth();
           }}
         />
       </div>
