@@ -10,8 +10,14 @@ defaults.responsive = true;
 defaults.plugins.legend.display = false;
 defaults.plugins.title.display = false;
 
-export default function CategoryChart() {
-  const { data, loading, refetch: refetchTotals } = useGetSumByCategoryQuery();
+export default function CategoryChart({ userId }: { userId?: string }) {
+  const {
+    data,
+    loading,
+    refetch: refetchTotals,
+  } = useGetSumByCategoryQuery({
+    variables: { userId },
+  });
   refetchTotals();
 
   const totalCO2 = (data?.getSumByCategory ?? []).reduce(
@@ -52,7 +58,7 @@ export default function CategoryChart() {
       {loading ? (
         'Chargement'
       ) : (
-        <div className='flex w-full h-full justify-between pb-3 pt-3'>
+        <div className='flex justify-between w-full h-full pt-3 pb-3'>
           <div className='w-[70%] flex justify-center'>
             {data?.getSumByCategory.length === 0 ? (
               'Aucune données enregistrés'
@@ -72,7 +78,7 @@ export default function CategoryChart() {
                       height={35}
                     />
                   </div>
-                  <div className='text-medium_blue poppins-semiBold text-lg'>
+                  <div className='text-lg text-medium_blue poppins-semiBold'>
                     {cat.sumKgCO2} <span>kgCO2</span>
                   </div>
                 </div>

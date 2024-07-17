@@ -46,10 +46,16 @@ export default class ActivityEntryResolver {
 
   @Authorized()
   @Query(() => [SumByCategory])
-  async getSumByCategory(@Ctx() ctx: MyContext) {
+  async getSumByCategory(
+    @Ctx() ctx: MyContext,
+    @Arg('userId', { nullable: true }) userId?: string,
+  ): Promise<SumByCategory[]> {
     if (!ctx.user) {
       throw new Error('You must be authenticated to access this information.');
     }
+
+    const userIdToUse = userId ?? ctx.user.id;
+
     const sumByCategory = await ActivityEntry.createQueryBuilder(
       'activityEntry',
     )
@@ -57,7 +63,7 @@ export default class ActivityEntryResolver {
       .select('category.name', 'categoryName')
       .addSelect('category.id', 'categoryId')
       .addSelect('SUM(activityEntry.input)', 'sumKgCO2')
-      .where('activityEntry.userId = :userId', { userId: ctx.user.id })
+      .where('activityEntry.userId = :userId', { userId: userIdToUse })
       .groupBy('category.id')
       .getRawMany<{
         categoryName: string;

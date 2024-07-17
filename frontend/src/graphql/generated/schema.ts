@@ -205,6 +205,10 @@ export type QueryGetPostByIdArgs = {
   postId: Scalars['Float'];
 };
 
+export type QueryGetSumByCategoryArgs = {
+  userId?: InputMaybe<Scalars['String']>;
+};
+
 export type QueryLoginArgs = {
   infos: InputLogin;
 };
@@ -230,6 +234,7 @@ export type SumByCategory = {
   categoryId: Scalars['Float'];
   categoryName: Scalars['String'];
   sumKgCO2: Scalars['Float'];
+  userId?: Maybe<Scalars['String']>;
 };
 
 export type SumByMonth = {
@@ -380,15 +385,17 @@ export type GetBooksQuery = {
   }>;
 };
 
-export type GetSumByCategoryQueryVariables = Exact<{ [key: string]: never }>;
+export type GetSumByCategoryQueryVariables = Exact<{
+  userId?: InputMaybe<Scalars['String']>;
+}>;
 
 export type GetSumByCategoryQuery = {
   __typename?: 'Query';
   getSumByCategory: Array<{
     __typename?: 'SumByCategory';
+    categoryId: number;
     categoryName: string;
     sumKgCO2: number;
-    categoryId: number;
   }>;
 };
 
@@ -1030,11 +1037,11 @@ export type GetBooksQueryResult = Apollo.QueryResult<
   GetBooksQueryVariables
 >;
 export const GetSumByCategoryDocument = gql`
-  query GetSumByCategory {
-    getSumByCategory {
+  query GetSumByCategory($userId: String) {
+    getSumByCategory(userId: $userId) {
+      categoryId
       categoryName
       sumKgCO2
-      categoryId
     }
   }
 `;
@@ -1051,6 +1058,7 @@ export const GetSumByCategoryDocument = gql`
  * @example
  * const { data, loading, error } = useGetSumByCategoryQuery({
  *   variables: {
+ *      userId: // value for 'userId'
  *   },
  * });
  */
