@@ -11,8 +11,8 @@ const Links = () => {
   const router = useRouter();
   const [logout] = useLazyQuery<LogoutQuery, LogoutQueryVariables>(LOGOUT);
 
-  const handleLogout = () => {
-    logout()
+  const handleLogout = async () => {
+    await logout()
       .then((response) => {
         if (response.data) {
           router.push('/auth/login');

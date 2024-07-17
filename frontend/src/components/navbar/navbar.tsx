@@ -17,8 +17,8 @@ export default function navbar() {
     setIsModalOpen(!isModalOpen);
   };
 
-  const handleLogout = () => {
-    logout()
+  const handleLogout = async () => {
+    await logout()
       .then((response) => {
         if (response.data) {
           router.push('/auth/login');
