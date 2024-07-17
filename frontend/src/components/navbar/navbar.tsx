@@ -33,7 +33,7 @@ export default function navbar() {
   return (
     <>
       <div className='flex items-center justify-center h-screen ml-5 mr-5'>
-        <div className='flex flex-col h-[95vh] bg-black text-white w-36 rounded-3xl'>
+        <div className='flex flex-col h-[98vh] bg-black text-white w-36 rounded-3xl'>
           <div className='logo flex items-center justify-center relative mt-5'>
             <Link href='/'>
               <svg
@@ -71,7 +71,6 @@ export default function navbar() {
 
             <button
               className={`${isModalOpen ? 'bg-white rounded-s-full' : ''} nav-link flex justify-around w-full pt-2 pb-2 hover:bg-white hover:rounded-s-full`}
-              onClick={toggleModal}
               onMouseEnter={() => setHoveredLink('new-activity')}
               onMouseLeave={() => setHoveredLink('')}
             >

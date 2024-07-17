@@ -9,7 +9,7 @@ type Props = {
 export default function ActivityEntryWidgetSample({ entryData }: Props) {
   return (
     <div className='flex justify-between p-2 border border-b-black mb-4'>
-      <div>
+      <div className='min-w-[50px] mr-5 flex'>
         <img
           alt={entryData.category.name}
           src={`${entryData.category.name.toLocaleLowerCase()}.svg`}
@@ -17,7 +17,7 @@ export default function ActivityEntryWidgetSample({ entryData }: Props) {
           height={35}
         />
       </div>
-      <div className='flex flex-col w-8/12 items-left '>
+      <div className='flex flex-col grow items-left '>
         <div>
           <Typography className='poppins-bold text-dark_green text-left'>
             {entryData?.name}
@@ -29,7 +29,7 @@ export default function ActivityEntryWidgetSample({ entryData }: Props) {
           </Typography>
         </div>
       </div>
-      <div className='flex flex-col text-right min-w-[50px]'>
+      <div className='flex flex-col text-right min-w-[100px]'>
         <div>
           <Typography className='text-medium_blue poppins-bold text-lg'>
             {entryData?.input} Kg

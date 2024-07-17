@@ -4,9 +4,9 @@ import LastPostItem from './LastPostItem';
 
 export default function LastActivitiesListWidget() {
   return (
-    <>
+    <div className='h-full'>
       <Typography variant='heading'>Derniers posts</Typography>
-      <div className='flex flex-row h-full'>
+      <div className='flex flex-row h-[88%]'>
         <LastPostItem
           profilImg='/icons/avatar.svg'
           postContent=' Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum
@@ -29,6 +29,6 @@ export default function LastActivitiesListWidget() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

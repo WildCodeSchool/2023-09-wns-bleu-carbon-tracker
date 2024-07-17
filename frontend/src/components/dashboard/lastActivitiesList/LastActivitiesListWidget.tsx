@@ -12,8 +12,6 @@ export default function LastActivitiesListWidget() {
     setIsModalOpen(!isModalOpen);
   };
 
-  if (loading) return 'Chargement';
-
   const lastActivitiesSorted = (data?.activityEntries ?? [])
     .toSorted((a, b) => {
       return new Date(b.spendedAt).getTime() - new Date(a.spendedAt).getTime();
@@ -28,11 +26,18 @@ export default function LastActivitiesListWidget() {
           <img src='/button-plus.svg' alt='add an activity entry' />
         </button>
       </div>
-      <div className='flex flex-col overflow-auto'>
-        {(lastActivitiesSorted ?? []).map((entry) => {
-          return <ActivityEntryWidgetSample key={entry.id} entryData={entry} />;
-        })}
-      </div>
+      {loading ? (
+        'Chargement'
+      ) : (
+        <div className='flex flex-col overflow-auto'>
+          {(lastActivitiesSorted ?? []).map((entry) => {
+            return (
+              <ActivityEntryWidgetSample key={entry.id} entryData={entry} />
+            );
+          })}
+        </div>
+      )}
+
       {isModalOpen && <AddActivityModal onClose={toggleModal} />}
       {isModalOpen && <div className='overlay'></div>}
     </div>

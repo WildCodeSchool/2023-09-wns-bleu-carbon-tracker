@@ -7,6 +7,7 @@ import {
   CreateActivityEntryMutation,
   CreateActivityEntryMutationVariables,
   useActivityEntriesQuery,
+  useGetSumByCategoryQuery,
 } from '@/graphql/generated/schema';
 import LIST_CATEGORIES from '@/graphql/category/queries/category.queries';
 import Typography from '@/components/commons/typography/Typography';
@@ -32,6 +33,7 @@ const AddActivityModal: React.FC<MyModalProps> = ({ onClose }) => {
   const categories = data?.categories || [];
 
   const { refetch: refetchActivities } = useActivityEntriesQuery();
+  const { refetch: refetchTotals } = useGetSumByCategoryQuery();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -45,6 +47,7 @@ const AddActivityModal: React.FC<MyModalProps> = ({ onClose }) => {
         variables: { data: { ...formJSON } },
         onCompleted: async () => {
           await refetchActivities();
+          await refetchTotals();
           onClose();
         },
       });

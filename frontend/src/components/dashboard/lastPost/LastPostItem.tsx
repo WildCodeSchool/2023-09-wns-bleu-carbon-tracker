@@ -15,8 +15,8 @@ const LastPostItem: React.FC<LastPostItemProps> = ({
         <div className='w-12 rounded-full mb-1'>
           <img src={profilImg} alt='profil picture' />
         </div>
-        <div className='truncate-container w-full h-full overflow-hidden'>
-          <p className='text-ellipsis overflow-hidden whitespace-normal line-clamp-5'>
+        <div className='truncate-container w-full overflow-hidden'>
+          <p className='text-ellipsis overflow-hidden whitespace-normal line-clamp-4'>
             {postContent}
           </p>
         </div>

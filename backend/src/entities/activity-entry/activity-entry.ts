@@ -27,9 +27,9 @@ export default class ActivityEntry extends BaseEntity {
   @Field()
   updatedAt: Date;
 
-  @Column({ nullable: true, type: 'text', default: '' })
+  @Column()
   @Field()
-  spendedAt?: string;
+  spendedAt?: Date;
 
   @Column({ nullable: true, type: 'text' })
   @Field()
