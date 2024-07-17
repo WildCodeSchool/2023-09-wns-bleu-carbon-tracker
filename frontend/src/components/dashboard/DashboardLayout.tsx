@@ -1,5 +1,3 @@
-import ListBooks from '../example/Book';
-import Title from '../example/Title';
 import ByMonthChart from './dataViz/ByMonthChart';
 import CategoryChart from './dataViz/CategoryChart';
 import LastActivitiesListWidget from './lastActivitiesList/LastActivitiesListWidget';
@@ -19,8 +17,6 @@ export default function DashboardLayout() {
             </h1>
 
             <CategoryChart />
-            <ListBooks />
-            <Title />
           </div>
         </div>
         <div className='h-[28%]  p-3'>

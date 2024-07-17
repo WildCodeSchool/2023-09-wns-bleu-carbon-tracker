@@ -70,7 +70,10 @@ const AddActivityModal: React.FC<MyModalProps> = ({ onClose }) => {
           ✕
         </button>
         <div className='pb-5'>
-          <label className='block text-sm font-medium leading-6 text-gray-900 pb-2'>
+          <label
+            htmlFor='category'
+            className='block text-sm font-medium leading-6 text-gray-900 pb-2'
+          >
             Catégorie
           </label>
           <select
@@ -92,6 +95,7 @@ const AddActivityModal: React.FC<MyModalProps> = ({ onClose }) => {
         </div>
         <div className='pb-5'>
           <InputLabel
+            id='name'
             name='name'
             label="Nom de l'activité"
             placeholder='Mon trajet en voiture pour me rendre au travail'
@@ -104,6 +108,7 @@ const AddActivityModal: React.FC<MyModalProps> = ({ onClose }) => {
         <div className='flex flex-row justify-start'>
           <div className='pb-5 w-4/12 mr-5'>
             <InputLabel
+              id='input'
               name='input'
               label='Dépense carbone (en kg/CO2e)'
               placeholder='10'
@@ -115,6 +120,7 @@ const AddActivityModal: React.FC<MyModalProps> = ({ onClose }) => {
           </div>
           <div className='pb-5 w-4/12'>
             <InputLabel
+              id='spendedAt'
               name='spendedAt'
               label='Date de la dépense'
               type='date'
