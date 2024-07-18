@@ -1,36 +1,51 @@
-// import { useState } from 'react'
+/* eslint-disable no-restricted-syntax */
+
 import axios from 'axios';
+import { useState } from 'react';
 import { useUser } from '../contexts/UserContext';
 
 import Layout from '@/components/layout';
-// import {
-//   GetUserbyIdQuery,
-//   useGetUserbyIdQuery,
-// } from '@/graphql/generated/schema';
+import { useUpdateUserMutation } from '@/graphql/generated/schema';
 
 export default function Profile() {
-  // const [userData, setUserData] = useState<GetUserbyIdQuery['userById'] | null>(
-  //   null,
-  // );
-  const { user } = useUser();
-  // const fetchData = async () => {
-  //   try {
-  //     const { data } = await useGetUserbyIdQuery({
-  //       variables: {
-  //         userByIdId: '0d9b89a7-7dd7-462b-8adf-3bd07119f764',
-  //       },
-  //     });
-  //     if (data) {
-  //       setUserData(data.userById);
-  //     }
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
+  const { user, setUser } = useUser();
+  const [imageSrc, setImageSrc] = useState<string>(
+    user?.picture != null ? user.picture : '/icons/avatar.svg',
+  );
+  const [updateUser] = useUpdateUserMutation();
 
-  // fetchData();
-  // eslint-disable-next-line no-restricted-syntax
-  console.log(user);
+  const handleChangeFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const form = new FormData();
+    const file = e.target.files?.[0];
+    if (file) {
+      form.append('file', file);
+      try {
+        const res = await axios.post('http://localhost:8000/uploads', form, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+
+        const imageUrl: string = res.data.url;
+        console.log(imageUrl);
+
+        const updatedUser = await updateUser({
+          variables: {
+            picture: imageUrl,
+          },
+        });
+        if (updatedUser?.data?.updateUser && user != null)
+          setUser({
+            ...user,
+            picture: updatedUser?.data?.updateUser.picture ?? null,
+          });
+        console.log('User picture updated:', updatedUser);
+        setImageSrc(updatedUser?.data?.updateUser.picture ?? '');
+      } catch (error) {
+        console.error('Error uploading file or updating user picture:', error);
+      }
+    }
+  };
 
   return (
     <Layout title='Profile'>
@@ -41,40 +56,34 @@ export default function Profile() {
         <p className='mb-5 text-sm font-medium leading-6 text-gray-900'>
           editer, modifier mon profile
         </p>
+
         <div className='dashboardWidget mb-3'>
-          <h2 className='mb-5 font-poppins font-semibold text-sm'>
-            Changer ma photo de profi
-          </h2>
-          <div className='flex mb-5'>
-            <div className='w-20 rounded-full mr-3'>
+          <div className='flex-col mb-5'>
+            <div className='relative '>
               <img
-                src={user?.picture ? user.picture : '/icons/avatar.svg'}
-                alt='profil picture'
+                src={imageSrc}
+                alt='profile picture'
+                className='object-cover w-40 h-40 rounded-full mb-5'
               />
-            </div>
-            <div className='flex items-end'>
               <input
                 type='file'
-                onChange={(e) => {
-                  const form = new FormData();
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    form.append('file', file);
-                    axios
-                      .post('http://localhost:8000/uploads', file)
-                      .then((res) => {
-                        // eslint-disable-next-line no-restricted-syntax
-                        console.log(res.data);
-                      })
-                      .catch(console.error);
-                  }
-                }}
+                id='file-input'
+                className='hidden'
+                onChange={handleChangeFile}
               />
-              <button className='rounded-xl bg-medium_green text-sm font-semibold cursor-pointer text-white shadow-sm transition-colors duration-300 ease-in-out p-2 hover:bg-light_green'>
-                Télécharger
-              </button>
+              <label
+                htmlFor='file-input'
+                className='absolute bottom-0 left-0 bg-lime-700 rounded-full p-2 cursor-pointer shadow-md hover:bg-black'
+              >
+                <img
+                  src='/icons/modify.png'
+                  alt='Edit icon'
+                  className='w-6 h-6'
+                />
+              </label>
             </div>
           </div>
+
           {user?.name ? (
             <p>{user.name}</p>
           ) : (
@@ -119,12 +128,6 @@ export default function Profile() {
               />
             </div>
           </div>
-          <button
-            type='submit'
-            className='rounded-xl bg-medium_green text-sm font-semibold cursor-pointer text-white shadow-sm transition-colors duration-300 ease-in-out hover:bg-light_green px-4 py-2.5 mt-2'
-          >
-            {user?.email}
-          </button>
         </form>
       </div>
     </Layout>

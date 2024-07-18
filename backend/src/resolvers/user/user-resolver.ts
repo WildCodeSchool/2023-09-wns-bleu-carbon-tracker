@@ -1,7 +1,10 @@
+/* eslint-disable no-restricted-syntax */
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 import * as argon2 from 'argon2';
 import Cookies from 'cookies';
 import { SignJWT } from 'jose';
+import { GraphQLError } from 'graphql';
+import { validate } from 'class-validator';
 import { db } from '../../db';
 import User from '../../entities/user/user';
 import InputRegister from '../../entities/user/input-register';
@@ -86,5 +89,39 @@ export default class UserResolver {
     });
 
     return newUser;
+  }
+
+  @Authorized()
+  @Mutation(() => User)
+  async updateUser(
+    @Ctx() ctx: MyContext,
+    @Arg('name', { nullable: true }) name?: string,
+    @Arg('picture', { nullable: true }) picture?: string,
+  ): Promise<User | null> {
+    if (!ctx.user) {
+      throw new Error(
+        'You must be authenticated to update your profile picture.',
+      );
+    }
+    const userToUpdate = await User.findOne({
+      where: { id: ctx.user.id },
+    });
+
+    if (!userToUpdate) {
+      throw new Error('User not found.');
+    }
+
+    const data = { picture, name };
+
+    Object.assign(userToUpdate, data);
+    console.log(data);
+    const errors = await validate(userToUpdate);
+    console.log(errors);
+    if (errors.length !== 0)
+      throw new GraphQLError('Invalid data', { extensions: { errors } });
+    await userToUpdate.save();
+    return User.findOne({
+      where: { id: ctx.user.id },
+    });
   }
 }

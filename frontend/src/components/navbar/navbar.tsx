@@ -3,8 +3,10 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Typography from '@/components/commons/typography/Typography';
 import AddActivityModal from '../modal/AddActivityModal';
+import { useUser } from '@/contexts/UserContext';
 
 export default function navbar() {
+  const { user } = useUser();
   const router = useRouter();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -117,7 +119,10 @@ export default function navbar() {
                 className='btn btn-ghost btn-circle avatar w-full pr-5'
               >
                 <div className='w-12 rounded-full'>
-                  <img src='/icons/avatar.svg' alt='profil picture' />
+                  <img
+                    src={user?.picture ?? '/icons/avatar.svg'}
+                    alt='profil picture'
+                  />
                 </div>
                 <Typography variant='paragraph'>John Doe</Typography>
               </label>
