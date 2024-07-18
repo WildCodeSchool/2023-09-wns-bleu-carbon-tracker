@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 import React, { FormEvent } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 import { CREATE_ACTIVITY_ENTRY } from '@/graphql/activity-entry/mutations/activity-entry.mutations';
@@ -14,7 +15,7 @@ import InputLabel from '@/components/commons/inputs/InputLabel';
 
 interface MyModalProps {
   onClose: () => void;
-  refetchOnValidate: () => void;
+  refetchOnValidate?: () => void;
 }
 
 const AddActivityModal: React.FC<MyModalProps> = ({
@@ -45,7 +46,7 @@ const AddActivityModal: React.FC<MyModalProps> = ({
       await createActivityEntry({
         variables: { data: { ...formJSON } },
         onCompleted: async () => {
-          refetchOnValidate();
+          refetchOnValidate !== undefined && refetchOnValidate();
           onClose();
         },
       });
