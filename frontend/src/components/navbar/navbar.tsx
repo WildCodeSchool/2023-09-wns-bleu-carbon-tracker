@@ -1,18 +1,34 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import { useLazyQuery } from '@apollo/client';
 import Typography from '@/components/commons/typography/Typography';
 import AddActivityModal from '../modal/AddActivityModal';
 import { useUser } from '@/contexts/UserContext';
+import { LogoutQuery, LogoutQueryVariables } from '@/graphql/generated/schema';
+import { LOGOUT } from '@/graphql/user/queries/auth.queries';
 
 export default function navbar() {
   const { user } = useUser();
   const router = useRouter();
-
+  const [hoveredLink, setHoveredLink] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [logout] = useLazyQuery<LogoutQuery, LogoutQueryVariables>(LOGOUT);
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
+  };
+
+  const handleLogout = async () => {
+    await logout()
+      .then((response) => {
+        if (response.data) {
+          router.push('/auth/login');
+        }
+      })
+      .catch((err) => {
+        console.error('Logout failed', err);
+      });
   };
 
   const navLink = [
@@ -29,8 +45,6 @@ export default function navbar() {
       imgHover: '/icons/co2-icon-hover.png',
     },
   ];
-
-  const [hoveredLink, setHoveredLink] = useState('');
 
   return (
     <>
@@ -95,9 +109,9 @@ export default function navbar() {
                 className='w-10 mr-5'
               />
             </Link>
-            <Link
+            <button
               key='logout'
-              href='/auth/login'
+              onClick={handleLogout}
               className={`${router.pathname === '/auth/login' ? 'bg-white rounded-s-full' : ''} nav-link flex justify-around w-full pt-2 pb-2 hover:bg-white hover:rounded-s-full`}
               onMouseEnter={() => setHoveredLink('logout')}
               onMouseLeave={() => setHoveredLink('')}
@@ -107,7 +121,7 @@ export default function navbar() {
                 alt={'logout'}
                 className='w-10 mr-5'
               />
-            </Link>
+            </button>
 
             <Link
               key={'profile'}
