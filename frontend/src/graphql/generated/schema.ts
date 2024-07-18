@@ -163,6 +163,7 @@ export type Query = {
   __typename?: 'Query';
   activityEntries: Array<ActivityEntry>;
   categories: Array<Category>;
+  filteredActivityEntries: Array<ActivityEntry>;
   getActivityEntryById: ActivityEntry;
   getAllPosts: Array<Post>;
   getLastDonations: Array<Donation>;
@@ -187,6 +188,16 @@ export type QueryActivityEntriesArgs = {
 
 export type QueryCategoriesArgs = {
   name?: InputMaybe<Scalars['String']>;
+};
+
+
+export type QueryFilteredActivityEntriesArgs = {
+  categoryIds?: InputMaybe<Array<Scalars['Int']>>;
+  dateFrom?: InputMaybe<Scalars['DateTimeISO']>;
+  dateTo?: InputMaybe<Scalars['DateTimeISO']>;
+  searchTerm?: InputMaybe<Scalars['String']>;
+  skip?: Scalars['Int'];
+  take?: Scalars['Int'];
 };
 
 
@@ -290,6 +301,18 @@ export type GetActivityEntryByIdQueryVariables = Exact<{
 
 
 export type GetActivityEntryByIdQuery = { __typename?: 'Query', getActivityEntryById: { __typename?: 'ActivityEntry', input: number, name: string, id: number, category: { __typename?: 'Category', id: number } } };
+
+export type FilteredActivityEntriesQueryVariables = Exact<{
+  searchTerm?: InputMaybe<Scalars['String']>;
+  categoryIds?: InputMaybe<Array<Scalars['Int']> | Scalars['Int']>;
+  dateFrom?: InputMaybe<Scalars['DateTimeISO']>;
+  dateTo?: InputMaybe<Scalars['DateTimeISO']>;
+  skip: Scalars['Int'];
+  take: Scalars['Int'];
+}>;
+
+
+export type FilteredActivityEntriesQuery = { __typename?: 'Query', filteredActivityEntries: Array<{ __typename?: 'ActivityEntry', createdAt: any, id: number, input: number, name: string, spendedAt: any, category: { __typename?: 'Category', name: string, id: number } }> };
 
 export type CategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -538,6 +561,61 @@ export function useGetActivityEntryByIdLazyQuery(baseOptions?: Apollo.LazyQueryH
 export type GetActivityEntryByIdQueryHookResult = ReturnType<typeof useGetActivityEntryByIdQuery>;
 export type GetActivityEntryByIdLazyQueryHookResult = ReturnType<typeof useGetActivityEntryByIdLazyQuery>;
 export type GetActivityEntryByIdQueryResult = Apollo.QueryResult<GetActivityEntryByIdQuery, GetActivityEntryByIdQueryVariables>;
+export const FilteredActivityEntriesDocument = gql`
+    query FilteredActivityEntries($searchTerm: String, $categoryIds: [Int!], $dateFrom: DateTimeISO, $dateTo: DateTimeISO, $skip: Int!, $take: Int!) {
+  filteredActivityEntries(
+    searchTerm: $searchTerm
+    categoryIds: $categoryIds
+    dateFrom: $dateFrom
+    dateTo: $dateTo
+    skip: $skip
+    take: $take
+  ) {
+    category {
+      name
+      id
+    }
+    createdAt
+    id
+    input
+    name
+    spendedAt
+  }
+}
+    `;
+
+/**
+ * __useFilteredActivityEntriesQuery__
+ *
+ * To run a query within a React component, call `useFilteredActivityEntriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFilteredActivityEntriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFilteredActivityEntriesQuery({
+ *   variables: {
+ *      searchTerm: // value for 'searchTerm'
+ *      categoryIds: // value for 'categoryIds'
+ *      dateFrom: // value for 'dateFrom'
+ *      dateTo: // value for 'dateTo'
+ *      skip: // value for 'skip'
+ *      take: // value for 'take'
+ *   },
+ * });
+ */
+export function useFilteredActivityEntriesQuery(baseOptions: Apollo.QueryHookOptions<FilteredActivityEntriesQuery, FilteredActivityEntriesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FilteredActivityEntriesQuery, FilteredActivityEntriesQueryVariables>(FilteredActivityEntriesDocument, options);
+      }
+export function useFilteredActivityEntriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FilteredActivityEntriesQuery, FilteredActivityEntriesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FilteredActivityEntriesQuery, FilteredActivityEntriesQueryVariables>(FilteredActivityEntriesDocument, options);
+        }
+export type FilteredActivityEntriesQueryHookResult = ReturnType<typeof useFilteredActivityEntriesQuery>;
+export type FilteredActivityEntriesLazyQueryHookResult = ReturnType<typeof useFilteredActivityEntriesLazyQuery>;
+export type FilteredActivityEntriesQueryResult = Apollo.QueryResult<FilteredActivityEntriesQuery, FilteredActivityEntriesQueryVariables>;
 export const CategoriesDocument = gql`
     query Categories {
   categories {

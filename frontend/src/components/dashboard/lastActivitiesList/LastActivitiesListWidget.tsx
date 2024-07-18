@@ -1,22 +1,22 @@
 import { useState } from 'react';
 import Typography from '@/components/commons/typography/Typography';
 import ActivityEntryWidgetSample from './ActivityEntryWidgetSample';
-import { useActivityEntriesQuery } from '@/graphql/generated/schema';
+import { useFilteredActivityEntriesQuery } from '@/graphql/generated/schema';
 import AddActivityModal from '@/components/modal/AddActivityModal';
 
-export default function LastActivitiesListWidget() {
-  const { data, loading } = useActivityEntriesQuery();
+type Props = {
+  handleRefetch: () => void;
+};
+export default function LastActivitiesListWidget({ handleRefetch }: Props) {
+  const { data, loading, refetch } = useFilteredActivityEntriesQuery({
+    variables: { skip: 0, take: 15 },
+  });
 
+  refetch();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
-
-  const lastActivitiesSorted = (data?.activityEntries ?? [])
-    .toSorted((a, b) => {
-      return new Date(b.spendedAt).getTime() - new Date(a.spendedAt).getTime();
-    })
-    .slice(0, 12);
 
   return (
     <div className='dashboardWidget flex flex-col  h-full'>
@@ -30,7 +30,7 @@ export default function LastActivitiesListWidget() {
         'Chargement'
       ) : (
         <div className='flex flex-col overflow-auto'>
-          {(lastActivitiesSorted ?? []).map((entry) => {
+          {(data?.filteredActivityEntries ?? []).map((entry) => {
             return (
               <ActivityEntryWidgetSample key={entry.id} entryData={entry} />
             );
@@ -38,7 +38,15 @@ export default function LastActivitiesListWidget() {
         </div>
       )}
 
-      {isModalOpen && <AddActivityModal onClose={toggleModal} />}
+      {isModalOpen && (
+        <AddActivityModal
+          onClose={toggleModal}
+          refetchOnValidate={async () => {
+            await refetch();
+            handleRefetch();
+          }}
+        />
+      )}
       {isModalOpen && <div className='overlay'></div>}
     </div>
   );

@@ -1,3 +1,7 @@
+import {
+  useGetSumByCategoryQuery,
+  useGetSumByMonthQuery,
+} from '@/graphql/generated/schema';
 import ListBooks from '../example/Book';
 import Title from '../example/Title';
 import ByMonthChart from './dataViz/ByMonthChart';
@@ -6,6 +10,19 @@ import LastActivitiesListWidget from './lastActivitiesList/LastActivitiesListWid
 import LastPostWidget from './lastPost/LastPostWidget';
 
 export default function DashboardLayout() {
+  const {
+    data: sumsByCategories,
+    loading: loadingByCategory,
+    refetch: refetchTotalsByCategories,
+  } = useGetSumByCategoryQuery();
+
+  const {
+    data: sumsByMonth,
+    loading: loadingByMonth,
+    refetch: refetchTotalsByMonth,
+  } = useGetSumByMonthQuery();
+  refetchTotalsByMonth();
+  refetchTotalsByCategories();
   return (
     <div className='flex h-screen text-black'>
       <div className='w-7/12 h-full'>
@@ -18,7 +35,10 @@ export default function DashboardLayout() {
               </span>
             </h1>
 
-            <CategoryChart />
+            <CategoryChart
+              dataByCategory={sumsByCategories?.getSumByCategory ?? []}
+              loading={loadingByCategory}
+            />
             <ListBooks />
             <Title />
           </div>
@@ -26,7 +46,10 @@ export default function DashboardLayout() {
         <div className='h-[28%]  p-3'>
           <div className='dashboardWidget h-full'>
             <div className='poppins-bold text-xl'>Dépenses annuelles</div>
-            <ByMonthChart />
+            <ByMonthChart
+              dataByMonth={sumsByMonth?.getSumByMonth ?? []}
+              loading={loadingByMonth}
+            />
           </div>
         </div>
         <div className='h-[28%]  p-3'>
@@ -34,7 +57,12 @@ export default function DashboardLayout() {
         </div>
       </div>
       <div className='w-5/12 p-3  h-full'>
-        <LastActivitiesListWidget />
+        <LastActivitiesListWidget
+          handleRefetch={() => {
+            refetchTotalsByCategories();
+            refetchTotalsByMonth();
+          }}
+        />
       </div>
     </div>
   );

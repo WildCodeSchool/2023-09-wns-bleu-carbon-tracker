@@ -1,20 +1,22 @@
 import { defaults } from 'chart.js/auto';
 import { Line } from 'react-chartjs-2';
-import { useGetSumByMonthQuery } from '@/graphql/generated/schema';
+import { SumByMonth } from '@/types';
 
 defaults.maintainAspectRatio = false;
 defaults.responsive = true;
 defaults.plugins.legend.display = false;
 defaults.plugins.title.display = false;
 
-export default function ByMonthChart() {
-  const { data, loading, refetch: refetchTotals } = useGetSumByMonthQuery();
-  refetchTotals();
-  const dataByMonth = {
-    labels: data?.getSumByMonth.map((item) => item.month),
+type Props = {
+  loading: boolean;
+  dataByMonth: SumByMonth[];
+};
+export default function ByMonthChart({ dataByMonth, loading }: Props) {
+  const dataSetByMonth = {
+    labels: dataByMonth.map((item) => item.month),
     datasets: [
       {
-        data: data?.getSumByMonth.map((item) => item.sumKgCO2),
+        data: dataByMonth.map((item) => item.sumKgCO2),
         borderColor: '#31a531',
         borderRadius: 5,
         pointRadius: 6,
@@ -41,10 +43,10 @@ export default function ByMonthChart() {
         'chargement...'
       ) : (
         <>
-          {data?.getSumByMonth.length === 0 ? (
+          {dataSetByMonth?.datasets.length === 0 ? (
             'Aucune données'
           ) : (
-            <Line data={dataByMonth} options={options} />
+            <Line data={dataSetByMonth} options={options} />
           )}
         </>
       )}
