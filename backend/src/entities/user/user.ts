@@ -7,8 +7,9 @@ import {
   BeforeInsert,
   OneToMany,
   ManyToMany,
+  BaseEntity,
 } from 'typeorm';
-import { Length, IsEmail } from 'class-validator';
+import { IsEmail } from 'class-validator';
 import { ObjectType, Field } from 'type-graphql';
 import * as argon2 from 'argon2';
 import Donation from '../donation/donation';
@@ -17,7 +18,7 @@ import Post from '../post/post';
 
 @Entity()
 @ObjectType()
-export default class User {
+export default class User extends BaseEntity {
   @BeforeInsert()
   protected async hashPassword() {
     this.password = await argon2.hash(this.password);
@@ -36,7 +37,6 @@ export default class User {
   updatedAt: Date;
 
   @Column({ nullable: true })
-  @Length(2, 50)
   @Field({ nullable: true })
   name: string;
 
