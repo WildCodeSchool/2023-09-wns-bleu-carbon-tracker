@@ -148,14 +148,12 @@ export default class UserResolver {
     if (!validOldPassword) {
       throw new Error('Ancien mot de passe incorrecte.');
     }
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()])[A-Za-z\d!@#$%^&*()]{8,}$/;
 
-    const minLength = 6;
-    const hasUpperCase = /[A-Z]/.test(newPassword);
-    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(newPassword);
-
-    if (newPassword.length < minLength || !hasUpperCase || !hasSpecialChar) {
+    if (!passwordRegex.test(newPassword)) {
       throw new Error(
-        'Le nouveau mot de passe doit contenir au moins 6 caractères, une majuscule et un caractère spécial.',
+        'Le mot de passe doit contenir au moins huit caractères, au moins une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial.',
       );
     }
 
