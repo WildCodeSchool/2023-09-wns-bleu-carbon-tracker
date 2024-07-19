@@ -164,4 +164,31 @@ export default class UserResolver {
 
     return user;
   }
+
+  @Authorized()
+  @Mutation(() => Boolean)
+  async deleteUser(
+    @Ctx() ctx: MyContext,
+    @Arg('password') password: string,
+  ): Promise<boolean> {
+    if (!ctx.user) {
+      throw new Error('You must be authenticated to delete your account.');
+    }
+
+    const user = await User.findOne({
+      where: { id: ctx.user.id },
+    });
+
+    if (!user) {
+      throw new Error('User not found.');
+    }
+
+    const validPassword = await argon2.verify(user.password, password);
+    if (!validPassword) {
+      throw new Error('Password is incorrect.');
+    }
+
+    await User.remove(user);
+    return true;
+  }
 }

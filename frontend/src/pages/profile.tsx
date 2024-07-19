@@ -8,7 +8,10 @@ import Layout from '@/components/layout';
 import {
   useUpdateUserMutation,
   useChangePasswordMutation,
+  useDeleteUserMutation,
 } from '@/graphql/generated/schema';
+import Button from '@/components/commons/buttons/Button';
+import Modal from '@/components/modal/Modal';
 
 export default function Profile() {
   const { user, setUser } = useUser();
@@ -17,14 +20,17 @@ export default function Profile() {
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [newName, setNewName] = useState(user?.name || '');
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
+  const [deletePassword, setDeletePassword] = useState('');
   const [updateUser] = useUpdateUserMutation();
   const [changePassword] = useChangePasswordMutation();
+  const [deleteUser] = useDeleteUserMutation();
   const [error, setError] = useState<string | null>(null);
 
-  const handleChangeFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const form = new FormData();
     const file = e.target.files?.[0];
     if (file) {
@@ -55,7 +61,7 @@ export default function Profile() {
     }
   };
 
-  const handleUpdateName = async () => {
+  const handleNameUpdate = async () => {
     try {
       const updatedUser = await updateUser({
         variables: {
@@ -101,6 +107,24 @@ export default function Profile() {
       }
     }
   };
+  const handleDeleteAccount = async () => {
+    try {
+      await deleteUser({
+        variables: {
+          password: deletePassword,
+        },
+      });
+      setUser(null);
+      localStorage.removeItem('user');
+      window.location.href = '/auth/login';
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('An unknown error occurred.');
+      }
+    }
+  };
 
   return (
     <Layout title='Profile'>
@@ -109,7 +133,7 @@ export default function Profile() {
           Mon profil
         </h1>
         <p className='mb-5 text-sm font-medium leading-6 text-gray-900'>
-          editer, modifier mon profile
+          éditer, modifier mon profil
         </p>
 
         <div className='dashboardWidget mb-3'>
@@ -124,7 +148,7 @@ export default function Profile() {
                 type='file'
                 id='file-input'
                 className='hidden'
-                onChange={handleChangeFile}
+                onChange={handleFileChange}
               />
               <label
                 htmlFor='file-input'
@@ -139,115 +163,117 @@ export default function Profile() {
             </div>
           </div>
 
-          {user?.name ? (
-            <div className='text-center flex-col'>
-              <p className='mt-3 font-poppins text-xl font-bold pb-2 text-black'>
-                {user.name}
-              </p>
-              <button
-                onClick={() => setIsModalOpen(true)}
-                className='mt-2 px-4 py-2 bg-lime-700 text-white rounded-md'
-              >
-                Modifier le nom
-              </button>
-              <button
-                onClick={() => setIsPasswordModalOpen(true)}
-                className='mt-2 px-4 py-2  bg-lime-700 text-white rounded-md'
-              >
-                Modifier mon mot de passe
-              </button>
-            </div>
-          ) : (
-            <div className='text-center'>
-              <p>Veuillez saisir votre Nom</p>
-              <button
-                onClick={() => setIsModalOpen(true)}
-                className='mt-2 px-4 py-2 bg-blue-500 text-white rounded-md'
-              >
-                Ajouter un nom
-              </button>
-            </div>
-          )}
+          <div className='text-center flex flex-col'>
+            {user?.name ? (
+              <>
+                <p className='mt-3 font-poppins text-xl font-bold pb-2 text-black'>
+                  {user.name}
+                </p>
+                <Button
+                  onClick={() => setIsModalOpen(true)}
+                  className='mt-2 bg-lime-700 '
+                >
+                  Modifier le nom
+                </Button>
+              </>
+            ) : (
+              <div className='text-center'>
+                <p>Veuillez saisir votre Nom</p>
+                <Button
+                  onClick={() => setIsModalOpen(true)}
+                  className='mt-2 bg-blue-500'
+                >
+                  Ajouter un nom
+                </Button>
+              </div>
+            )}
+            <Button
+              onClick={() => setIsPasswordModalOpen(true)}
+              className='mt-2 bg-lime-700'
+            >
+              Modifier mon mot de passe
+            </Button>
+            <Button
+              onClick={() => setIsDeleteModalOpen(true)}
+              className='mt-2 bg-red-600'
+            >
+              Supprimer mon compte
+            </Button>
+          </div>
         </div>
       </div>
 
-      {/* Modale pour modifier le nom */}
       {isModalOpen && (
-        <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50'>
-          <div className='bg-white p-6 rounded-md'>
-            <h2 className='mb-4 text-lg font-bold'>Modifier le nom</h2>
-            <input
-              type='text'
-              value={newName}
-              onChange={(e) => setNewName(e.target.value)}
-              className='w-full px-3 py-2 border border-gray-300 rounded-md'
-            />
-            <div className='mt-4 flex justify-end'>
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className='mr-2 px-4 py-2 bg-gray-500 text-white rounded-md'
-              >
-                Annuler
-              </button>
-              <button
-                onClick={handleUpdateName}
-                className='px-4 py-2 bg-lime-700 text-white rounded-md'
-              >
-                Valider
-              </button>
-            </div>
-          </div>
-        </div>
+        <Modal
+          onClose={() => setIsModalOpen(false)}
+          onConfirm={handleNameUpdate}
+          title='Modifier le nom'
+        >
+          <input
+            type='text'
+            value={newName}
+            onChange={(e) => setNewName(e.target.value)}
+            className='w-full px-3 py-2 border border-gray-300 rounded-md'
+          />
+        </Modal>
       )}
 
-      {/* Modale pour modifier le mot de passe */}
       {isPasswordModalOpen && (
-        <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50'>
-          <div className='bg-white p-6 rounded-md'>
-            <h2 className='mb-4 text-lg font-bold'>Changer mon mot de passe</h2>
-            <label
-              htmlFor='oldPassword'
-              className='text-sm font-medium text-gray-700'
-            >
-              Ancien mot de passe
-            </label>
-            <input
-              type='password'
-              id='oldPassword'
-              value={oldPassword}
-              onChange={(e) => setOldPassword(e.target.value)}
-              className='w-full px-3 py-2 border border-gray-300 rounded-md'
-            />
-            <label
-              htmlFor='newPassword'
-              className='text-sm font-medium text-gray-700 mt-4'
-            >
-              Nouveau mot de passe
-            </label>
-            <input
-              type='password'
-              id='newPassword'
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              className='w-full px-3 py-2 border border-gray-300 rounded-md'
-            />
-            {error && <p className='mt-2 text-red-500'>{error}</p>}
-            <div className='mt-4 flex justify-end'>
-              <button
-                onClick={() => setIsPasswordModalOpen(false)}
-                className='mr-2 px-4 py-2 bg-gray-500 text-white rounded-md'
-              >
-                Annuler
-              </button>
-              <button
-                onClick={handleChangePassword}
-                className='px-4 py-2 bg-lime-700 text-white rounded-md'
-              >
-                Valider
-              </button>
-            </div>
-          </div>
-        </div>
+        <Modal
+          onClose={() => setIsPasswordModalOpen(false)}
+          onConfirm={handleChangePassword}
+          title='Changer mon mot de passe'
+        >
+          <label
+            htmlFor='oldPassword'
+            className='text-sm font-medium text-gray-700'
+          >
+            Ancien mot de passe
+          </label>
+          <input
+            type='password'
+            id='oldPassword'
+            value={oldPassword}
+            onChange={(e) => setOldPassword(e.target.value)}
+            className='w-full px-3 py-2 border border-gray-300 rounded-md'
+          />
+          <label
+            htmlFor='newPassword'
+            className='text-sm font-medium text-gray-700 mt-4'
+          >
+            Nouveau mot de passe
+          </label>
+          <input
+            type='password'
+            id='newPassword'
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            className='w-full px-3 py-2 border border-gray-300 rounded-md'
+          />
+          {error && <p className='mt-2 text-red-500'>{error}</p>}
+        </Modal>
+      )}
+      {isDeleteModalOpen && (
+        <Modal
+          onClose={() => setIsDeleteModalOpen(false)}
+          onConfirm={handleDeleteAccount}
+          title='Supprimer mon compte'
+        >
+          <label
+            htmlFor='deletePassword'
+            className='text-sm font-medium text-gray-700'
+          >
+            Mot de passe
+          </label>
+          <input
+            type='password'
+            id='deletePassword'
+            value={deletePassword}
+            onChange={(e) => setDeletePassword(e.target.value)}
+            className='w-full px-3 py-2 border border-gray-300 rounded-md'
+          />
+          {error && <p className='mt-2 text-red-500'>{error}</p>}
+        </Modal>
       )}
     </Layout>
   );

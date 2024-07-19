@@ -18,3 +18,9 @@ export const CHANGE_PASSWORD_MUTATION = gql`
     }
   }
 `;
+
+export const DELETE_USER = gql`
+  mutation DeleteUser($password: String!) {
+    deleteUser(password: $password)
+  }
+`;
