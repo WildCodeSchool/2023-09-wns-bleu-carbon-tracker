@@ -8,7 +8,7 @@ import {
   Query,
   Resolver,
 } from 'type-graphql';
-import { Like } from 'typeorm';
+import { Between, In, LessThanOrEqual, ILike, MoreThanOrEqual } from 'typeorm';
 import { GraphQLError } from 'graphql';
 import { validate } from 'class-validator';
 import ActivityEntry from '../../entities/activity-entry/activity-entry';
@@ -16,6 +16,7 @@ import InputCreate from '../../entities/activity-entry/input-create';
 import InputUpdate from '../../entities/activity-entry/input-update';
 import { MyContext } from '../..';
 import { SumByCategory, SumByMonth } from './utils';
+import { FilterWhereConditions } from './filterWhereConditions';
 
 @Resolver(ActivityEntry)
 export default class ActivityEntryResolver {
@@ -33,7 +34,7 @@ export default class ActivityEntryResolver {
     return ActivityEntry.find({
       relations: { category: true, user: true },
       where: {
-        name: name ? Like(`%${name}%`) : undefined,
+        name: name ? ILike(`%${name}%`) : undefined,
         category: {
           id: categoryId,
         },
@@ -41,6 +42,52 @@ export default class ActivityEntryResolver {
           id: ctx.user?.id,
         },
       },
+    });
+  }
+
+  @Authorized()
+  @Query(() => [ActivityEntry])
+  async filteredActivityEntries(
+    @Ctx() ctx: MyContext,
+    @Arg('searchTerm', { nullable: true }) searchTerm?: string,
+    @Arg('dateFrom', () => Date, { nullable: true }) dateFrom?: Date,
+    @Arg('dateTo', () => Date, { nullable: true }) dateTo?: Date,
+    @Arg('categoryIds', () => [Int], { nullable: true }) categoryIds?: number[],
+    @Arg('skip', () => Int, { defaultValue: 0 }) skip = 0,
+    @Arg('take', () => Int, { defaultValue: 15 }) take = 15,
+  ): Promise<ActivityEntry[]> {
+    if (!ctx.user) {
+      throw new Error('You must be authenticated to access activities.');
+    }
+
+    const whereConditions: FilterWhereConditions = {
+      user: { id: ctx.user.id },
+    };
+
+    if (searchTerm) {
+      whereConditions.name = ILike(`%${searchTerm}%`);
+    }
+
+    if (dateFrom && dateTo) {
+      whereConditions.spendedAt = Between(dateFrom, dateTo);
+    } else if (dateFrom) {
+      whereConditions.spendedAt = MoreThanOrEqual(dateFrom);
+    } else if (dateTo) {
+      whereConditions.spendedAt = LessThanOrEqual(dateTo);
+    }
+
+    if (categoryIds) {
+      whereConditions.category = { id: In(categoryIds) };
+    }
+
+    return ActivityEntry.find({
+      relations: { category: true, user: true },
+      where: whereConditions,
+      order: {
+        spendedAt: 'DESC',
+      },
+      skip,
+      take,
     });
   }
 
