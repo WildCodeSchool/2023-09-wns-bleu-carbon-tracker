@@ -21,7 +21,7 @@ export default function UpdateActivityModal({ entryData, onClose }: Props) {
   const { refetch: refetchActivities } = useActivityEntriesQuery();
   const { refetch: refetchTotals } = useGetSumByCategoryQuery();
 
-  const [undateActivity] = useUpdateActivityEntryMutation();
+  const [updateActivity] = useUpdateActivityEntryMutation();
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
@@ -31,7 +31,7 @@ export default function UpdateActivityModal({ entryData, onClose }: Props) {
       id: parseInt(formJSON.category, 10),
     };
     try {
-      await undateActivity({
+      await updateActivity({
         variables: { data: { ...formJSON }, activityEntryId: entryData.id },
         onCompleted: async () => {
           await refetchActivities();

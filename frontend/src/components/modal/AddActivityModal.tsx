@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 import React, { FormEvent } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 import { CREATE_ACTIVITY_ENTRY } from '@/graphql/activity-entry/mutations/activity-entry.mutations';
@@ -6,8 +7,6 @@ import {
   CategoriesQueryVariables,
   CreateActivityEntryMutation,
   CreateActivityEntryMutationVariables,
-  useActivityEntriesQuery,
-  useGetSumByCategoryQuery,
 } from '@/graphql/generated/schema';
 import LIST_CATEGORIES from '@/graphql/category/queries/category.queries';
 import Typography from '@/components/commons/typography/Typography';
@@ -16,9 +15,13 @@ import InputLabel from '@/components/commons/inputs/InputLabel';
 
 interface MyModalProps {
   onClose: () => void;
+  refetchOnValidate?: () => void;
 }
 
-const AddActivityModal: React.FC<MyModalProps> = ({ onClose }) => {
+const AddActivityModal: React.FC<MyModalProps> = ({
+  onClose,
+  refetchOnValidate,
+}) => {
   const [createActivityEntry] = useMutation<
     CreateActivityEntryMutation,
     CreateActivityEntryMutationVariables
@@ -32,9 +35,6 @@ const AddActivityModal: React.FC<MyModalProps> = ({ onClose }) => {
   );
   const categories = data?.categories || [];
 
-  const { refetch: refetchActivities } = useActivityEntriesQuery();
-  const { refetch: refetchTotals } = useGetSumByCategoryQuery();
-
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
@@ -46,8 +46,7 @@ const AddActivityModal: React.FC<MyModalProps> = ({ onClose }) => {
       await createActivityEntry({
         variables: { data: { ...formJSON } },
         onCompleted: async () => {
-          await refetchActivities();
-          await refetchTotals();
+          refetchOnValidate !== undefined && refetchOnValidate();
           onClose();
         },
       });

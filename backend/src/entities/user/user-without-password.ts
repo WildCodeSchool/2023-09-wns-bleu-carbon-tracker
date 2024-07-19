@@ -8,7 +8,17 @@ export default class UserWithoutPassword
   implements
     Omit<
       User,
-      'password' | 'donations' | 'activityEntries' | 'posts' | 'likedPosts'
+      | 'password'
+      | 'donations'
+      | 'activityEntries'
+      | 'posts'
+      | 'likedPosts'
+      | 'hasId'
+      | 'save'
+      | 'remove'
+      | 'softRemove'
+      | 'recover'
+      | 'reload'
     >
 {
   @Field()

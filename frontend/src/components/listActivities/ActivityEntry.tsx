@@ -4,7 +4,6 @@ import getDateFormated from '@/utils/dateFormater';
 import InputCheckbox from '@/components/commons/inputs/InputCheckbox';
 import ActivityEntryActionsModal from './ActivityEntryActionsModal';
 import {
-  useActivityEntriesQuery,
   useCreateActivityEntryMutation,
   useDeleteActivityEntryMutation,
 } from '@/graphql/generated/schema';
@@ -17,6 +16,7 @@ type Props = {
   searchedTerm: string;
   onCheckChange: () => void;
   onUpdate: (entry: EntryData) => void;
+  handleRefetch: () => void;
 };
 
 export default function ActivityEntry({
@@ -25,8 +25,8 @@ export default function ActivityEntry({
   searchedTerm,
   onCheckChange,
   onUpdate,
+  handleRefetch,
 }: Props) {
-  const { refetch: refetchActivities } = useActivityEntriesQuery();
   const [showActionModal, setShowActionModal] = useState(false);
   const [deleteActivity] = useDeleteActivityEntryMutation();
   const [createActivity] = useCreateActivityEntryMutation();
@@ -47,7 +47,7 @@ export default function ActivityEntry({
           },
         },
       });
-      await refetchActivities();
+      handleRefetch();
     } catch (error) {
       // console.log(error);
     }
@@ -56,7 +56,7 @@ export default function ActivityEntry({
   const handleDelete = async (entry: EntryData) => {
     try {
       await deleteActivity({ variables: { activityEntryId: entry.id } });
-      await refetchActivities();
+      handleRefetch();
     } catch (error) {
       // console.log(error);
     }

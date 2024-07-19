@@ -1,8 +1,7 @@
 /* eslint-disable no-param-reassign */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { defaults } from 'chart.js/auto';
 import { Doughnut } from 'react-chartjs-2';
-import { useGetSumByCategoryQuery } from '@/graphql/generated/schema';
+import { SumByCategory } from '@/types';
 import CAT_COLOR_MAP from '@/utils/categoryColors';
 
 // defaults.maintainAspectRatio = false;
@@ -10,23 +9,21 @@ defaults.responsive = true;
 defaults.plugins.legend.display = false;
 defaults.plugins.title.display = false;
 
-export default function CategoryChart() {
-  const { data, loading, refetch: refetchTotals } = useGetSumByCategoryQuery();
-  refetchTotals();
-
-  const totalCO2 = (data?.getSumByCategory ?? []).reduce(
+type Props = {
+  loading: boolean;
+  dataByCategory: SumByCategory[];
+};
+export default function CategoryChart({ dataByCategory, loading }: Props) {
+  const totalCO2 = (dataByCategory ?? []).reduce(
     (sum, cat) => sum + cat.sumKgCO2,
     0,
   );
-
-  const dataByCat = {
-    labels: data?.getSumByCategory.map((cat) => cat.categoryName),
+  const dataSetsByCategory = {
+    labels: dataByCategory.map((cat) => cat.categoryName),
     datasets: [
       {
-        data: data?.getSumByCategory.map(
-          (cat) => (cat.sumKgCO2 / totalCO2) * 100,
-        ),
-        backgroundColor: data?.getSumByCategory.map(
+        data: dataByCategory.map((cat) => (cat.sumKgCO2 / totalCO2) * 100),
+        backgroundColor: dataByCategory.map(
           (cat) => CAT_COLOR_MAP[cat.categoryName.toLocaleLowerCase()],
         ),
         borderRadius: 5,
@@ -50,18 +47,18 @@ export default function CategoryChart() {
   return (
     <>
       {loading ? (
-        'Chargement'
+        'Chargement...'
       ) : (
         <div className='flex w-full h-full justify-between pb-3 pt-3'>
           <div className='w-[70%] flex justify-center'>
-            {data?.getSumByCategory.length === 0 ? (
+            {dataByCategory.length === 0 ? (
               'Aucune données enregistrés'
             ) : (
-              <Doughnut data={dataByCat} options={options} />
+              <Doughnut data={dataSetsByCategory} options={options} />
             )}
           </div>
           <div className='w-[20%] flex flex-col justify-around'>
-            {data?.getSumByCategory.map((cat) => {
+            {dataByCategory.map((cat) => {
               return (
                 <div className='flex items-center gap-2' key={cat.categoryName}>
                   <div>

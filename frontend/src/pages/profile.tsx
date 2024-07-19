@@ -1,35 +1,130 @@
-import { useState } from 'react';
+/* eslint-disable @typescript-eslint/no-shadow */
+/* eslint-disable no-restricted-syntax */
 
+import axios from 'axios';
+import { useState } from 'react';
+import { useUser } from '../contexts/UserContext';
 import Layout from '@/components/layout';
 import {
-  GetUserbyIdQuery,
-  useGetUserbyIdQuery,
+  useUpdateUserMutation,
+  useChangePasswordMutation,
+  useDeleteUserMutation,
 } from '@/graphql/generated/schema';
+import Button from '@/components/commons/buttons/Button';
+import Modal from '@/components/modal/Modal';
 
 export default function Profile() {
-  const [userData, setUserData] = useState<GetUserbyIdQuery['userById'] | null>(
-    null,
+  const { user, setUser } = useUser();
+  const [imageSrc, setImageSrc] = useState<string>(
+    user?.picture != null ? user.picture : '/icons/avatar.svg',
   );
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [newName, setNewName] = useState(user?.name || '');
+  const [oldPassword, setOldPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [deletePassword, setDeletePassword] = useState('');
+  const [updateUser] = useUpdateUserMutation();
+  const [changePassword] = useChangePasswordMutation();
+  const [deleteUser] = useDeleteUserMutation();
+  const [error, setError] = useState<string | null>(null);
 
-  // Définir une fonction asynchrone à l'intérieur de useEffect
-  const fetchData = async () => {
-    try {
-      const { data } = await useGetUserbyIdQuery({
-        variables: {
-          userByIdId: '0d9b89a7-7dd7-462b-8adf-3bd07119f764',
-        },
-      });
-      if (data) {
-        setUserData(data.userById);
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const form = new FormData();
+    const file = e.target.files?.[0];
+    if (file) {
+      form.append('file', file);
+      try {
+        const res = await axios.post('http://localhost:8000/uploads', form, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+
+        const imageUrl: string = res.data.url;
+        const updatedUser = await updateUser({
+          variables: {
+            picture: imageUrl,
+          },
+        });
+        if (updatedUser?.data?.updateUser && user != null) {
+          setUser({
+            ...user,
+            picture: updatedUser?.data?.updateUser.picture ?? null,
+          });
+        }
+        setImageSrc(updatedUser?.data?.updateUser.picture ?? '');
+      } catch (error) {
+        console.error('Error uploading file or updating user picture:', error);
       }
-    } catch (err) {
-      console.error(err);
     }
   };
 
-  fetchData();
-  // eslint-disable-next-line no-restricted-syntax
-  console.log(userData);
+  const handleNameUpdate = async () => {
+    try {
+      const updatedUser = await updateUser({
+        variables: {
+          name: newName,
+        },
+      });
+      if (updatedUser?.data?.updateUser && user != null) {
+        setUser({
+          ...user,
+          name: updatedUser?.data?.updateUser.name ?? null,
+        });
+        localStorage.setItem(
+          'user',
+          JSON.stringify({
+            ...user,
+            name: updatedUser?.data?.updateUser.name ?? null,
+          }),
+        );
+      }
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error('Error updating user name:', error);
+    }
+  };
+
+  const handleChangePassword = async () => {
+    try {
+      await changePassword({
+        variables: {
+          oldPassword,
+          newPassword,
+        },
+      });
+      setOldPassword('');
+      setNewPassword('');
+      setError(null);
+      setIsPasswordModalOpen(false);
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('An unknown error occurred.');
+      }
+    }
+  };
+  const handleDeleteAccount = async () => {
+    try {
+      await deleteUser({
+        variables: {
+          password: deletePassword,
+        },
+      });
+      setUser(null);
+      localStorage.removeItem('user');
+      window.location.href = '/auth/login';
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('An unknown error occurred.');
+      }
+    }
+  };
 
   return (
     <Layout title='Profile'>
@@ -38,74 +133,148 @@ export default function Profile() {
           Mon profil
         </h1>
         <p className='mb-5 text-sm font-medium leading-6 text-gray-900'>
-          editer, modifier mon profile
+          éditer, modifier mon profil
         </p>
-        <div className='dashboardWidget mb-3'>
-          <h2 className='mb-5 font-poppins font-semibold text-sm'>
-            Changer ma photo de profil
-          </h2>
-          <div className='flex mb-5'>
-            <div className='w-20 rounded-full mr-3'>
-              <img src='/icons/avatar.svg' alt='profil picture' />
-            </div>
-            <div className='flex items-end'>
-              <button className='rounded-xl bg-medium_green text-sm font-semibold cursor-pointer text-white shadow-sm transition-colors duration-300 ease-in-out p-2 hover:bg-light_green'>
-                Télécharger
-              </button>
-            </div>
-          </div>
-          {userData?.name ? (
-            <p>{userData.name}</p>
-          ) : (
-            <div>
-              <p>Veuillez saisir votre Nom</p>
-              <input
-                type='name'
-                name='name'
-                className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
-              />
-            </div>
-          )}
-        </div>
-        <form className='space-y-6'>
-          <div className='flex flex-col dashboardWidget'>
-            <h2 className='mb-5 font-poppins font-semibold text-sm'>
-              Changer mon mot de passe
-            </h2>
-            <label
-              htmlFor='password'
-              className='text-sm font-medium text-gray-700'
-            >
-              Ancien mot de passe
-            </label>
-            <input
-              type='password'
-              name='password'
-              className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
-            />
 
-            <div className='flex flex-col mb-3'>
-              <label
-                htmlFor='newPassword'
-                className='text-sm font-medium text-gray-700'
-              >
-                Nouveau mot de passe
-              </label>
-              <input
-                type='password'
-                name='newPassword'
-                className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
+        <div className='dashboardWidget mb-3'>
+          <div className='flex justify-center'>
+            <div className='relative inline-block'>
+              <img
+                src={imageSrc}
+                alt='profile picture'
+                className='object-cover w-40 h-40 rounded-full mb-5'
               />
+              <input
+                type='file'
+                id='file-input'
+                className='hidden'
+                onChange={handleFileChange}
+              />
+              <label
+                htmlFor='file-input'
+                className='absolute bottom-0 right-0 bg-lime-700 rounded-full p-2 cursor-pointer shadow-md hover:bg-black'
+              >
+                <img
+                  src='/icons/modify.png'
+                  alt='Edit icon'
+                  className='w-6 h-6'
+                />
+              </label>
             </div>
           </div>
-          <button
-            type='submit'
-            className='rounded-xl bg-medium_green text-sm font-semibold cursor-pointer text-white shadow-sm transition-colors duration-300 ease-in-out hover:bg-light_green px-4 py-2.5 mt-2'
-          >
-            Sauvegarder
-          </button>
-        </form>
+
+          <div className='text-center flex flex-col'>
+            {user?.name ? (
+              <>
+                <p className='mt-3 font-poppins text-xl font-bold pb-2 text-black'>
+                  {user.name}
+                </p>
+                <Button
+                  onClick={() => setIsModalOpen(true)}
+                  className='mt-2 bg-lime-700 '
+                >
+                  Modifier le nom
+                </Button>
+              </>
+            ) : (
+              <div className='text-center'>
+                <p>Veuillez saisir votre Nom</p>
+                <Button
+                  onClick={() => setIsModalOpen(true)}
+                  className='mt-2 bg-blue-500'
+                >
+                  Ajouter un nom
+                </Button>
+              </div>
+            )}
+            <Button
+              onClick={() => setIsPasswordModalOpen(true)}
+              className='mt-2 bg-lime-700'
+            >
+              Modifier mon mot de passe
+            </Button>
+            <Button
+              onClick={() => setIsDeleteModalOpen(true)}
+              className='mt-2 bg-red-600'
+            >
+              Supprimer mon compte
+            </Button>
+          </div>
+        </div>
       </div>
+
+      {isModalOpen && (
+        <Modal
+          onClose={() => setIsModalOpen(false)}
+          onConfirm={handleNameUpdate}
+          title='Modifier le nom'
+        >
+          <input
+            type='text'
+            value={newName}
+            onChange={(e) => setNewName(e.target.value)}
+            className='w-full px-3 py-2 border border-gray-300 rounded-md'
+          />
+        </Modal>
+      )}
+
+      {isPasswordModalOpen && (
+        <Modal
+          onClose={() => setIsPasswordModalOpen(false)}
+          onConfirm={handleChangePassword}
+          title='Changer mon mot de passe'
+        >
+          <label
+            htmlFor='oldPassword'
+            className='text-sm font-medium text-gray-700'
+          >
+            Ancien mot de passe
+          </label>
+          <input
+            type='password'
+            id='oldPassword'
+            value={oldPassword}
+            onChange={(e) => setOldPassword(e.target.value)}
+            className='w-full px-3 py-2 border border-gray-300 rounded-md'
+          />
+          <label
+            htmlFor='newPassword'
+            className='text-sm font-medium text-gray-700 mt-4'
+          >
+            Nouveau mot de passe
+          </label>
+          <input
+            type='password'
+            id='newPassword'
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            className='w-full px-3 py-2 border border-gray-300 rounded-md'
+          />
+          {error && <p className='mt-2 text-red-500'>{error}</p>}
+        </Modal>
+      )}
+      {isDeleteModalOpen && (
+        <Modal
+          onClose={() => setIsDeleteModalOpen(false)}
+          onConfirm={handleDeleteAccount}
+          title='Supprimer mon compte'
+        >
+          <label
+            htmlFor='deletePassword'
+            className='text-sm font-medium text-gray-700'
+          >
+            Mot de passe
+          </label>
+          <input
+            type='password'
+            id='deletePassword'
+            value={deletePassword}
+            onChange={(e) => setDeletePassword(e.target.value)}
+            className='w-full px-3 py-2 border border-gray-300 rounded-md'
+          />
+          {error && <p className='mt-2 text-red-500'>{error}</p>}
+        </Modal>
+      )}
     </Layout>
   );
 }
