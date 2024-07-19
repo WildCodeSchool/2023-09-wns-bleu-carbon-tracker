@@ -33,15 +33,17 @@ export default function Profile() {
       <p className='p-4 text-2xl font-bold'>Profil de {formattedUsername}</p>
       <div className='flex h-screen text-black'>
         <div className='w-full h-full'>
-          <div className='h-[35%]  p-3'>
-            <div className='h-full dashboardWidget'>
+          <div className='w-full h-[35%] p-3 flex gap-4 items-center'>
+            <div className='w-3/4 h-full dashboardWidget'>
               <h1 className='text-xl poppins-bold'>
-                Répartition de tes émissons de CO2 par catégories
+                Répartition des émissons de CO2 par catégories
               </h1>
 
               <CategoryChart userId={data?.userByName?.id} />
             </div>
+            <div className='w-1/4 h-full dashboardWidget'></div>
           </div>
+
           <div className='h-[28%]  p-3'>
             <div className='h-full dashboardWidget'>
               <div className='text-xl poppins-bold'>Dépenses annuelles</div>
