@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-const UPDATE_USER = gql`
+export const UPDATE_USER = gql`
   mutation updateUser($picture: String, $name: String) {
     updateUser(picture: $picture, name: $name) {
       name
@@ -10,4 +10,11 @@ const UPDATE_USER = gql`
   }
 `;
 
-export default UPDATE_USER;
+export const CHANGE_PASSWORD_MUTATION = gql`
+  mutation ChangePassword($oldPassword: String!, $newPassword: String!) {
+    changePassword(oldPassword: $oldPassword, newPassword: $newPassword) {
+      id
+      name
+    }
+  }
+`;

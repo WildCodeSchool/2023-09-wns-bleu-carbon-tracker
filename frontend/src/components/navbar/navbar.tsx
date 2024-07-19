@@ -23,6 +23,7 @@ export default function navbar() {
     await logout()
       .then((response) => {
         if (response.data) {
+          localStorage.removeItem('user');
           router.push('/auth/login');
         }
       })
@@ -138,7 +139,7 @@ export default function navbar() {
                     alt='profil picture'
                   />
                 </div>
-                <Typography variant='paragraph'>John Doe</Typography>
+                <Typography variant='paragraph'>{user?.name ?? ''}</Typography>
               </label>
             </Link>
           </div>

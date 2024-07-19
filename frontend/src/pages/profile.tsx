@@ -1,18 +1,28 @@
+/* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable no-restricted-syntax */
 
 import axios from 'axios';
 import { useState } from 'react';
 import { useUser } from '../contexts/UserContext';
-
 import Layout from '@/components/layout';
-import { useUpdateUserMutation } from '@/graphql/generated/schema';
+import {
+  useUpdateUserMutation,
+  useChangePasswordMutation,
+} from '@/graphql/generated/schema';
 
 export default function Profile() {
   const { user, setUser } = useUser();
   const [imageSrc, setImageSrc] = useState<string>(
     user?.picture != null ? user.picture : '/icons/avatar.svg',
   );
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+  const [newName, setNewName] = useState(user?.name || '');
+  const [oldPassword, setOldPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
   const [updateUser] = useUpdateUserMutation();
+  const [changePassword] = useChangePasswordMutation();
+  const [error, setError] = useState<string | null>(null);
 
   const handleChangeFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const form = new FormData();
@@ -27,22 +37,67 @@ export default function Profile() {
         });
 
         const imageUrl: string = res.data.url;
-        console.log(imageUrl);
-
         const updatedUser = await updateUser({
           variables: {
             picture: imageUrl,
           },
         });
-        if (updatedUser?.data?.updateUser && user != null)
+        if (updatedUser?.data?.updateUser && user != null) {
           setUser({
             ...user,
             picture: updatedUser?.data?.updateUser.picture ?? null,
           });
-        console.log('User picture updated:', updatedUser);
+        }
         setImageSrc(updatedUser?.data?.updateUser.picture ?? '');
       } catch (error) {
         console.error('Error uploading file or updating user picture:', error);
+      }
+    }
+  };
+
+  const handleUpdateName = async () => {
+    try {
+      const updatedUser = await updateUser({
+        variables: {
+          name: newName,
+        },
+      });
+      if (updatedUser?.data?.updateUser && user != null) {
+        setUser({
+          ...user,
+          name: updatedUser?.data?.updateUser.name ?? null,
+        });
+        localStorage.setItem(
+          'user',
+          JSON.stringify({
+            ...user,
+            name: updatedUser?.data?.updateUser.name ?? null,
+          }),
+        );
+      }
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error('Error updating user name:', error);
+    }
+  };
+
+  const handleChangePassword = async () => {
+    try {
+      await changePassword({
+        variables: {
+          oldPassword,
+          newPassword,
+        },
+      });
+      setOldPassword('');
+      setNewPassword('');
+      setError(null);
+      setIsPasswordModalOpen(false);
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('An unknown error occurred.');
       }
     }
   };
@@ -58,8 +113,8 @@ export default function Profile() {
         </p>
 
         <div className='dashboardWidget mb-3'>
-          <div className='flex-col mb-5'>
-            <div className='relative '>
+          <div className='flex justify-center'>
+            <div className='relative inline-block'>
               <img
                 src={imageSrc}
                 alt='profile picture'
@@ -73,7 +128,7 @@ export default function Profile() {
               />
               <label
                 htmlFor='file-input'
-                className='absolute bottom-0 left-0 bg-lime-700 rounded-full p-2 cursor-pointer shadow-md hover:bg-black'
+                className='absolute bottom-0 right-0 bg-lime-700 rounded-full p-2 cursor-pointer shadow-md hover:bg-black'
               >
                 <img
                   src='/icons/modify.png'
@@ -85,51 +140,115 @@ export default function Profile() {
           </div>
 
           {user?.name ? (
-            <p>{user.name}</p>
+            <div className='text-center flex-col'>
+              <p className='mt-3 font-poppins text-xl font-bold pb-2 text-black'>
+                {user.name}
+              </p>
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className='mt-2 px-4 py-2 bg-lime-700 text-white rounded-md'
+              >
+                Modifier le nom
+              </button>
+              <button
+                onClick={() => setIsPasswordModalOpen(true)}
+                className='mt-2 px-4 py-2  bg-lime-700 text-white rounded-md'
+              >
+                Modifier mon mot de passe
+              </button>
+            </div>
           ) : (
-            <div>
+            <div className='text-center'>
               <p>Veuillez saisir votre Nom</p>
-              <input
-                type='name'
-                name='name'
-                className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
-              />
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className='mt-2 px-4 py-2 bg-blue-500 text-white rounded-md'
+              >
+                Ajouter un nom
+              </button>
             </div>
           )}
         </div>
-        <form className='space-y-6'>
-          <div className='flex flex-col dashboardWidget'>
-            <h2 className='mb-5 font-poppins font-semibold text-sm'>
-              Changer mon mot de passe
-            </h2>
+      </div>
+
+      {/* Modale pour modifier le nom */}
+      {isModalOpen && (
+        <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50'>
+          <div className='bg-white p-6 rounded-md'>
+            <h2 className='mb-4 text-lg font-bold'>Modifier le nom</h2>
+            <input
+              type='text'
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
+              className='w-full px-3 py-2 border border-gray-300 rounded-md'
+            />
+            <div className='mt-4 flex justify-end'>
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className='mr-2 px-4 py-2 bg-gray-500 text-white rounded-md'
+              >
+                Annuler
+              </button>
+              <button
+                onClick={handleUpdateName}
+                className='px-4 py-2 bg-lime-700 text-white rounded-md'
+              >
+                Valider
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modale pour modifier le mot de passe */}
+      {isPasswordModalOpen && (
+        <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50'>
+          <div className='bg-white p-6 rounded-md'>
+            <h2 className='mb-4 text-lg font-bold'>Changer mon mot de passe</h2>
             <label
-              htmlFor='password'
+              htmlFor='oldPassword'
               className='text-sm font-medium text-gray-700'
             >
               Ancien mot de passe
             </label>
             <input
               type='password'
-              name='password'
-              className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
+              id='oldPassword'
+              value={oldPassword}
+              onChange={(e) => setOldPassword(e.target.value)}
+              className='w-full px-3 py-2 border border-gray-300 rounded-md'
             />
-
-            <div className='flex flex-col mb-3'>
-              <label
-                htmlFor='newPassword'
-                className='text-sm font-medium text-gray-700'
+            <label
+              htmlFor='newPassword'
+              className='text-sm font-medium text-gray-700 mt-4'
+            >
+              Nouveau mot de passe
+            </label>
+            <input
+              type='password'
+              id='newPassword'
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              className='w-full px-3 py-2 border border-gray-300 rounded-md'
+            />
+            {error && <p className='mt-2 text-red-500'>{error}</p>}
+            <div className='mt-4 flex justify-end'>
+              <button
+                onClick={() => setIsPasswordModalOpen(false)}
+                className='mr-2 px-4 py-2 bg-gray-500 text-white rounded-md'
               >
-                Nouveau mot de passe
-              </label>
-              <input
-                type='password'
-                name='newPassword'
-                className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
-              />
+                Annuler
+              </button>
+              <button
+                onClick={handleChangePassword}
+                className='px-4 py-2 bg-lime-700 text-white rounded-md'
+              >
+                Valider
+              </button>
             </div>
           </div>
-        </form>
-      </div>
+        </div>
+      )}
     </Layout>
   );
 }

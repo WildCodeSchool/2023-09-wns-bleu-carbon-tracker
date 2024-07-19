@@ -124,4 +124,44 @@ export default class UserResolver {
       where: { id: ctx.user.id },
     });
   }
+
+  @Authorized()
+  @Mutation(() => User)
+  async changePassword(
+    @Ctx() ctx: MyContext,
+    @Arg('oldPassword') oldPassword: string,
+    @Arg('newPassword') newPassword: string,
+  ): Promise<User | null> {
+    if (!ctx.user) {
+      throw new Error('You must be authenticated to change your password.');
+    }
+
+    const user = await User.findOne({
+      where: { id: ctx.user.id },
+    });
+
+    if (!user) {
+      throw new Error('User not found.');
+    }
+
+    const validOldPassword = await argon2.verify(user.password, oldPassword);
+    if (!validOldPassword) {
+      throw new Error('Ancien mot de passe incorrecte.');
+    }
+
+    const minLength = 6;
+    const hasUpperCase = /[A-Z]/.test(newPassword);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(newPassword);
+
+    if (newPassword.length < minLength || !hasUpperCase || !hasSpecialChar) {
+      throw new Error(
+        'Le nouveau mot de passe doit contenir au moins 6 caractères, une majuscule et un caractère spécial.',
+      );
+    }
+
+    user.password = await argon2.hash(newPassword);
+    await user.save();
+
+    return user;
+  }
 }
