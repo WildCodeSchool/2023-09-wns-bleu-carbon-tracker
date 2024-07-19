@@ -209,6 +209,10 @@ export type QueryGetSumByCategoryArgs = {
   userId?: InputMaybe<Scalars['String']>;
 };
 
+export type QueryGetSumByMonthArgs = {
+  userId?: InputMaybe<Scalars['String']>;
+};
+
 export type QueryLoginArgs = {
   infos: InputLogin;
 };
@@ -399,7 +403,9 @@ export type GetSumByCategoryQuery = {
   }>;
 };
 
-export type GetSumByMonthQueryVariables = Exact<{ [key: string]: never }>;
+export type GetSumByMonthQueryVariables = Exact<{
+  userId?: InputMaybe<Scalars['String']>;
+}>;
 
 export type GetSumByMonthQuery = {
   __typename?: 'Query';
@@ -1097,8 +1103,8 @@ export type GetSumByCategoryQueryResult = Apollo.QueryResult<
   GetSumByCategoryQueryVariables
 >;
 export const GetSumByMonthDocument = gql`
-  query GetSumByMonth {
-    getSumByMonth {
+  query GetSumByMonth($userId: String) {
+    getSumByMonth(userId: $userId) {
       month
       sumKgCO2
     }
@@ -1117,6 +1123,7 @@ export const GetSumByMonthDocument = gql`
  * @example
  * const { data, loading, error } = useGetSumByMonthQuery({
  *   variables: {
+ *      userId: // value for 'userId'
  *   },
  * });
  */

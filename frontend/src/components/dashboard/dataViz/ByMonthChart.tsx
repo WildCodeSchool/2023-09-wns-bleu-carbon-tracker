@@ -7,8 +7,14 @@ defaults.responsive = true;
 defaults.plugins.legend.display = false;
 defaults.plugins.title.display = false;
 
-export default function ByMonthChart() {
-  const { data, loading, refetch: refetchTotals } = useGetSumByMonthQuery();
+export default function ByMonthChart({ userId }: { userId?: string }) {
+  const {
+    data,
+    loading,
+    refetch: refetchTotals,
+  } = useGetSumByMonthQuery({
+    variables: { userId },
+  });
   refetchTotals();
   const dataByMonth = {
     labels: data?.getSumByMonth.map((item) => item.month),

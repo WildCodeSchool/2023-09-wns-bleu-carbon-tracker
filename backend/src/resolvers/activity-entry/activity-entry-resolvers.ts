@@ -76,11 +76,16 @@ export default class ActivityEntryResolver {
 
   @Authorized()
   @Query(() => [SumByMonth])
-  async getSumByMonth(@Ctx() ctx: MyContext) {
+  async getSumByMonth(
+    @Ctx() ctx: MyContext,
+    @Arg('userId', { nullable: true }) userId?: string,
+  ) {
     if (!ctx.user) {
       throw new Error('You must be authenticated to access this information.');
     }
     const currentDate = new Date();
+
+    const userIdToUse = userId ?? ctx.user.id;
 
     const twelveMonthsAgo = new Date(currentDate);
     twelveMonthsAgo.setFullYear(currentDate.getFullYear() - 1);
@@ -88,7 +93,7 @@ export default class ActivityEntryResolver {
     const sumByMonth = await ActivityEntry.createQueryBuilder('activityEntry')
       .select("DATE_TRUNC('month', activityEntry.spendedAt)", 'month')
       .addSelect('SUM(activityEntry.input)', 'sumKgCO2')
-      .where('activityEntry.userId = :userId', { userId: ctx.user.id })
+      .where('activityEntry.userId = :userId', { userId: userIdToUse })
       .andWhere('activityEntry.spendedAt >= :twelveMonthsAgo', {
         twelveMonthsAgo,
       })

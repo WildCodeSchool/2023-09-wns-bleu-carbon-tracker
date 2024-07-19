@@ -11,8 +11,8 @@ export const SUM_BY_CATEGORY = gql`
 `;
 
 export const SUM_BY_MONTH = gql`
-  query GetSumByMonth {
-    getSumByMonth {
+  query GetSumByMonth($userId: String) {
+    getSumByMonth(userId: $userId) {
       month
       sumKgCO2
     }

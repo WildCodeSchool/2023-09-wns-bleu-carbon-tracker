@@ -2,6 +2,8 @@ import { useRouter } from 'next/router';
 import { useGetUserByNameQuery } from '@/graphql/generated/schema';
 import Layout from '@/components/layout';
 import CategoryChart from '@/components/dashboard/dataViz/CategoryChart';
+import ByMonthChart from '@/components/dashboard/dataViz/ByMonthChart';
+import LastPostWidget from '@/components/dashboard/lastPost/LastPostWidget';
 
 export default function Profile() {
   const router = useRouter();
@@ -28,12 +30,27 @@ export default function Profile() {
 
   return (
     <Layout title='Liste des activités'>
-      <p>
-        {formattedUsername} {username}
-        <div className='w-[70%] h-[25%]'>
-          <CategoryChart userId={data?.userByName?.id} />
+      <p className='p-4 text-2xl font-bold'>Profil de {formattedUsername}</p>
+      <div className='flex h-screen text-black'>
+        <div className='w-full h-full'>
+          <div className='h-[35%]  p-3'>
+            <div className='h-full dashboardWidget'>
+              <h1 className='text-xl poppins-bold'>
+                Répartition de tes émissons de CO2 par catégories
+              </h1>
+
+              <CategoryChart userId={data?.userByName?.id} />
+            </div>
+          </div>
+          <div className='h-[28%]  p-3'>
+            <div className='h-full dashboardWidget'>
+              <div className='text-xl poppins-bold'>Dépenses annuelles</div>
+              <ByMonthChart userId={data?.userByName?.id} />
+            </div>
+          </div>
+          <div className='h-[28%]  p-3'>{<LastPostWidget readOnly />}</div>
         </div>
-      </p>
+      </div>
     </Layout>
   );
 }

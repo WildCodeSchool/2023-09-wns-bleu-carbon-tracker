@@ -2,6 +2,7 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { defaults } from 'chart.js/auto';
 import { Doughnut } from 'react-chartjs-2';
+import Image from 'next/image';
 import { useGetSumByCategoryQuery } from '@/graphql/generated/schema';
 import CAT_COLOR_MAP from '@/utils/categoryColors';
 
@@ -71,8 +72,8 @@ export default function CategoryChart({ userId }: { userId?: string }) {
               return (
                 <div className='flex items-center gap-2' key={cat.categoryName}>
                   <div>
-                    <img
-                      src={`${cat.categoryName.toLocaleLowerCase()}.svg`}
+                    <Image
+                      src={`/${cat.categoryName.toLocaleLowerCase()}.svg`}
                       alt={cat.categoryName}
                       width={35}
                       height={35}
