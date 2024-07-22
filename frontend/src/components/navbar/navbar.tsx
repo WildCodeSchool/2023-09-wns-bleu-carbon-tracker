@@ -50,7 +50,7 @@ export default function navbar() {
   return (
     <>
       <div className='flex items-center justify-center h-screen ml-5 mr-5'>
-        <div className='flex flex-col h-[98vh] bg-black text-white w-28 rounded-3xl items-center'>
+        <div className='flex flex-col h-[98vh] min-h-fit bg-black text-white w-28 rounded-3xl items-center'>
           <div className='cirlce flex items-center justify-center mt-5 bg-white w-full'>
             <div className='w-[60%] p-2'>
               <Link href='/'>
@@ -58,7 +58,7 @@ export default function navbar() {
               </Link>
             </div>
           </div>
-          <div className='nav-links flex flex-col flex-grow items-center justify-around pl-6'>
+          <div className='nav-links flex flex-col flex-grow items-center justify-around pl-6 mt-4 mb-6 min-h-fit'>
             {navLink.map(({ link, name, img, imgHover }) => (
               <Link
                 key={name}
@@ -118,7 +118,7 @@ export default function navbar() {
             <Link
               key={'profile'}
               href={'/profile'}
-              className='nav-link flex justify-around'
+              className='nav-link flex justify-around mb-2'
             >
               <label
                 tabIndex={0}
