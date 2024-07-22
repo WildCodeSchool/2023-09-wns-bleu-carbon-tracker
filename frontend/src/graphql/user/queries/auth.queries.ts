@@ -5,6 +5,12 @@ export const LOGIN = gql`
     login(infos: $infos) {
       success
       message
+      user {
+        id
+        name
+        email
+        picture
+      }
     }
   }
 `;

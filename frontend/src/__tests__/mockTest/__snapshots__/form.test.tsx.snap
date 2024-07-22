@@ -1,0 +1,128 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AddActivityModal renders the form fields correctly 1`] = `
+<body>
+  <div>
+    <div
+      class="modal-box w-11/12 max-w-5xl absolute z-50 top-2/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+    >
+      <p
+        class="font-poppins text-xl font-bold pb-2 text-black"
+      >
+        Ajouter une dépense carbone
+      </p>
+      <form
+        class="m-4"
+        method="dialog"
+      >
+        <button
+          class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 text-black hover:bg-[#204660] hover:text-white text-lg font-light"
+          type="button"
+        >
+          ✕
+        </button>
+        <div
+          class="pb-5"
+        >
+          <label
+            class="block text-sm font-medium leading-6 text-gray-900 pb-2"
+            for="category"
+          >
+            Catégorie
+          </label>
+          <select
+            class="select select-bordered block w-full rounded-xl px-2 border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+            id="category"
+            name="category"
+            required=""
+          >
+            <option
+              disabled=""
+              selected=""
+              value=""
+            >
+              --Sélectionner une catégorie--
+            </option>
+          </select>
+        </div>
+        <div
+          class="pb-5"
+        >
+          <div>
+            <label
+              class="block text-sm font-medium leading-6 text-gray-900 pb-2"
+              for="name"
+            >
+              Nom de l'activité
+            </label>
+            <input
+              autocomplete="name"
+              class="block w-full rounded-xl px-2 border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 py-2.5"
+              id="name"
+              name="name"
+              placeholder="Mon trajet en voiture pour me rendre au travail"
+              required=""
+              type="text"
+            />
+          </div>
+        </div>
+        <div
+          class="flex flex-row justify-start"
+        >
+          <div
+            class="pb-5 w-4/12 mr-5"
+          >
+            <div>
+              <label
+                class="block text-sm font-medium leading-6 text-gray-900 pb-2"
+                for="input"
+              >
+                Dépense carbone (en kg/CO2e)
+              </label>
+              <input
+                autocomplete="input"
+                class="block w-full rounded-xl px-2 border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 py-2.5"
+                id="input"
+                name="input"
+                placeholder="10"
+                required=""
+                type="text"
+              />
+            </div>
+          </div>
+          <div
+            class="pb-5 w-4/12"
+          >
+            <div>
+              <label
+                class="block text-sm font-medium leading-6 text-gray-900 pb-2"
+                for="spendedAt"
+              >
+                Date de la dépense
+              </label>
+              <input
+                class="block w-full rounded-xl px-2 border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 py-2.5"
+                id="spendedAt"
+                name="spendedAt"
+                required=""
+                type="date"
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          class="text-right"
+        >
+          <button
+            class="rounded-xl bg-medium_green text-sm font-semibold cursor-pointer text-white shadow-sm transition-colors duration-300 ease-in-out hover:bg-light_green px-4 py-2.5 mt-2"
+            data-testid="submit"
+            type="submit"
+          >
+            Enregistrer
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+`;

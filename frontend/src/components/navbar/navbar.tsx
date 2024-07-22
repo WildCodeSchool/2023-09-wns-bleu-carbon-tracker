@@ -4,10 +4,12 @@ import { useRouter } from 'next/router';
 import { useLazyQuery } from '@apollo/client';
 import Typography from '@/components/commons/typography/Typography';
 import AddActivityModal from '../modal/AddActivityModal';
+import { useUser } from '@/contexts/UserContext';
 import { LogoutQuery, LogoutQueryVariables } from '@/graphql/generated/schema';
 import { LOGOUT } from '@/graphql/user/queries/auth.queries';
 
 export default function navbar() {
+  const { user } = useUser();
   const router = useRouter();
   const [hoveredLink, setHoveredLink] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -21,6 +23,7 @@ export default function navbar() {
     await logout()
       .then((response) => {
         if (response.data) {
+          localStorage.removeItem('user');
           router.push('/auth/login');
         }
       })
@@ -131,9 +134,12 @@ export default function navbar() {
                 className='btn btn-ghost btn-circle avatar w-full pr-5'
               >
                 <div className='w-12 rounded-full'>
-                  <img src='/icons/avatar.svg' alt='profil picture' />
+                  <img
+                    src={user?.picture ?? '/icons/avatar.svg'}
+                    alt='profil picture'
+                  />
                 </div>
-                <Typography variant='paragraph'>John Doe</Typography>
+                <Typography variant='paragraph'>{user?.name ?? ''}</Typography>
               </label>
             </Link>
           </div>

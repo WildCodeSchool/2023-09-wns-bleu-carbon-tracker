@@ -7,8 +7,8 @@ interface AuthLayoutProps {
 
 export default function AuthLayout({ children }: AuthLayoutProps) {
   return (
-    <main className='fixed left-0 top-0 h-screen w-screen flex py-32 px-20 2xl:px-60 text-black'>
-      <div className='justify-end items-center h-full w-1/2 pr-10 hidden lg:flex'>
+    <main className='fixed top-0 left-0 flex w-screen h-screen px-20 py-32 text-black 2xl:px-60'>
+      <div className='items-center justify-end hidden w-1/2 h-full pr-10 lg:flex'>
         <div>
           <Image
             src='/login-img.webp'
@@ -21,7 +21,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
           />
         </div>
       </div>
-      <div className='flex justify-center lg:justify-start items-center h-full w-full lg:w-1/2 pl-10 lg:pb-10 xl:pb-16'>
+      <div className='flex items-center justify-center w-full h-full pl-10 lg:justify-start lg:w-1/2 lg:pb-10 xl:pb-16'>
         {children}
       </div>
     </main>
