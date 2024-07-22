@@ -1,39 +1,23 @@
-/* eslint-disable @typescript-eslint/no-unused-expressions */
 import React, { FormEvent } from 'react';
-import { useMutation, useQuery } from '@apollo/client';
-import { CREATE_ACTIVITY_ENTRY } from '@/graphql/activity-entry/mutations/activity-entry.mutations';
 import {
-  CategoriesQuery,
-  CategoriesQueryVariables,
-  CreateActivityEntryMutation,
-  CreateActivityEntryMutationVariables,
+  useActivityEntriesQuery,
+  useCategoriesQuery,
+  useCreateActivityEntryMutation,
+  useGetSumByCategoryQuery,
 } from '@/graphql/generated/schema';
-import LIST_CATEGORIES from '@/graphql/category/queries/category.queries';
-import Typography from '@/components/commons/typography/Typography';
-import Button from '@/components/commons/buttons/Button';
 import InputLabel from '@/components/commons/inputs/InputLabel';
+import GenericModal from '@/components/modal/GenericFormModal';
 
-interface MyModalProps {
+type Props = {
   onClose: () => void;
   refetchOnValidate?: () => void;
-}
+};
 
-const AddActivityModal: React.FC<MyModalProps> = ({
-  onClose,
-  refetchOnValidate,
-}) => {
-  const [createActivityEntry] = useMutation<
-    CreateActivityEntryMutation,
-    CreateActivityEntryMutationVariables
-  >(CREATE_ACTIVITY_ENTRY);
-
-  const { data } = useQuery<CategoriesQuery, CategoriesQueryVariables>(
-    LIST_CATEGORIES,
-    {
-      fetchPolicy: 'no-cache',
-    },
-  );
-  const categories = data?.categories || [];
+export default function AddActivityModal({ onClose }: Props) {
+  const { data } = useCategoriesQuery();
+  const { refetch: refetchActivities } = useActivityEntriesQuery();
+  const { refetch: refetchTotals } = useGetSumByCategoryQuery();
+  const [createActivityEntry] = useCreateActivityEntryMutation();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -46,7 +30,8 @@ const AddActivityModal: React.FC<MyModalProps> = ({
       await createActivityEntry({
         variables: { data: { ...formJSON } },
         onCompleted: async () => {
-          refetchOnValidate !== undefined && refetchOnValidate();
+          await refetchActivities();
+          await refetchTotals();
           onClose();
         },
       });
@@ -56,87 +41,71 @@ const AddActivityModal: React.FC<MyModalProps> = ({
   };
 
   return (
-    <div className='modal-box w-11/12 max-w-5xl absolute z-50 top-2/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
-      <Typography variant='heading' className='pb-2 text-black'>
-        Ajouter une dépense carbone
-      </Typography>
-      <form method='dialog' onSubmit={handleSubmit} className='m-4'>
-        <button
-          type='button'
-          className='btn btn-sm btn-circle btn-ghost absolute right-2 top-2 text-black hover:bg-[#204660] hover:text-white text-lg font-light'
-          onClick={onClose}
+    <GenericModal
+      title='Ajouter une dépense carbone'
+      onClose={onClose}
+      onSubmit={handleSubmit}
+    >
+      <div className='pb-5'>
+        <label
+          htmlFor='category'
+          className='block text-sm font-medium leading-6 text-gray-900 pb-2'
         >
-          ✕
-        </button>
-        <div className='pb-5'>
-          <label
-            htmlFor='category'
-            className='block text-sm font-medium leading-6 text-gray-900 pb-2'
-          >
-            Catégorie
-          </label>
-          <select
-            className='select select-bordered block w-full rounded-xl px-2 border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6'
-            id='category'
-            name='category'
-            required
-            defaultValue=''
-          >
-            <option value='' disabled>
-              --Sélectionner une catégorie--
+          Catégorie
+        </label>
+        <select
+          className='select select-bordered block w-full rounded-xl px-2 border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6'
+          id='category'
+          name='category'
+          required
+          defaultValue=''
+        >
+          <option value='' disabled>
+            --Sélectionner une catégorie--
+          </option>
+          {(data?.categories ?? []).map((cat) => (
+            <option key={cat.id} value={cat.id}>
+              {cat.name}
             </option>
-            {categories.map((cat) => (
-              <option key={cat.id} value={cat.id}>
-                {cat.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className='pb-5'>
+          ))}
+        </select>
+      </div>
+      <div className='pb-5'>
+        <InputLabel
+          id='name'
+          name='name'
+          label="Nom de l'activité"
+          placeholder='Mon trajet en voiture pour me rendre au travail'
+          type='text'
+          sizes='xl'
+          autoComplete='name'
+          required
+        />
+      </div>
+      <div className='flex flex-row justify-start'>
+        <div className='pb-5 w-4/12 mr-5'>
           <InputLabel
-            id='name'
-            name='name'
-            label="Nom de l'activité"
-            placeholder='Mon trajet en voiture pour me rendre au travail'
+            id='input'
+            name='input'
+            label='Dépense carbone (en kg/CO2e)'
+            placeholder='10'
             type='text'
             sizes='xl'
-            autoComplete='name'
+            autoComplete='input'
             required
           />
         </div>
-        <div className='flex flex-row justify-start'>
-          <div className='pb-5 w-4/12 mr-5'>
-            <InputLabel
-              id='input'
-              name='input'
-              label='Dépense carbone (en kg/CO2e)'
-              placeholder='10'
-              type='text'
-              sizes='xl'
-              autoComplete='input'
-              required
-            />
-          </div>
-          <div className='pb-5 w-4/12'>
-            <InputLabel
-              id='spendedAt'
-              name='spendedAt'
-              label='Date de la dépense'
-              type='date'
-              sizes='xl'
-              required
-            />
-          </div>
+        <div className='pb-5 w-4/12'>
+          <InputLabel
+            id='spendedAt'
+            name='spendedAt'
+            label='Date de la dépense'
+            type='date'
+            sizes='xl'
+            required
+          />
         </div>
-
-        <div className='text-right'>
-          <Button className='mt-2' size='xl' type='submit' data-testid='submit'>
-            Enregistrer
-          </Button>
-        </div>
-      </form>
-    </div>
+      </div>
+    </GenericModal>
   );
-};
-
-export default AddActivityModal;
+}

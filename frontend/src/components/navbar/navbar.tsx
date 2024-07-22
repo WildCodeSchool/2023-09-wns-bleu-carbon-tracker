@@ -88,12 +88,12 @@ export default function navbar() {
 
             <button
               className={`${isModalOpen ? 'bg-white rounded-s-full' : ''} nav-link flex justify-around w-full pt-2 pb-2 hover:bg-white hover:rounded-s-full`}
-              onMouseEnter={() => setHoveredLink('new-activity')}
+              onMouseEnter={() => setHoveredLink('new-post')}
               onMouseLeave={() => setHoveredLink('')}
             >
               <img
-                src={`${isModalOpen || hoveredLink === 'new-activity' ? '/icons/write-icon-hover.png' : '/icons/write-icon.png'}`}
-                alt='new-activity'
+                src={`${isModalOpen || hoveredLink === 'new-post' ? '/icons/write-icon-hover.png' : '/icons/write-icon.png'}`}
+                alt='new-post'
                 className='w-10 mr-5'
               />
             </button>
