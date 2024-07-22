@@ -18,5 +18,5 @@ export default async function getNewUser() {
 
   const user = await userRepository.save(newUser);
 
-  return { user };
+  return user;
 }
