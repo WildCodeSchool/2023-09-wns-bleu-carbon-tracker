@@ -20,7 +20,7 @@ describe('Activity entry resolver', () => {
     await ActivityEntry.create({
       name: 'title1',
       input: 10,
-      spendedAt: new Date(),
+      spendedAt: new Date('2024-07-22T07:43:28.593Z'),
       user: newUser,
       category: { id: 1 },
     }).save();
@@ -28,7 +28,7 @@ describe('Activity entry resolver', () => {
     await ActivityEntry.create({
       name: 'title2',
       input: 20,
-      spendedAt: new Date(),
+      spendedAt: new Date('2024-07-22T07:43:28.593Z'),
       user: newUser,
       category: { id: 1 },
     }).save();
