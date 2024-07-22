@@ -83,17 +83,19 @@ export default function navbar() {
               </Link>
             ))}
 
-            <button
+            <Link
+              href='/posts/list'
               className={`${isModalOpen ? 'bg-white rounded-s-full' : ''} nav-link flex justify-around w-full pt-2 pb-2 hover:bg-white hover:rounded-s-full`}
               onMouseEnter={() => setHoveredLink('new-activity')}
               onMouseLeave={() => setHoveredLink('')}
             >
               <img
-                src={`${isModalOpen || hoveredLink === 'new-activity' ? '/icons/write-icon-hover.png' : '/icons/write-icon.png'}`}
+                src={`${hoveredLink === 'new-activity' ? '/icons/write-icon-hover.png' : '/icons/write-icon.png'}`}
                 alt='new-activity'
                 className='w-10 mr-5'
               />
-            </button>
+            </Link>
+
             <Link
               key='donation'
               href='/donation'
