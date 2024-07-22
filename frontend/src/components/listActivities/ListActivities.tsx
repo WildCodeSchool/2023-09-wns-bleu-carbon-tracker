@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 
 import { useEffect, useState } from 'react';
+import clsx from 'clsx';
 import {
   useCreateActivityEntryMutation,
   useDeleteActivityEntryMutation,
@@ -201,19 +202,20 @@ export default function ListActivities() {
   };
 
   return (
-    <div className='flex  h-screen text-black bg-very_light_grey'>
-      <div className=' w-full flex flex-col p-10'>
+    <div className='flex  h-full text-black '>
+      <div className=' w-full flex flex-col p-10 pb-0 max-[1710px]:p-2'>
         <HeaderTotals totalEmissions={totalCo2Sum} />
-        <div
-          className='flex items-center justify-between bg-white border-b-2 p-5 shadow-xl rounded-t-xl
-        '
-        >
+        <div className='flex items-center justify-between bg-white border-b-2 p-5 shadow-xl rounded-t-xl'>
           <div className='flex items-center'>
             <div className=''>
               <InputCheckbox
                 id={'selectBarBox'}
                 label=''
-                checked={activityEntries?.length === selectedEntries.length}
+                disabled={activityEntries?.length === 0}
+                checked={
+                  activityEntries?.length === selectedEntries.length &&
+                  activityEntries.length !== 0
+                }
                 partiallyChecked={
                   partiallyChecked &&
                   activityEntries?.length !== selectedEntries.length
@@ -226,8 +228,12 @@ export default function ListActivities() {
               />
             </div>
             <div
-              className='cursor-pointer p-2 relative'
-              onClick={() => setShowActionModal(true)}
+              className={clsx('cursor-pointer p-2 relative', {
+                'opacity-25 cursor-default': selectedEntries.length === 0,
+              })}
+              onClick={() =>
+                selectedEntries.length !== 0 && setShowActionModal(true)
+              }
             >
               <img src='/vertical-dots.svg' width={6} height={4} />
               <ActivityEntryActionsModal
@@ -237,19 +243,21 @@ export default function ListActivities() {
                 alignment='left'
               />
             </div>
-            <div className='ml-10'>
+            <div className='ml-10 max-[970px]:ml-2 mr-2'>
               <Button
                 size='lg'
-                className='text-lg bg-medium_blue hover:bg-light_blue flex items-center'
+                className='text-lg bg-medium_blue hover:bg-light_blue flex items-center '
                 onClick={() => setShowModalCreate(true)}
               >
-                <img src={'/plus-icon.svg'} />{' '}
-                <span className='ml-2'>Ajouter une dépense</span>
+                <img src={'/plus-icon.svg'} width={20} height={20} />{' '}
+                <span className='ml-2 max-[970px]:hidden'>
+                  Ajouter une dépense
+                </span>
               </Button>
             </div>
           </div>
           <div className='flex items-center'>
-            <div className='w-[300px]'>
+            <div className='w-[300px]  max-[970px]:w-[200px]'>
               <InputLabel
                 label=''
                 placeholder='Rechercher'
@@ -257,6 +265,7 @@ export default function ListActivities() {
                 sizes='lg'
                 value={searchedTerm}
                 onChange={(e) => setSearchedTerm(e.target.value)}
+                showLabel={false}
               />
             </div>
             <div className='ml-5 relative'>
@@ -265,8 +274,8 @@ export default function ListActivities() {
                 className='text-lg bg-medium_blue hover:bg-light_blue flex items-center '
                 onClick={() => setShowFilterModal((s) => !s)}
               >
-                <img src={'/filter-icon.svg'} />
-                <span className='ml-2'>Filtrer</span>
+                <img src={'/filter-icon.svg'} width={20} height={20} />
+                <span className='ml-2 max-[970px]:hidden'>Filtrer</span>
               </Button>
               <FilterModal
                 selectedCategories={selectedCategoriesFilter ?? []}
@@ -298,36 +307,37 @@ export default function ListActivities() {
           />
         )}
 
-        <div className='overflow-auto h-max'>
-          {activityEntries?.map((activity) => (
-            <ActivityEntry
-              onUpdate={(entry) => handleUpdateEntry(entry)}
-              selected={selectedEntries.some((a) => a.id === activity.id)}
-              entryData={activity}
-              key={activity.id}
-              onCheckChange={() => toggleSelect(activity)}
-              searchedTerm={searchedTerm}
-              handleRefetch={async () => {
-                await refetch();
-                await refetchTotals();
-              }}
-            />
-          ))}
+        <div className='overflow-auto h-max shadow-xl bg-light_grey'>
+          {activityEntries?.length !== 0 ? (
+            activityEntries?.map((activity) => (
+              <ActivityEntry
+                onUpdate={(entry) => handleUpdateEntry(entry)}
+                selected={selectedEntries.some((a) => a.id === activity.id)}
+                entryData={activity}
+                key={activity.id}
+                onCheckChange={() => toggleSelect(activity)}
+                searchedTerm={searchedTerm}
+                handleRefetch={async () => {
+                  await refetch();
+                  await refetchTotals();
+                }}
+              />
+            ))
+          ) : (
+            <div className='w-full min-h-[500px] flex justify-center mt-10 '>
+              <Typography customClass='text-md  font-bold text-medium_green '>
+                Aucune activité ne correspond à vos filtres et recherche
+              </Typography>
+            </div>
+          )}
           {!hideLoadMoreButton && (
             <div className='m-2 flex justify-center'>
               <Button onClick={() => handleLoadMore()}>voir plus</Button>
             </div>
           )}
-
-          {activityEntries?.length === 0 && (
-            <div className='w-full flex justify-center mt-10'>
-              <Typography customClass='text-md  font-bold text-medium_green'>
-                Aucune activité ne correspond à vos filtres et recherche
-              </Typography>
-            </div>
-          )}
         </div>
       </div>
+
       {showModalCreate && (
         <AddActivityModal
           onClose={() => setShowModalCreate(false)}

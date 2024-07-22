@@ -24,7 +24,7 @@ export default function DashboardLayout() {
   refetchTotalsByMonth();
   refetchTotalsByCategories();
   return (
-    <div className='flex h-screen text-black'>
+    <div className='flex h-full text-black'>
       <div className='w-7/12 h-full'>
         <div className='h-[44%]  p-3'>
           <div className='dashboardWidget h-full'>

@@ -75,8 +75,11 @@ const NavLinks = () => {
           <Links />
         </div>
         <div className='md:hidden'>
-          <button className='absolute right-5 z-50' onClick={toggleNavbar}>
-            {isOpen ? <X className='text-white' /> : <Menu />}
+          <button
+            className='flex items-center justify-center mr-5 z-50'
+            onClick={toggleNavbar}
+          >
+            {isOpen ? <X className='text-white z-50' /> : <Menu />}
           </button>
         </div>
       </nav>
@@ -99,7 +102,7 @@ const NavLinks = () => {
 
 const MobileNavBar = () => {
   return (
-    <header className='flex sticky top-0 z-20 text-black mx-auto flex-wrap w-full items-center justify-between p-5'>
+    <header className='flex sticky top-0 z-20 text-black mx-auto flex-wrap w-full items-center justify-between h-[50px] bg-very_light_grey shadow-xl'>
       <NavLinks />
     </header>
   );
