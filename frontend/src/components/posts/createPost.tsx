@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, FormEvent } from 'react'; // Importez ChangeEvent et FormEvent pour le typage
+import React, { useState, ChangeEvent, FormEvent } from 'react';
 import { useMutation } from '@apollo/client';
 import { CREATE_POST } from '@/graphql/posts/mutations/mutations';
 import { GET_ALL_POSTS } from '@/graphql/posts/queries/queries';
@@ -17,7 +17,7 @@ const CreatePost = () => {
       setTitle('');
       setContent('');
     } catch (err) {
-      console.error(err);
+      console.error('Erreur lors de la création du post:', err);
     }
   };
 
@@ -44,10 +44,7 @@ const CreatePost = () => {
                 <h3 className='text-lg font-bold'>John Doe</h3>
               </div>
             </div>
-            <div className='flex'>
-              <label className='font-bold mr-2' htmlFor='title'>
-                Title:
-              </label>
+            <div className='flex mb-2'>
               <input
                 id='title'
                 type='text'
@@ -55,18 +52,17 @@ const CreatePost = () => {
                 value={title}
                 onChange={handleTitleChange}
                 className='flex-grow focus:outline-none focus:ring focus:ring-blue-500 focus:ring-opacity-50'
+                required
               />
             </div>
             <div>
-              <label className='font-bold mb-2' htmlFor='content'>
-                Content:
-              </label>
               <textarea
                 id='content'
                 value={content}
                 placeholder='Postez ici vos bons plans...'
                 onChange={handleContentChange}
                 className='w-full h-24 resize-none focus:outline-none focus:ring focus:ring-blue-500 focus:ring-opacity-50'
+                required
               />
             </div>
           </div>

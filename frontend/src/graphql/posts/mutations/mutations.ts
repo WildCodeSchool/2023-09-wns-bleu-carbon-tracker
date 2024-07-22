@@ -8,32 +8,24 @@ export const CREATE_POST = gql`
       content
       createdAt
       updatedAt
-      user {
-        id
-        email
-      }
     }
   }
 `;
 
 export const UPDATE_POST = gql`
-  mutation UpdatePost($postId: Int!, $title: String!, $content: String!) {
+  mutation UpdatePost($postId: Float!, $title: String!, $content: String!) {
     updatePost(postId: $postId, title: $title, content: $content) {
       id
       title
       content
       createdAt
       updatedAt
-      user {
-        id
-        email
-      }
     }
   }
 `;
 
 export const DELETE_POST = gql`
-  mutation DeletePost($postId: Int!) {
+  mutation DeletePost($postId: Float!) {
     deletePost(postId: $postId)
   }
 `;
