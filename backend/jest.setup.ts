@@ -1,7 +1,10 @@
 import { ASTNode, graphql, GraphQLSchema, print } from 'graphql';
 import { Maybe } from 'type-graphql';
+import dotenv from 'dotenv';
 import { db } from './src/db';
 import getSchema from './src/schema';
+
+dotenv.config();
 
 async function clearDB() {
   const entities = db.entityMetadatas;
@@ -20,8 +23,11 @@ export async function execute(
   variableValues?: Maybe<{
     readonly [variable: string]: unknown;
   }>,
-  contextValue = {},
+  authToken?: string,
 ) {
+  const contextValue = authToken
+    ? { req: { headers: { authorization: `Bearer ${authToken}` } } }
+    : {};
   return graphql({
     schema,
     source: print(operation),
@@ -29,10 +35,9 @@ export async function execute(
     contextValue,
   });
 }
-
 beforeAll(async () => {
   await db.initialize();
-  schema = await getSchema;
+  schema = await getSchema();
 });
 
 beforeEach(async () => {
