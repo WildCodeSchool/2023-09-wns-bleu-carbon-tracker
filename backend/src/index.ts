@@ -7,13 +7,11 @@ import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import { buildSchema } from 'type-graphql';
-import { jwtVerify } from 'jose';
 import { db } from './db';
 import BookResolver from './resolvers/bookResolver';
 import UserResolver from './resolvers/user/user-resolver';
 import User from './entities/user/user';
-import customAuthChecker from './lib/auth-checker';
-import UserService from './services/user-service';
+import customAuthChecker, { verifyToken } from './lib/auth-checker';
 import CategoryResolver from './resolvers/category/category-resolvers';
 import ActivityEntryResolver from './resolvers/activity-entry/activity-entry-resolvers';
 import DonationResolver from './resolvers/donation/donation-resolver';
@@ -62,19 +60,12 @@ async function main() {
       context: async ({ req, res }) => {
         let user: User | null = null;
 
+        const tokenInAuthHeaders = req.headers.authorization?.split(' ')[1];
         const cookies = new Cookies(req, res);
-        const token = cookies.get('token');
+        const tokenInCookie = cookies.get('token');
+        const token = tokenInAuthHeaders ?? tokenInCookie;
         if (token) {
-          try {
-            const verify = await jwtVerify<Payload>(
-              token,
-              new TextEncoder().encode(process.env.SECRET_KEY),
-            );
-            const { email } = verify.payload;
-            user = await UserService.readByMail(email);
-          } catch (err) {
-            console.error(err);
-          }
+          user = await verifyToken(token);
         }
         return { req, res, user };
       },

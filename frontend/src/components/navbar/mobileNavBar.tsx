@@ -15,6 +15,7 @@ const Links = () => {
     await logout()
       .then((response) => {
         if (response.data) {
+          localStorage.removeItem('user');
           router.push('/auth/login');
         }
       })
