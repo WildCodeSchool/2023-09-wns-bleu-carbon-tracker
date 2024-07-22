@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Activity entry resolver can get a list of activities 1`] = `
+{
+  "data": {
+    "activityEntries": [
+      {
+        "category": {
+          "id": 1,
+          "name": "cat1",
+        },
+        "id": 1,
+        "input": 10,
+        "name": "title1",
+        "spendedAt": "2024-07-22T07:43:28.593Z",
+      },
+      {
+        "category": {
+          "id": 1,
+          "name": "cat1",
+        },
+        "id": 2,
+        "input": 20,
+        "name": "title2",
+        "spendedAt": "2024-07-22T07:43:28.593Z",
+      },
+    ],
+  },
+}
+`;
