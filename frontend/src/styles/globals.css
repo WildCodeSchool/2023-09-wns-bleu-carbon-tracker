@@ -86,3 +86,7 @@ body {
   backdrop-filter: blur(5px);
   z-index: 20;
 }
+
+.cirlce {
+  clip-path: circle();
+}

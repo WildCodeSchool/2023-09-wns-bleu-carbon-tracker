@@ -50,26 +50,15 @@ export default function navbar() {
   return (
     <>
       <div className='flex items-center justify-center h-screen ml-5 mr-5'>
-        <div className='flex flex-col h-[98vh] bg-black text-white w-36 rounded-3xl'>
-          <div className='logo flex items-center justify-center relative mt-5'>
-            <Link href='/'>
-              <svg
-                width='100'
-                height='100'
-                viewBox='0 0 100 100'
-                fill='none'
-                xmlns='http://www.w3.org/2000/svg'
-              >
-                <circle cx='50' cy='50' r='45' fill='white' />
-              </svg>
-              <img
-                src='/icons/logo.png'
-                alt='Logo'
-                className='logo-image absolute top-11 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 w-12'
-              />
-            </Link>
+        <div className='flex flex-col h-[98vh] min-h-fit bg-black text-white w-28 rounded-3xl items-center'>
+          <div className='cirlce flex items-center justify-center mt-5 bg-white w-full'>
+            <div className='w-[60%] p-2'>
+              <Link href='/'>
+                <img src='/icons/logo.png' alt='Logo' className='w-full' />
+              </Link>
+            </div>
           </div>
-          <div className='nav-links flex flex-col flex-grow items-center justify-around pl-6'>
+          <div className='nav-links flex flex-col flex-grow items-center justify-around pl-6 mt-4 mb-6 min-h-fit'>
             {navLink.map(({ link, name, img, imgHover }) => (
               <Link
                 key={name}
@@ -86,17 +75,24 @@ export default function navbar() {
               </Link>
             ))}
 
-            <button
+            <Link
+              href='/posts/list'
               className={`${isModalOpen ? 'bg-white rounded-s-full' : ''} nav-link flex justify-around w-full pt-2 pb-2 hover:bg-white hover:rounded-s-full`}
               onMouseEnter={() => setHoveredLink('new-post')}
               onMouseLeave={() => setHoveredLink('')}
             >
               <img
+<<<<<<< HEAD
                 src={`${isModalOpen || hoveredLink === 'new-post' ? '/icons/write-icon-hover.png' : '/icons/write-icon.png'}`}
                 alt='new-post'
+=======
+                src={`${hoveredLink === 'new-activity' ? '/icons/write-icon-hover.png' : '/icons/write-icon.png'}`}
+                alt='new-activity'
+>>>>>>> cb67a858fa07bc88580502a345544bf9c9a143a1
                 className='w-10 mr-5'
               />
-            </button>
+            </Link>
+
             <Link
               key='donation'
               href='/donation'
@@ -127,7 +123,7 @@ export default function navbar() {
             <Link
               key={'profile'}
               href={'/profile'}
-              className='nav-link flex justify-around'
+              className='nav-link flex justify-around mb-2'
             >
               <label
                 tabIndex={0}

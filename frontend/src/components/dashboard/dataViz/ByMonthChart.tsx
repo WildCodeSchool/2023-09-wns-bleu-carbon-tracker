@@ -38,7 +38,7 @@ export default function ByMonthChart({ dataByMonth, loading }: Props) {
     },
   };
   return (
-    <div className='w-full pt-3'>
+    <div className='w-full h-full pt-3'>
       {loading ? (
         'chargement...'
       ) : (
