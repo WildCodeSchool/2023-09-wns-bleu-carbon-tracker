@@ -2,60 +2,121 @@
 
 import { useEffect, useState } from 'react';
 import {
-  useActivityEntriesQuery,
   useCreateActivityEntryMutation,
   useDeleteActivityEntryMutation,
+  useFilteredActivityEntriesQuery,
   useGetSumByCategoryQuery,
 } from '@/graphql/generated/schema';
 import Typography from '../commons/typography/Typography';
 import InputCheckbox from '../commons/inputs/InputCheckbox';
 import Button from '../commons/buttons/Button';
 import InputLabel from '@/components/commons/inputs/InputLabel';
-import getDateFormated from '@/utils/dateFormater';
 import ActivityEntryActionsModal from './ActivityEntryActionsModal';
-import ActiveFilterBagde from './ActiveFilterBagde';
 import ActivityEntry from './ActivityEntry';
 import { Category, EntryData } from '@/types';
 import FilterModal from './FilterModal';
 import AddActivityModal from '../modal/AddActivityModal';
 import UpdateActivityModal from '../modal/UpdateActivityModal';
+import ActiveFiltersBar from './ActiveFiltersBar';
+import HeaderTotals from './HeaderTotals';
 
 export default function ListActivities() {
-  const {
-    data,
-    loading,
-    refetch: refetchActivities,
-  } = useActivityEntriesQuery();
-
   const { data: totals, refetch: refetchTotals } = useGetSumByCategoryQuery();
+
+  const totalCo2Sum = totals?.getSumByCategory.reduce((acc, cat) => {
+    return acc + Number(cat.sumKgCO2);
+  }, 0);
+
   const [createActivity] = useCreateActivityEntryMutation();
   const [deleteActivity] = useDeleteActivityEntryMutation();
   const [selectedEntries, setSelectedEntries] = useState<EntryData[]>([]);
+  const partiallyChecked = selectedEntries.length > 0;
+
   const [searchedTerm, setSearchedTerm] = useState('');
-  const [activityEntries, setActivityEntries] = useState(data?.activityEntries);
+  const [selectedCategoriesFilter, setSelectedCategoriesFilter] =
+    useState<Category[]>();
+  const [selectedDateFilter, setSelectedDateFilter] = useState<{
+    from: string;
+    to: string;
+  }>({ from: '', to: '' });
+
   const [showActionModal, setShowActionModal] = useState(false);
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [showModalCreate, setShowModalCreate] = useState(false);
   const [entryToUpdate, setEntryToUpdate] = useState<EntryData | null>(null);
 
-  const [selectedCategories, setSelectedCategories] = useState<Category[]>();
-  const [selectedDate, setSelectedDate] = useState<{
-    from: string;
-    to: string;
-  }>({ from: '', to: '' });
+  const [skip, setSkip] = useState(0);
+  const take = 15;
+  const {
+    data: filteredResults,
+    loading: loadingFiltered,
+    fetchMore,
+    refetch,
+  } = useFilteredActivityEntriesQuery({
+    variables: {
+      searchTerm: searchedTerm,
+      categoryIds:
+        selectedCategoriesFilter?.length === 0
+          ? null
+          : selectedCategoriesFilter?.map((cat) => cat.id),
+      dateFrom:
+        selectedDateFilter.from !== ''
+          ? new Date(selectedDateFilter.from).toISOString()
+          : null,
+      dateTo:
+        selectedDateFilter.to !== ''
+          ? new Date(selectedDateFilter.to).toISOString()
+          : null,
+      skip,
+      take,
+    },
+    fetchPolicy: 'network-only',
+  });
+  const [activityEntries, setActivityEntries] = useState(
+    filteredResults?.filteredActivityEntries,
+  );
+
+  useEffect(() => {
+    if (filteredResults?.filteredActivityEntries) {
+      if (skip === 0) {
+        setActivityEntries(filteredResults.filteredActivityEntries);
+      } else {
+        setActivityEntries((prev) => [
+          ...(prev ?? []),
+          ...filteredResults.filteredActivityEntries,
+        ]);
+      }
+    }
+  }, [filteredResults?.filteredActivityEntries]);
+
+  useEffect(() => {
+    setActivityEntries([]);
+    setSkip(0);
+    refetch();
+  }, [searchedTerm, selectedCategoriesFilter, selectedDateFilter]);
+
+  const handleLoadMore = () => {
+    if (!loadingFiltered) {
+      const newSkip = skip + take;
+      fetchMore({
+        variables: {
+          skip: newSkip,
+          take,
+        },
+      });
+      setSkip(newSkip);
+      setActivityEntries(filteredResults?.filteredActivityEntries ?? []);
+    }
+  };
+  const hideLoadMoreButton =
+    filteredResults?.filteredActivityEntries.length !== undefined &&
+    filteredResults?.filteredActivityEntries.length < take;
+
+  const showDateFilterBadge =
+    selectedDateFilter.from !== '' || selectedDateFilter.to !== '';
 
   const showActiveFiltersBar =
-    (selectedCategories ?? []).length > 0 ||
-    (selectedDate.from !== '' && selectedDate.to !== '');
-
-  const RECOMMENDED_CO2_EMISSION = 2300;
-  const totalCo2Sum = totals?.getSumByCategory.reduce((acc, cat) => {
-    return acc + Number(cat.sumKgCO2);
-  }, 0);
-
-  const percentOfRecommendedEmissions = Math.round(
-    ((totalCo2Sum ?? 0) / RECOMMENDED_CO2_EMISSION) * 100,
-  );
+    (selectedCategoriesFilter ?? []).length > 0 || showDateFilterBadge;
 
   const toggleSelect = (activity: EntryData): void => {
     const isSelected = selectedEntries.some((a) => a.id === activity.id);
@@ -64,60 +125,6 @@ export default function ListActivities() {
       ? setSelectedEntries((prev) => [...prev, activity])
       : setSelectedEntries((prev) => prev.filter((a) => a.id !== activity.id));
   };
-  const partiallyChecked = selectedEntries.length > 0;
-
-  useEffect(() => {
-    if (data?.activityEntries) {
-      const filteredEntriesByCategories = data.activityEntries.filter(
-        (entry) => {
-          return (selectedCategories ?? []).some(
-            (category) => category.id === entry.category.id,
-          );
-        },
-      );
-      const relevantEntriesToSearchIn =
-        (selectedCategories ?? []).length === 0
-          ? data.activityEntries
-          : filteredEntriesByCategories;
-
-      const filteredEntriesBySearchTerm = relevantEntriesToSearchIn.filter(
-        (entry) =>
-          entry.name.toLowerCase().includes(searchedTerm.toLowerCase()) ||
-          entry.input
-            .toString()
-            .toLowerCase()
-            .includes(searchedTerm.toLowerCase()) ||
-          entry.createdAt.toLowerCase().includes(searchedTerm.toLowerCase()) ||
-          entry.category.name
-            .toLowerCase()
-            .includes(searchedTerm.toLowerCase()),
-      );
-
-      const filteredEntriesByDate = filteredEntriesBySearchTerm.filter(
-        (entry) => {
-          if (selectedDate.from && selectedDate.to) {
-            const entrySpendDate = new Date(entry.spendedAt);
-            const fromDate = new Date(selectedDate.from);
-            const toDate = new Date(selectedDate.to);
-
-            toDate.setHours(23, 59, 59, 999);
-            return entrySpendDate >= fromDate && entrySpendDate <= toDate;
-          }
-          return true;
-        },
-      );
-      const ChronoSortedEntries = (filteredEntriesByDate ?? []).sort((a, b) => {
-        return (
-          new Date(b.spendedAt).getTime() - new Date(a.spendedAt).getTime()
-        );
-      });
-      setActivityEntries(ChronoSortedEntries);
-    }
-
-    return () => {
-      setActivityEntries([]);
-    };
-  }, [data?.activityEntries, searchedTerm, selectedCategories, selectedDate]);
 
   const handleDuplicateSelection = async () => {
     try {
@@ -139,7 +146,7 @@ export default function ListActivities() {
           }
         }),
       );
-      await refetchActivities();
+      await refetch();
       await refetchTotals();
       setSelectedEntries([]);
     } catch (err) {
@@ -160,7 +167,7 @@ export default function ListActivities() {
           }
         }),
       );
-      await refetchActivities();
+      await refetch();
       await refetchTotals();
       setSelectedEntries([]);
     } catch (error) {
@@ -183,44 +190,20 @@ export default function ListActivities() {
   ];
 
   const handleToggleCatSelection = (category: Category) => {
-    const isSelected = (selectedCategories ?? []).some(
+    const isSelected = (selectedCategoriesFilter ?? []).some(
       (cat) => cat.id === category.id,
     );
     !isSelected
-      ? setSelectedCategories((prev) => [...(prev ?? []), category])
-      : setSelectedCategories((prev) =>
+      ? setSelectedCategoriesFilter((prev) => [...(prev ?? []), category])
+      : setSelectedCategoriesFilter((prev) =>
           (prev ?? []).filter((cat) => cat.id !== category.id),
         );
   };
 
-  const handleDateSelection = (date: { from: string; to: string }) => {
-    setSelectedDate(date);
-  };
-  if (loading) return 'Chargement';
-
   return (
     <div className='flex  h-screen text-black bg-very_light_grey'>
       <div className=' w-full flex flex-col p-10'>
-        <div className='dashboardWidget h-[15vh] max-h-[128px] flex justify-between items-center'>
-          <Typography customClass='text-4xl lg:text-3xl xl:text-5xl font-bold text-dark_green'>
-            Mes dépenses
-          </Typography>
-          <div className='flex flex-col items-end'>
-            <div className='flex items-end'>
-              <Typography customClass='text-4xl lg:text-3xl xl:text-5xl font-bold mr-1 text-medium_orange'>
-                {totalCo2Sum}
-              </Typography>
-              <Typography customClass='text-lg lg:text-xl xl:text-3xl font-bold text-dark_green'>
-                kgCO2
-              </Typography>
-            </div>
-            <div>
-              <Typography customClass='text-md  font-bold text-medium_green'>
-                {percentOfRecommendedEmissions} % du total annuel recommandé
-              </Typography>
-            </div>
-          </div>
-        </div>
+        <HeaderTotals totalEmissions={totalCo2Sum} />
         <div
           className='flex items-center justify-between bg-white border-b-2 p-5 shadow-xl rounded-t-xl
         '
@@ -286,12 +269,12 @@ export default function ListActivities() {
                 <span className='ml-2'>Filtrer</span>
               </Button>
               <FilterModal
-                selectedCategories={selectedCategories ?? []}
+                selectedCategories={selectedCategoriesFilter ?? []}
                 toggleCatSelection={(category) =>
                   handleToggleCatSelection(category)
                 }
-                setDateFilter={(date) => handleDateSelection(date)}
-                selectedDate={selectedDate}
+                setDateFilter={(date) => setSelectedDateFilter(date)}
+                selectedDate={selectedDateFilter}
                 isOpened={showFilterModal}
                 onClose={() => setShowFilterModal(false)}
                 alignment='right'
@@ -301,37 +284,20 @@ export default function ListActivities() {
         </div>
 
         {showActiveFiltersBar && (
-          <div className='flex items-center justify-between bg-white p-5 shadow-xl mb-2'>
-            <div className='flex flex-wrap'>
-              {(selectedCategories ?? []).map((cat) => {
-                return (
-                  <ActiveFilterBagde
-                    key={cat.id}
-                    content={cat.name}
-                    onRemoveClick={() => handleToggleCatSelection(cat)}
-                  />
-                );
-              })}
-              {selectedDate.from !== '' && selectedDate.to !== '' && (
-                <ActiveFilterBagde
-                  key={'dateFilterBadge'}
-                  content={`Du ${getDateFormated(selectedDate.from)} au ${getDateFormated(selectedDate.to)}`}
-                  onRemoveClick={() => setSelectedDate({ from: '', to: '' })}
-                />
-              )}
-            </div>
-            <div>
-              <Button
-                size='lg'
-                className='text-lg bg-medium_blue hover:bg-light_blue flex items-center'
-                onClick={() => setSelectedCategories([])}
-              >
-                <img src={'/trash-icon.svg'} />
-                <span className='ml-2'>Supprimer les filtres</span>
-              </Button>
-            </div>
-          </div>
+          <ActiveFiltersBar
+            selectedCategoriesFilter={selectedCategoriesFilter ?? []}
+            selectedDateFilter={selectedDateFilter}
+            onClearFilters={() => {
+              setSelectedCategoriesFilter([]);
+              setSelectedDateFilter({ from: '', to: '' });
+            }}
+            onRemoveCategory={handleToggleCatSelection}
+            onRemoveDateFilter={() =>
+              setSelectedDateFilter({ from: '', to: '' })
+            }
+          />
         )}
+
         <div className='overflow-auto h-max'>
           {activityEntries?.map((activity) => (
             <ActivityEntry
@@ -341,8 +307,18 @@ export default function ListActivities() {
               key={activity.id}
               onCheckChange={() => toggleSelect(activity)}
               searchedTerm={searchedTerm}
+              handleRefetch={async () => {
+                await refetch();
+                await refetchTotals();
+              }}
             />
           ))}
+          {!hideLoadMoreButton && (
+            <div className='m-2 flex justify-center'>
+              <Button onClick={() => handleLoadMore()}>voir plus</Button>
+            </div>
+          )}
+
           {activityEntries?.length === 0 && (
             <div className='w-full flex justify-center mt-10'>
               <Typography customClass='text-md  font-bold text-medium_green'>
@@ -353,7 +329,13 @@ export default function ListActivities() {
         </div>
       </div>
       {showModalCreate && (
-        <AddActivityModal onClose={() => setShowModalCreate(false)} />
+        <AddActivityModal
+          onClose={() => setShowModalCreate(false)}
+          refetchOnValidate={async () => {
+            await refetchTotals();
+            await refetch();
+          }}
+        />
       )}
       {showModalCreate && <div className='overlay'></div>}
       {entryToUpdate && (

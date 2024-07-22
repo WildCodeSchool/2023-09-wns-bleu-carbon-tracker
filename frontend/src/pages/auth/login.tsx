@@ -6,6 +6,7 @@ import {
   LoginQueryVariables,
   InputLogin,
 } from '@/graphql/generated/schema';
+import { useUser } from '../../contexts/UserContext';
 import { LOGIN } from '@/graphql/user/queries/auth.queries';
 import InputLabel from '@/components/commons/inputs/InputLabel';
 import Button from '@/components/commons/buttons/Button';
@@ -15,6 +16,7 @@ import AuthLayout from '@/components/auth/layout';
 
 export default function Login() {
   const router = useRouter();
+  const { setUser } = useUser();
 
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -33,6 +35,12 @@ export default function Login() {
         },
         onCompleted(result) {
           if (result.login.success) {
+            // eslint-disable-next-line no-restricted-syntax
+            console.log(result.login.user);
+            if (result.login.user) {
+              setUser(result.login.user);
+            }
+
             router.push('/');
           } else {
             setErrorMessage(result.login.message);
