@@ -22,14 +22,14 @@ export default function DashboardLayout() {
   refetchTotalsByMonth();
   refetchTotalsByCategories();
   return (
-    <div className='flex h-full text-black'>
-      <div className='w-7/12 h-full'>
-        <div className='h-[44%]  p-3'>
-          <div className='dashboardWidget h-full'>
+    <div className='flex h-full text-black max-[960px]:flex-col'>
+      <div className='w-7/12 h-full min-h-fit max-[960px]:w-full'>
+        <div className='h-[44%] p-3 max-[960px]: min-h-fit'>
+          <div className='dashboardWidget h-full min-h-fit'>
             <h1 className='poppins-bold text-xl'>
               Bienvenue{' '}
               <span className='poppins-regular text-sm'>
-                Voici la répartition de tes émissons de CO2 par catégories
+                Répartition d&apos;émissons par catégories
               </span>
             </h1>
 
@@ -52,7 +52,7 @@ export default function DashboardLayout() {
           <LastPostWidget />
         </div>
       </div>
-      <div className='w-5/12 p-3  h-full'>
+      <div className='w-5/12 p-3  h-full max-[960px]:w-full'>
         <LastActivitiesListWidget
           handleRefetch={() => {
             refetchTotalsByCategories();
