@@ -82,13 +82,8 @@ export default function navbar() {
               onMouseLeave={() => setHoveredLink('')}
             >
               <img
-<<<<<<< HEAD
-                src={`${isModalOpen || hoveredLink === 'new-post' ? '/icons/write-icon-hover.png' : '/icons/write-icon.png'}`}
-                alt='new-post'
-=======
                 src={`${hoveredLink === 'new-activity' ? '/icons/write-icon-hover.png' : '/icons/write-icon.png'}`}
                 alt='new-activity'
->>>>>>> cb67a858fa07bc88580502a345544bf9c9a143a1
                 className='w-10 mr-5'
               />
             </Link>
