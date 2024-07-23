@@ -176,7 +176,7 @@ export type Post = {
   likers: Array<User>;
   title: Scalars['String'];
   updatedAt: Scalars['DateTimeISO'];
-  user: Array<User>;
+  user: User;
   viewOnPost: Scalars['Float'];
 };
 

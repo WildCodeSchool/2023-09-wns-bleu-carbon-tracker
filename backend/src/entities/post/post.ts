@@ -1,17 +1,15 @@
-import { Field, Int, ObjectType } from 'type-graphql';
-
 import {
-  BaseEntity,
-  Column,
   Entity,
+  Column,
   PrimaryGeneratedColumn,
-  JoinTable,
-  UpdateDateColumn,
   CreateDateColumn,
+  UpdateDateColumn,
   ManyToOne,
+  JoinTable,
   ManyToMany,
+  BaseEntity,
 } from 'typeorm';
-
+import { ObjectType, Field, Int } from 'type-graphql';
 import User from '../user/user';
 
 @Entity()
@@ -38,18 +36,18 @@ export default class Post extends BaseEntity {
   content: string;
 
   @Column({ nullable: true })
-  @Field()
+  @Field({ nullable: true })
   viewOnPost?: number;
+
+  @ManyToOne(() => User, (user) => user.posts, {
+    nullable: false,
+    onDelete: 'CASCADE',
+  })
+  @Field(() => User)
+  user: User;
 
   @ManyToMany(() => User, (user) => user.likedPosts)
   @JoinTable()
   @Field(() => [User])
   likers: User[];
-
-  @Field(() => [User])
-  @ManyToOne(() => User, (user) => user.posts, {
-    nullable: false,
-    onDelete: 'CASCADE',
-  })
-  user: User;
 }
