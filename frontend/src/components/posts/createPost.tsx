@@ -30,46 +30,35 @@ const CreatePost = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div className='flex flex-col items-center'>
-        <div className='rounded-xl bg-gray-100 shadow-md w-3/4 py-4 px-28 mb-4'>
-          <div className='flex flex-col mb-2'>
-            <div className='flex items-center pb-4'>
-              <img
-                src='https://picsum.photos/200'
-                alt='Profile picture'
-                className='w-14 rounded-full mr-2'
-              />
-              <div className='flex-grow'>
-                <h3 className='text-lg font-bold'>John Doe</h3>
-              </div>
-            </div>
-            <div className='flex mb-2'>
-              <input
-                id='title'
-                type='text'
-                placeholder='Quoi de neuf ?'
-                value={title}
-                onChange={handleTitleChange}
-                className='flex-grow focus:outline-none focus:ring focus:ring-blue-500 focus:ring-opacity-50'
-                required
-              />
-            </div>
-            <div>
-              <textarea
-                id='content'
-                value={content}
-                placeholder='Postez ici vos bons plans...'
-                onChange={handleContentChange}
-                className='w-full h-24 resize-none focus:outline-none focus:ring focus:ring-blue-500 focus:ring-opacity-50'
-                required
-              />
-            </div>
+    <form onSubmit={handleSubmit} className='w-full max-w-md mx-auto p-4'>
+      <div className='bg-gray-100 shadow-md rounded-lg p-6'>
+        <div className='flex flex-col gap-4'>
+          <div className='flex flex-col'>
+            <input
+              id='title'
+              type='text'
+              placeholder='Quoi de neuf ?'
+              value={title}
+              onChange={handleTitleChange}
+              className='w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50'
+              required
+            />
           </div>
-          <div className='flex justify-end mt-4'>
+          <div className='flex flex-col'>
+            <textarea
+              id='content'
+              value={content}
+              placeholder='Postez ici vos bons plans...'
+              onChange={handleContentChange}
+              className='w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50'
+              rows={4}
+              required
+            />
+          </div>
+          <div className='flex justify-end'>
             <button
               type='submit'
-              className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-blue-500 focus:ring-opacity-50'
+              className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50'
             >
               Publier
             </button>
