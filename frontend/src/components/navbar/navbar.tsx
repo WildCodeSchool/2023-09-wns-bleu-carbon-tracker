@@ -45,6 +45,18 @@ export default function navbar() {
       img: '/icons/co2-icon.png',
       imgHover: '/icons/co2-icon-hover.png',
     },
+    {
+      name: 'posts',
+      link: '/posts/list',
+      img: '/icons/write-icon.png',
+      imgHover: '/icons/write-icon-hover.png',
+    },
+    {
+      name: 'donations',
+      link: '/donation',
+      img: '/icons/donation-icon.png',
+      imgHover: '/icons/donation-icon-hover.png',
+    },
   ];
 
   return (
@@ -74,33 +86,6 @@ export default function navbar() {
                 />
               </Link>
             ))}
-
-            <Link
-              href='/posts/list'
-              className={`${isModalOpen ? 'bg-white rounded-s-full' : ''} nav-link flex justify-around w-full pt-2 pb-2 hover:bg-white hover:rounded-s-full`}
-              onMouseEnter={() => setHoveredLink('new-post')}
-              onMouseLeave={() => setHoveredLink('')}
-            >
-              <img
-                src={`${hoveredLink === 'new-activity' ? '/icons/write-icon-hover.png' : '/icons/write-icon.png'}`}
-                alt='new-activity'
-                className='w-10 mr-5'
-              />
-            </Link>
-
-            <Link
-              key='donation'
-              href='/donation'
-              className={`${router.pathname === '' ? 'bg-white rounded-s-full' : ''} nav-link flex justify-around w-full pt-2 pb-2 hover:bg-white hover:rounded-s-full`}
-              onMouseEnter={() => setHoveredLink('donation')}
-              onMouseLeave={() => setHoveredLink('')}
-            >
-              <img
-                src={`${router.pathname === '' || hoveredLink === 'donation' ? '/icons/donation-icon-hover.png' : '/icons/donation-icon.png'}`}
-                alt={'donation'}
-                className='w-10 mr-5'
-              />
-            </Link>
             <button
               key='logout'
               onClick={handleLogout}

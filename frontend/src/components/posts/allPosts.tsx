@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import Link from 'next/link';
 import { useQuery } from '@apollo/client';
-import { GET_ALL_POSTS } from '@/graphql/posts/queries/queries';
+import { GET_ALL_POSTS } from '@/graphql/posts/queries/post.queries';
 import { Post } from '@/graphql/generated/schema';
 
 const Posts = () => {
@@ -9,13 +9,13 @@ const Posts = () => {
     GET_ALL_POSTS,
   );
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      refetch();
-    });
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     refetch();
+  //   });
 
-    return () => clearInterval(interval);
-  }, [refetch]);
+  //   return () => clearInterval(interval);
+  // }, [refetch]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
