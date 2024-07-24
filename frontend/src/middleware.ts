@@ -23,7 +23,6 @@ async function checkToken(token: string | undefined, request: NextRequest) {
 
   try {
     const payload = await verify(token);
-
     if (payload?.email) {
       return NextResponse.next();
     }
@@ -43,5 +42,11 @@ export default async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: '/books/:path*',
+  matcher: [
+    '/',
+    '/activity-entries/:path*',
+    '/donation/:path*',
+    '/profile',
+    '/posts/:path*',
+  ],
 };
