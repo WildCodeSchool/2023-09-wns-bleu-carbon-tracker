@@ -17,13 +17,10 @@ const logoutLink = onError((err) => {
     !window.location.pathname.includes('/profile/')
   ) {
     if (errorCode === 'UNAUTHENTICATED') {
-      alert(
-        "Vous n'êtes pas connecté ou votre session a expiré. Merci de vous reconnecter.",
-      );
       window.location.href = `/auth/login`;
     } else if (errorCode === 'UNAUTHORIZED') {
       alert(
-        "Vous n'avez pas les permissions nécéssaires pour consulter cette partie du site ou effectuer cette action. Vous allez etre déconnecté. Merci de vous reconnecter avec un compte possédant les permissions adéquates.",
+        "Vous n'avez pas les permissions nécéssaires pour consulter cette partie du site ou effectuer cette action. Vous allez être déconnecté. Merci de vous reconnecter avec un compte possédant les permissions adéquates.",
       );
 
       client.mutate({ mutation: LogoutDocument }).then(() => {

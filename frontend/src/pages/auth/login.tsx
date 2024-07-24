@@ -33,6 +33,7 @@ export default function Login() {
         variables: {
           infos: { email: formData.email, password: formData.password },
         },
+        fetchPolicy: 'network-only',
         onCompleted(result) {
           if (result.login.success) {
             // eslint-disable-next-line no-restricted-syntax

@@ -24,9 +24,9 @@ export const LOGOUT = gql`
   }
 `;
 
-export const USER_BY_NAME = gql`
-  query GetUserByName($name: String!) {
-    userByName(name: $name) {
+export const GET_USER_BY_ID = gql`
+  query GetUserById($id: String!) {
+    userById(id: $id) {
       id
       name
       email

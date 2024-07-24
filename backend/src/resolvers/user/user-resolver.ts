@@ -34,17 +34,6 @@ export default class UserResolver {
     return UserService.readById(id);
   }
 
-  @Query(() => User, { nullable: true })
-  async userByName(@Arg('name') name: string) {
-    const userRepository = db.getRepository(User);
-    return userRepository.findOne({
-      where: {
-        name: Raw((alias) => `LOWER(${alias}) = LOWER(:name)`, { name }),
-      },
-      relations: ['donations', 'activityEntries', 'activityEntries.category'],
-    });
-  }
-
   @Query(() => Message)
   async login(@Arg('infos') infos: InputLogin, @Ctx() ctx: MyContext) {
     const user = await UserService.readByMail(infos.email);
