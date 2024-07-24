@@ -171,8 +171,8 @@ export type Post = {
   likers: Array<User>;
   title: Scalars['String'];
   updatedAt: Scalars['DateTimeISO'];
-  user: Array<User>;
-  viewOnPost: Scalars['Float'];
+  user: User;
+  viewOnPost?: Maybe<Scalars['Float']>;
 };
 
 export type Query = {

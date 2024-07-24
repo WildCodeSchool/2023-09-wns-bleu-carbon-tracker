@@ -77,9 +77,9 @@ export default function ActivityEntry({
     },
   ];
   return (
-    <div className='flex justify-between items-center p-4 mt-2 bg-white shadow-xl'>
-      <div className='flex items-center w-2/12'>
-        <div className='mr-7  p-2'>
+    <div className='flex justify-between items-center p-4 mt-2 bg-white shadow-xl '>
+      <div className='flex items-center w-[20%] min-w-fit max-[1500px]:w-[25%] max-lg:w-fit mr-2'>
+        <div className='p-2 mr-7 max-lg:mr-1 p-1 max-sm:mr-0'>
           <InputCheckbox
             id={entryData.id.toString()}
             label=''
@@ -87,58 +87,63 @@ export default function ActivityEntry({
             onChange={onCheckChange}
           />
         </div>
-        <img
-          alt={entryData.category.name}
-          src={`/${entryData.category.name.toLocaleLowerCase()}.svg`}
-          width={35}
-          height={35}
-        />
-        <div className='ml-5 text-medium_blue'>
-          <Typography className='poppins-semiBold text-medium_blue text-left text-xl'>
+        <div className='min-h-[40px] min-w-[40px] max-h-[40px] max-w-[40px]'>
+          <img
+            alt={entryData.category.name}
+            src={`/${entryData.category.name.toLocaleLowerCase()}.svg`}
+            className='w-full h-full'
+          />
+        </div>
+        <div className='ml-5 text-medium_blue grow max-lg:hidden'>
+          <div className='poppins-semiBold text-medium_blue text-left '>
             <Highlight search={searchedTerm ?? ''}>
               {entryData.category.name}
             </Highlight>
-          </Typography>
+          </div>
         </div>
       </div>
 
-      <div className='flex  w-4/12 items-center justify-between'>
-        <div className='mr-5'>
-          <Typography className='poppins-semiBold text-dark_green text-left text-xl'>
-            <Highlight search={searchedTerm ?? ''}>{entryData?.name}</Highlight>
-          </Typography>
+      <div className='mr-5 w-[20%] grow'>
+        <div className='poppins-semiBold text-dark_green text-left text-xl  max-xl:text-lg max-lg:text-sm'>
+          <Highlight search={searchedTerm ?? ''}>{entryData?.name}</Highlight>
         </div>
-        <div>
-          <Typography className='text-sm text-dark_green text-left'>
+      </div>
+      <div className='flex w-[20%] justify-beetwen gap-3 max-sm:flex-col gap-0'>
+        <div className='flex items-center justify-end w-[40%] grow max-sm:w-full'>
+          <Typography customClass='text-sm text-dark_green text-left max-sm:text-sm text-right'>
             <Highlight search={searchedTerm ?? ''}>
               {getDateFormated(entryData.spendedAt)}
             </Highlight>
           </Typography>
         </div>
+
+        <div className='flex items-center justify-end w-[60%] max-sm:w-full'>
+          <Typography className='text-medium_blue poppins-bold 2xl:text-xl xl:text-lg lg:text-md'>
+            <Highlight search={searchedTerm ?? ''}>
+              {entryData?.input.toString()}
+            </Highlight>
+          </Typography>
+          <Typography
+            className='text-dark_green poppins-bold ml-2'
+            customClass='text-sm text-dark_green text-left max-sm:text-xs'
+          >
+            {' '}
+            kgCO2
+          </Typography>
+        </div>
       </div>
 
-      <div className='flex items-center w-2/12 justify-end'>
-        <Typography className='text-medium_blue poppins-bold text-xl'>
-          <Highlight search={searchedTerm ?? ''}>
-            {entryData?.input.toString()}
-          </Highlight>
-        </Typography>
-        <Typography className='text-dark_green poppins-bold ml-2'>
-          {' '}
-          kgCO2
-        </Typography>
-        <div
-          onClick={() => setShowActionModal((s) => !s)}
-          className='ml-7 cursor-pointer p-2 relative'
-        >
-          <img src='/vertical-dots.svg' width={6} height={4} />
-          <ActivityEntryActionsModal
-            onClose={() => setShowActionModal(false)}
-            isOpened={showActionModal}
-            actions={modalActions}
-            alignment='right'
-          />
-        </div>
+      <div
+        onClick={() => setShowActionModal((s) => !s)}
+        className='ml-7 cursor-pointer p-2 relative max-lg:ml-2'
+      >
+        <img src='/vertical-dots.svg' width={6} height={4} />
+        <ActivityEntryActionsModal
+          onClose={() => setShowActionModal(false)}
+          isOpened={showActionModal}
+          actions={modalActions}
+          alignment='right'
+        />
       </div>
     </div>
   );

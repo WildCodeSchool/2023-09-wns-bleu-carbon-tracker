@@ -10,7 +10,7 @@ export default function LastActivitiesListWidget({ readOnly = false }: Props) {
   return (
     <div className='h-full'>
       <Typography variant='heading'>Derniers posts</Typography>
-      <div className='flex flex-row h-[88%]'>
+      <div className='flex flex-row h-[88%] '>
         <LastPostItem
           profilImg='/icons/avatar.svg'
           postContent=' Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum

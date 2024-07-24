@@ -11,12 +11,12 @@ export default function HeaderTotals({ totalEmissions }: Props) {
   );
   return (
     <div className='dashboardWidget h-[15vh] max-h-[128px] flex justify-between items-center'>
-      <Typography customClass='text-4xl lg:text-3xl xl:text-5xl font-bold text-dark_green'>
+      <Typography customClass='text-4xl font-bold text-dark_green max-lg:text-3xl'>
         Mes dépenses
       </Typography>
       <div className='flex flex-col items-end'>
         <div className='flex items-end'>
-          <Typography customClass='text-4xl lg:text-3xl xl:text-5xl font-bold mr-1 text-medium_orange'>
+          <Typography customClass='text-4xl font-bold mr-1 text-medium_orange max-lg:text-3xl'>
             {totalEmissions}
           </Typography>
           <Typography customClass='text-lg lg:text-xl xl:text-3xl font-bold text-dark_green'>
@@ -24,7 +24,7 @@ export default function HeaderTotals({ totalEmissions }: Props) {
           </Typography>
         </div>
         <div>
-          <Typography customClass='text-md  font-bold text-medium_green'>
+          <Typography customClass='text-md text-right font-bold text-medium_green max-lg:text-sm'>
             {percentOfRecommendedEmissions} % du total annuel recommandé
           </Typography>
         </div>

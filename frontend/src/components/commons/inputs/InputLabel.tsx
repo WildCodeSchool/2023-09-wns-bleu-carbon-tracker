@@ -5,6 +5,7 @@ interface InputLabelProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
   sizes?: 'sm' | 'md' | 'lg' | 'xl';
   className?: string;
+  showLabel?: boolean;
 }
 
 export default function InputLabel({
@@ -12,6 +13,7 @@ export default function InputLabel({
   sizes = 'md',
   className,
   disabled,
+  showLabel = true,
   ...props
 }: InputLabelProps) {
   const baseClasses =
@@ -38,12 +40,15 @@ export default function InputLabel({
 
   return (
     <div>
-      <label
-        htmlFor={props.id}
-        className='block text-sm font-medium leading-6 text-gray-900 pb-2'
-      >
-        {label}
-      </label>
+      {showLabel && (
+        <label
+          htmlFor={props.id}
+          className='block text-sm font-medium leading-6 text-gray-900 pb-2'
+        >
+          {label}
+        </label>
+      )}
+
       <input className={clsx(baseClasses, sizeClasses, className)} {...props} />
     </div>
   );

@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { SumByCategory } from '@/types';
 import CAT_COLOR_MAP from '@/utils/categoryColors';
 
-// defaults.maintainAspectRatio = false;
+defaults.maintainAspectRatio = false;
 defaults.responsive = true;
 defaults.plugins.legend.display = false;
 defaults.plugins.title.display = false;
@@ -50,27 +50,29 @@ export default function CategoryChart({ dataByCategory, loading }: Props) {
       {loading ? (
         'Chargement...'
       ) : (
-        <div className='flex justify-between w-full h-full pt-3 pb-3'>
-          <div className='w-[70%] flex justify-center'>
+        <div className='flex w-full h-full justify-between pb-3 pt-3 max-[768px]:flex-col'>
+          <div className='w-[50%] flex justify-center max-[960px]:w-full'>
             {dataByCategory.length === 0 ? (
               'Aucune données enregistrés'
             ) : (
               <Doughnut data={dataSetsByCategory} options={options} />
             )}
           </div>
-          <div className='w-[20%] flex flex-col justify-around'>
+          <div className='w-[50%] flex flex-wrap justify-around max-[960px]:w-full '>
             {dataByCategory.map((cat) => {
               return (
-                <div className='flex items-center gap-2' key={cat.categoryName}>
-                  <div>
-                    <Image
-                      src={`/${cat.categoryName.toLocaleLowerCase()}.svg`}
+                <div
+                  className='flex items-center gap-2 w-[48%] mr-2 max-[960px]:p-2 w-[40%] justify-center'
+                  key={cat.categoryName}
+                >
+                  <div className=' flex items-center w-[40px] min-w-[40px] h-[40px] min-h-[40px] max-[1220px]:w-[30px] min-w-[30px] h-[30px] min-h-[30px] '>
+                    <img
+                      className='w-full'
+                      src={`${cat.categoryName.toLocaleLowerCase()}.svg`}
                       alt={cat.categoryName}
-                      width={35}
-                      height={35}
                     />
                   </div>
-                  <div className='text-lg text-medium_blue poppins-semiBold'>
+                  <div className='text-medium_blue poppins-semiBold text-lg text-nowrap max-[1220px]:text-sm'>
                     {cat.sumKgCO2} <span>kgCO2</span>
                   </div>
                 </div>
