@@ -1,10 +1,13 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import { useRouter } from 'next/router';
 import { useQuery, useMutation } from '@apollo/client';
-import { GET_POST } from '@/graphql/posts/queries/queries';
+import { GET_POST } from '@/graphql/posts/queries/post.queries';
 import { Post } from '@/graphql/generated/schema';
 import Layout from '@/components/layout';
-import { UPDATE_POST, DELETE_POST } from '@/graphql/posts/mutations/mutations';
+import {
+  UPDATE_POST,
+  DELETE_POST,
+} from '@/graphql/posts/mutations/post.mutations';
 
 const PostDetail = () => {
   const router = useRouter();
@@ -86,12 +89,14 @@ const PostDetail = () => {
           >
             <div className='flex items-center mb-4 md:mb-0 md:pr-6 md:w-1/4'>
               <img
-                src='https://picsum.photos/50'
+                src={post.user?.picture || 'https://picsum.photos/50'}
                 alt='Profile picture'
                 className='w-14 rounded-full mr-2'
               />
               <div className='flex flex-col'>
-                <h4 className='text-lg font-bold'>John Doe</h4>
+                <h4 className='text-lg font-bold'>
+                  {post.user?.name || 'Anonymous'}
+                </h4>
                 <p className='text-gray-600 text-sm'>
                   Publié le{' '}
                   {new Date(post.createdAt).toLocaleDateString('fr-FR')}
