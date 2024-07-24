@@ -23,12 +23,12 @@ const LastPostItem: React.FC<LastPostItemProps> = ({
     lineClamp = 2;
   }
   return (
-    <div className='dashboardWidget flex flex-col w-full mt-2 mr-5'>
+    <div className='flex flex-col w-1/3 mt-2 mr-5 dashboardWidget'>
       <div className='flex flex-col justify-between align-center'>
-        <div className='w-12 rounded-full mb-1'>
+        <div className='w-12 mb-1 rounded-full'>
           <img src={profilImg} alt='profil picture' />
         </div>
-        <div className='truncate-container w-full overflow-hidden'>
+        <div className='w-full overflow-hidden truncate-container'>
           <p
             className={`text-ellipsis overflow-hidden whitespace-normal line-clamp-${lineClamp}`}
           >

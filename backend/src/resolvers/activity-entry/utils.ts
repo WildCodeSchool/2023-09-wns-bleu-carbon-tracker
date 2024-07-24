@@ -11,6 +11,9 @@ export class SumByCategory {
 
   @Field()
   sumKgCO2: number;
+
+  @Field({ nullable: true })
+  userId?: string;
 }
 
 @ObjectType()

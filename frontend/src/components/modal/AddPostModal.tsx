@@ -1,18 +1,14 @@
 import React, { ChangeEvent, FormEvent, useState } from 'react';
-import {
-  useCreatePostMutation,
-  useGetAllPostsQuery,
-} from '@/graphql/generated/schema';
+import { useCreatePostMutation } from '@/graphql/generated/schema';
 import InputLabel from '@/components/commons/inputs/InputLabel';
 import GenericModal from '@/components/modal/GenericFormModal';
 
 type Props = {
   onClose: () => void;
-  refetchOnValidate?: () => void;
+  refetchOnValidate: () => void;
 };
 
-export default function AddPostModal({ onClose }: Props) {
-  const { refetch: refetchPosts } = useGetAllPostsQuery();
+export default function AddPostModal({ onClose, refetchOnValidate }: Props) {
   const [createPost] = useCreatePostMutation();
 
   const [text, setText] = useState('');
@@ -29,7 +25,7 @@ export default function AddPostModal({ onClose }: Props) {
       await createPost({
         variables: { data: { ...formJSON } },
         onCompleted: async () => {
-          await refetchPosts();
+          await refetchOnValidate();
           onClose();
         },
       });
@@ -59,12 +55,12 @@ export default function AddPostModal({ onClose }: Props) {
       <div className='pb-5'>
         <label
           htmlFor='content'
-          className='block text-sm font-medium leading-6 text-gray-900 pb-2'
+          className='block pb-2 text-sm font-medium leading-6 text-gray-900'
         >
           Contenu du post
         </label>
         <textarea
-          className='block w-full rounded-xl px-2 border-0 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6'
+          className='block w-full px-2 py-2 text-gray-900 border-0 shadow-sm rounded-xl ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6'
           name='content'
           id='content'
           value={text}

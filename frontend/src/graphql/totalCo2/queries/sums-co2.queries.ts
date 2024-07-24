@@ -1,18 +1,18 @@
 import { gql } from '@apollo/client';
 
 export const SUM_BY_CATEGORY = gql`
-  query GetSumByCategory {
-    getSumByCategory {
+  query GetSumByCategory($userId: String) {
+    getSumByCategory(userId: $userId) {
+      categoryId
       categoryName
       sumKgCO2
-      categoryId
     }
   }
 `;
 
 export const SUM_BY_MONTH = gql`
-  query GetSumByMonth {
-    getSumByMonth {
+  query GetSumByMonth($userId: String) {
+    getSumByMonth(userId: $userId) {
       month
       sumKgCO2
     }
