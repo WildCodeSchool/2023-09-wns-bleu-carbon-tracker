@@ -11,7 +11,7 @@ import {
   useDeleteUserMutation,
 } from '@/graphql/generated/schema';
 import Button from '@/components/commons/buttons/Button';
-import Modal from '@/components/modal/Modal';
+import GenericFormModal from '@/components/modal/GenericFormModal';
 
 export default function Profile() {
   const { user, setUser } = useUser();
@@ -205,9 +205,9 @@ export default function Profile() {
       </div>
 
       {isModalOpen && (
-        <Modal
+        <GenericFormModal
           onClose={() => setIsModalOpen(false)}
-          onConfirm={handleNameUpdate}
+          onSubmit={handleNameUpdate}
           title='Modifier le nom'
         >
           <input
@@ -216,13 +216,13 @@ export default function Profile() {
             onChange={(e) => setNewName(e.target.value)}
             className='w-full px-3 py-2 border border-gray-300 rounded-md'
           />
-        </Modal>
+        </GenericFormModal>
       )}
-
+      {isModalOpen && <div className='overlay'></div>}
       {isPasswordModalOpen && (
-        <Modal
+        <GenericFormModal
           onClose={() => setIsPasswordModalOpen(false)}
-          onConfirm={handleChangePassword}
+          onSubmit={handleChangePassword}
           title='Changer mon mot de passe'
         >
           <label
@@ -252,12 +252,13 @@ export default function Profile() {
             className='w-full px-3 py-2 border border-gray-300 rounded-md'
           />
           {error && <p className='mt-2 text-red-500'>{error}</p>}
-        </Modal>
+        </GenericFormModal>
       )}
+      {isPasswordModalOpen && <div className='overlay'></div>}
       {isDeleteModalOpen && (
-        <Modal
+        <GenericFormModal
           onClose={() => setIsDeleteModalOpen(false)}
-          onConfirm={handleDeleteAccount}
+          onSubmit={handleDeleteAccount}
           title='Supprimer mon compte'
         >
           <label
@@ -274,8 +275,9 @@ export default function Profile() {
             className='w-full px-3 py-2 border border-gray-300 rounded-md'
           />
           {error && <p className='mt-2 text-red-500'>{error}</p>}
-        </Modal>
+        </GenericFormModal>
       )}
+      {isDeleteModalOpen && <div className='overlay'></div>}
     </Layout>
   );
 }

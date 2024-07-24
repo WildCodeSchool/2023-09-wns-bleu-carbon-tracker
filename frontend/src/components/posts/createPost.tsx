@@ -1,7 +1,7 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import { useMutation } from '@apollo/client';
-import { CREATE_POST } from '@/graphql/posts/mutations/mutations';
-import { GET_ALL_POSTS } from '@/graphql/posts/queries/queries';
+import { CREATE_POST } from '@/graphql/posts/mutations/post.mutations';
+import { GET_ALL_POSTS } from '@/graphql/posts/queries/post.queries';
 
 const CreatePost = () => {
   const [title, setTitle] = useState('');
