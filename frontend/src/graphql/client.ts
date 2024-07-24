@@ -9,15 +9,15 @@ const httpLink = new HttpLink({
 });
 
 const logoutLink = onError((err) => {
- 
   const errorCode = (err as any)?.graphQLErrors?.[0]?.extensions?.code;
   if (
     ['UNAUTHORIZED', 'UNAUTHENTICATED'].includes(errorCode) &&
     err?.operation?.operationName !== 'Profile' &&
-    !window.location.pathname.includes('/login')
+    !window.location.pathname.includes('/login') &&
+    !window.location.pathname.includes('/profile/')
   ) {
     if (errorCode === 'UNAUTHENTICATED') {
-     window.location.href = `/auth/login`;
+      window.location.href = `/auth/login`;
     } else if (errorCode === 'UNAUTHORIZED') {
       alert(
         "Vous n'avez pas les permissions nécéssaires pour consulter cette partie du site ou effectuer cette action. Vous allez être déconnecté. Merci de vous reconnecter avec un compte possédant les permissions adéquates.",

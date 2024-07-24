@@ -18,7 +18,6 @@ export default class PostResolver {
     }
   }
 
-  @Authorized()
   @Query(() => [Post])
   async getUserPosts(@Arg('userId') userId: string) {
     try {

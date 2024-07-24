@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import {
   useGetSumByCategoryQuery,
   useGetSumByMonthQuery,
-  useGetUserByNameQuery,
+  useGetUserByIdQuery,
   useGetUserPostsQuery,
 } from '@/graphql/generated/schema';
 import Layout from '@/components/layout';
@@ -90,31 +90,23 @@ const ProfileStats = ({ userId }: { userId: string }) => {
 
 export default function Profile() {
   const router = useRouter();
-  const { username } = router.query;
+  const { userId } = router.query;
 
-  const formatUsername = (
-    usernameParams: string | string[] | undefined,
-  ): string => {
-    if (Array.isArray(usernameParams)) {
-      return usernameParams.map((name) => name.replace('-', ' ')).join(' ');
-    }
-    return usernameParams ? usernameParams.replace('-', ' ') : '';
-  };
+  const userIdString = Array.isArray(userId) ? userId[0] : userId;
 
-  const formattedUsername = formatUsername(username);
-
-  const { data, loading } = useGetUserByNameQuery({
+  const { data, loading } = useGetUserByIdQuery({
     variables: {
-      name: formattedUsername,
+      id: userIdString ?? '',
     },
+    skip: !userIdString,
   });
 
   return (
     <Layout title='Liste des activités'>
-      <p className='p-4 text-2xl font-bold'>Profil de {formattedUsername}</p>
+      <p className='p-4 text-2xl font-bold'>Profil de {data?.userById?.name}</p>
       <div className='flex h-screen text-black'>
-        {!loading && data?.userByName && (
-          <ProfileStats userId={data.userByName?.id} />
+        {!loading && data?.userById && (
+          <ProfileStats userId={data.userById?.id} />
         )}
       </div>
     </Layout>
