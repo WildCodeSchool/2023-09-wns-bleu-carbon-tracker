@@ -91,17 +91,16 @@ export default class ActivityEntryResolver {
     });
   }
 
-  @Authorized()
   @Query(() => [SumByCategory])
   async getSumByCategory(
     @Ctx() ctx: MyContext,
     @Arg('userId', { nullable: true }) userId?: string,
   ): Promise<SumByCategory[]> {
-    if (!ctx.user) {
+    if (!ctx.user && !userId) {
       throw new Error('You must be authenticated to access this information.');
     }
 
-    const userIdToUse = userId ?? ctx.user.id;
+    const userIdToUse = userId ?? ctx.user!.id;
 
     const sumByCategory = await ActivityEntry.createQueryBuilder(
       'activityEntry',
@@ -121,18 +120,17 @@ export default class ActivityEntryResolver {
     return sumByCategory;
   }
 
-  @Authorized()
   @Query(() => [SumByMonth])
   async getSumByMonth(
     @Ctx() ctx: MyContext,
     @Arg('userId', { nullable: true }) userId?: string,
   ) {
-    if (!ctx.user) {
+    if (!ctx.user && !userId) {
       throw new Error('You must be authenticated to access this information.');
     }
     const currentDate = new Date();
 
-    const userIdToUse = userId ?? ctx.user.id;
+    const userIdToUse = userId ?? ctx.user!.id;
 
     const twelveMonthsAgo = new Date(currentDate);
     twelveMonthsAgo.setFullYear(currentDate.getFullYear() - 1);
