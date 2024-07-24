@@ -34,9 +34,9 @@ export default function DashboardLayout() {
   const userHasName = user?.name != null;
 
   const copyToClipboard = () => {
-    const userName = user?.name?.replace(/\s+/g, '-');
+    const userId = user?.id;
     navigator.clipboard.writeText(
-      `${process.env.NEXT_PUBLIC_APP_URL}/profile/${userName}`,
+      `${process.env.NEXT_PUBLIC_APP_URL}/profile/${userId}`,
     );
     showAlert('Copier dans le presse-papier !', 'success');
   };
