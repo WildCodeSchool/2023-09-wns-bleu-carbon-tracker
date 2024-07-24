@@ -49,7 +49,12 @@ export default function DashboardLayout() {
           </div>
         </div>
         <div className='h-[28%]  p-3'>
-          <LastPostWidget />
+          <LastPostWidget
+            handleRefetch={() => {
+              refetchTotalsByCategories();
+              refetchTotalsByMonth();
+            }}
+          />
         </div>
       </div>
       <div className='w-5/12 p-3  h-full max-[960px]:w-full'>
