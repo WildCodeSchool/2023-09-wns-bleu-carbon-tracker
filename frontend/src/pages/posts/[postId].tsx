@@ -1,10 +1,13 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import { useRouter } from 'next/router';
 import { useQuery, useMutation } from '@apollo/client';
-import { GET_POST } from '@/graphql/posts/queries/queries';
+import { GET_POST } from '@/graphql/posts/queries/post.queries';
 import { Post } from '@/graphql/generated/schema';
 import Layout from '@/components/layout';
-import { UPDATE_POST, DELETE_POST } from '@/graphql/posts/mutations/mutations';
+import {
+  UPDATE_POST,
+  DELETE_POST,
+} from '@/graphql/posts/mutations/post.mutations';
 
 const PostDetail = () => {
   const router = useRouter();

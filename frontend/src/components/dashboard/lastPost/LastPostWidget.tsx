@@ -1,40 +1,85 @@
-import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import Typography from '@/components/commons/typography/Typography';
 import LastPostItem from './LastPostItem';
+import AddPostModal from '@/components/modal/AddPostModal';
+import { useUser } from '@/contexts/UserContext';
+import { useGetAllPostsQuery } from '@/graphql/generated/schema';
+import useWindowSize from '@/utils/useWindowSize';
 
 type Props = {
+  handleRefetch?: () => void;
   readOnly?: boolean;
 };
 
-export default function LastActivitiesListWidget({ readOnly = false }: Props) {
+export default function LastPostsWidget({ handleRefetch, readOnly }: Props) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { user, setUser } = useUser();
+  const { data } = useGetAllPostsQuery();
+  const [postsToShow, setPostsToShow] = useState(1);
+  const size = useWindowSize();
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
+  useEffect(() => {
+    if (size.width >= 1440) {
+      setPostsToShow(3);
+    } else if (size.width >= 1280) {
+      setPostsToShow(2);
+    } else {
+      setPostsToShow(1);
+    }
+  }, [size]);
+
+  const realPosts = data?.getAllPosts || [];
+  const postsToDisplay = realPosts.slice(0, postsToShow);
+
+  while (postsToDisplay.length < postsToShow) {
+    postsToDisplay.push({
+      id: -(postsToDisplay.length + 1),
+      content: '...',
+      title: '',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+  }
+
   return (
     <div className='h-full'>
       <Typography variant='heading'>Derniers posts</Typography>
       <div className='flex flex-row h-[88%] '>
-        <LastPostItem
-          profilImg='/icons/avatar.svg'
-          postContent=' Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum
-                aut, accusantium nemo facilis omnis perspiciatis incidunt
-                dolores aliquam nesciunt dolore, et culpa laboriosam porro
-                eligendi totam minima vitae non voluptas?'
-        />
-        <LastPostItem
-          profilImg='/icons/avatar.svg'
-          postContent=' Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum
-                aut, accusantium nemo facilis omnis perspiciatis incidunt
-                dolores aliquam nesciunt dolore, et culpa laboriosam porro
-                eligendi totam minima vitae non voluptas?'
-        />
+        {postsToDisplay.map((post) => (
+          <LastPostItem
+            key={post.id}
+            profilImg={
+              user?.picture != null ? user.picture : '/icons/avatar.svg'
+            }
+            postContent={post.content}
+          />
+        ))}
         {!readOnly ? (
           <div className='flex flex-col justify-center w-full mt-2 dashboardWidget align-center'>
             <div className='flex justify-center m-5'>
-              <Link href='/' className='flex justify-center w-7/12'>
+              <button
+                onClick={toggleModal}
+                className='flex justify-center w-7/12'
+              >
                 <img src='/icons/cross.png' alt='new-post' />
-              </Link>
+              </button>
             </div>
           </div>
         ) : null}
       </div>
+      {isModalOpen && (
+        <AddPostModal
+          onClose={toggleModal}
+          refetchOnValidate={async () => {
+            handleRefetch();
+          }}
+        />
+      )}
+      {isModalOpen && <div className='overlay'></div>}
     </div>
   );
 }

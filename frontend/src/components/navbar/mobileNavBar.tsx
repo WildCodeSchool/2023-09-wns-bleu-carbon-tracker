@@ -32,13 +32,13 @@ const Links = () => {
       <Link href='/activity-entries/list' className='block p-2 max-w-fit'>
         <Typography variant='paragraph'>Liste des dépenses</Typography>
       </Link>
-      <Link href='/' className='block p-2 max-w-fit'>
+      <Link href='/posts/list' className='block p-2 max-w-fit'>
         <Typography variant='paragraph'>Ecrire un post</Typography>
       </Link>
       <Link href='/donation' className='block p-2 max-w-fit'>
         <Typography variant='paragraph'>Faire un don</Typography>
       </Link>
-      <Link href='/' className='block p-2 max-w-fit'>
+      <Link href='/profile' className='block p-2 max-w-fit'>
         <Typography variant='paragraph'>Profil</Typography>
       </Link>
       <button className='block p-2 max-w-fit' onClick={handleLogout}>

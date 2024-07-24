@@ -7,6 +7,7 @@ export const GET_ALL_POSTS = gql`
       title
       content
       createdAt
+      updatedAt
       user {
         id
         name

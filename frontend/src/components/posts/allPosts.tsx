@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { useQuery } from '@apollo/client';
-import { GET_ALL_POSTS } from '@/graphql/posts/queries/queries';
+import { GET_ALL_POSTS } from '@/graphql/posts/queries/post.queries';
 import { Post } from '@/graphql/generated/schema';
 
 const Posts = () => {

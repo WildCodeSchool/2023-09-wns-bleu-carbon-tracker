@@ -8,7 +8,6 @@ import Layout from '@/components/layout';
 import CategoryChart from '@/components/dashboard/dataViz/CategoryChart';
 import ByMonthChart from '@/components/dashboard/dataViz/ByMonthChart';
 import LastPostWidget from '@/components/dashboard/lastPost/LastPostWidget';
-import HeaderTotals from '@/components/listActivities/HeaderTotals';
 import Typography from '@/components/commons/typography/Typography';
 
 const ProfileStats = ({ userId }: { userId: string }) => {
