@@ -2,10 +2,13 @@ import React, { useState, ChangeEvent, FormEvent } from 'react';
 import { useMutation } from '@apollo/client';
 import { CREATE_POST } from '@/graphql/posts/mutations/post.mutations';
 import { GET_ALL_POSTS } from '@/graphql/posts/queries/post.queries';
+import Button from '../commons/buttons/Button';
+import { useUser } from '@/contexts/UserContext';
 
 const CreatePost = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const { user } = useUser();
   const [createPost] = useMutation(CREATE_POST, {
     refetchQueries: [{ query: GET_ALL_POSTS }],
   });
@@ -30,38 +33,56 @@ const CreatePost = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className='w-full max-w-md mx-auto p-4'>
+    <form onSubmit={handleSubmit} className='w-full mx-auto'>
       <div className='bg-gray-100 shadow-md rounded-lg p-6'>
         <div className='flex flex-col gap-4'>
-          <div className='flex flex-col'>
-            <input
-              id='title'
-              type='text'
-              placeholder='Quoi de neuf ?'
-              value={title}
-              onChange={handleTitleChange}
-              className='w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50'
-              required
-            />
-          </div>
-          <div className='flex flex-col'>
-            <textarea
-              id='content'
-              value={content}
-              placeholder='Postez ici vos bons plans...'
-              onChange={handleContentChange}
-              className='w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50'
-              rows={4}
-              required
-            />
-          </div>
-          <div className='flex justify-end'>
-            <button
-              type='submit'
-              className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50'
-            >
-              Publier
-            </button>
+          <div className='flex flex-row justify-between'>
+            <div className='flex flex-col items-center'>
+              <img
+                src={user?.picture != null ? user.picture : '/icons/avatar.svg'}
+                alt='Profile picture'
+                className='w-2/4 rounded-full'
+              />
+              <div className='flex flex-col'>
+                <h4 className='text-lg font-bold'>
+                  {user?.name || 'Anonymous'}
+                </h4>
+              </div>
+            </div>
+            <div className='w-11/12'>
+              <div className='flex flex-col p-1'>
+                <input
+                  id='title'
+                  type='text'
+                  placeholder='Quoi de neuf ?'
+                  value={title}
+                  onChange={handleTitleChange}
+                  className='w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50'
+                  required
+                />
+              </div>
+              <div className='flex flex-col p-1'>
+                <textarea
+                  id='content'
+                  value={content}
+                  placeholder='Postez ici vos bons plans...'
+                  onChange={handleContentChange}
+                  className='w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50'
+                  rows={4}
+                  required
+                />
+              </div>
+              <div className='flex justify-end p-1'>
+                <Button
+                  className='mt-2'
+                  size='xl'
+                  type='submit'
+                  data-testid='submit'
+                >
+                  Publier
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

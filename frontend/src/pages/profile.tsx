@@ -12,6 +12,7 @@ import {
 } from '@/graphql/generated/schema';
 import Button from '@/components/commons/buttons/Button';
 import GenericFormModal from '@/components/modal/GenericFormModal';
+import Typography from '@/components/commons/typography/Typography';
 
 export default function Profile() {
   const { user, setUser } = useUser();
@@ -128,78 +129,77 @@ export default function Profile() {
 
   return (
     <Layout title='Profile'>
-      <div className='container max-w-md p-4'>
-        <h1 className='mt-3 font-poppins text-xl font-bold pb-2 text-black'>
-          Mon profil
-        </h1>
-        <p>ceci est un test</p>
-        <p className='mb-5 text-sm font-medium leading-6 text-gray-900'>
-          éditer, modifier mon profil
-        </p>
-
-        <div className='dashboardWidget mb-3'>
-          <div className='flex justify-center'>
-            <div className='relative inline-block'>
-              <img
-                src={imageSrc}
-                alt='profile picture'
-                className='object-cover w-40 h-40 rounded-full mb-5'
-              />
-              <input
-                type='file'
-                id='file-input'
-                className='hidden'
-                onChange={handleFileChange}
-              />
-              <label
-                htmlFor='file-input'
-                className='absolute bottom-0 right-0 bg-lime-700 rounded-full p-2 cursor-pointer shadow-md hover:bg-black'
-              >
+      <div className='w-full flex flex-col p-10 pb-0 max-[1710px]:p-2'>
+        <div className='dashboardWidget h-[15vh] max-h-[128px] flex justify-between items-center mb-2'>
+          <Typography customClass='text-4xl font-bold text-dark_green max-lg:text-3xl'>
+            Mon profil
+          </Typography>
+        </div>
+        <div className='flex flex-row'>
+          <div className='dashboardWidget w-full'>
+            <div className='flex justify-center'>
+              <div className='relative inline-block'>
                 <img
-                  src='/icons/modify.png'
-                  alt='Edit icon'
-                  className='w-6 h-6'
+                  src={imageSrc}
+                  alt='profile picture'
+                  className='object-cover w-40 h-40 rounded-full mb-5'
                 />
-              </label>
-            </div>
-          </div>
-
-          <div className='text-center flex flex-col'>
-            {user?.name ? (
-              <>
-                <p className='mt-3 font-poppins text-xl font-bold pb-2 text-black'>
-                  {user.name}
-                </p>
-                <Button
-                  onClick={() => setIsModalOpen(true)}
-                  className='mt-2 bg-lime-700 '
+                <input
+                  type='file'
+                  id='file-input'
+                  className='hidden'
+                  onChange={handleFileChange}
+                />
+                <label
+                  htmlFor='file-input'
+                  className='absolute bottom-0 right-0 bg-lime-700 rounded-full p-2 cursor-pointer shadow-md hover:bg-black'
                 >
-                  Modifier le nom
-                </Button>
-              </>
-            ) : (
-              <div className='text-center'>
-                <p>Veuillez saisir votre Nom</p>
-                <Button
-                  onClick={() => setIsModalOpen(true)}
-                  className='mt-2 bg-blue-500'
-                >
-                  Ajouter un nom
-                </Button>
+                  <img
+                    src='/icons/modify.png'
+                    alt='Edit icon'
+                    className='w-6 h-6'
+                  />
+                </label>
               </div>
-            )}
-            <Button
-              onClick={() => setIsPasswordModalOpen(true)}
-              className='mt-2 bg-lime-700'
-            >
-              Modifier mon mot de passe
-            </Button>
-            <Button
-              onClick={() => setIsDeleteModalOpen(true)}
-              className='mt-2 bg-red-600'
-            >
-              Supprimer mon compte
-            </Button>
+            </div>
+
+            <div className='text-center flex flex-col items-center'>
+              {user?.name ? (
+                <>
+                  <p className='mt-3 font-poppins text-xl font-bold pb-2 text-black'>
+                    {user.name}
+                  </p>
+                  <Button
+                    onClick={() => setIsModalOpen(true)}
+                    className='mt-2 bg-lime-700 w-2/5'
+                  >
+                    Modifier le nom
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <p>Veuillez saisir votre Nom</p>
+                  <Button
+                    onClick={() => setIsModalOpen(true)}
+                    className='mt-2 bg-blue-500 w-2/5'
+                  >
+                    Ajouter un nom
+                  </Button>
+                </>
+              )}
+              <Button
+                onClick={() => setIsPasswordModalOpen(true)}
+                className='mt-2 bg-lime-700 w-2/5'
+              >
+                Modifier mon mot de passe
+              </Button>
+              <Button
+                onClick={() => setIsDeleteModalOpen(true)}
+                className='mt-2 bg-red-600 w-2/5'
+              >
+                Supprimer mon compte
+              </Button>
+            </div>
           </div>
         </div>
       </div>
