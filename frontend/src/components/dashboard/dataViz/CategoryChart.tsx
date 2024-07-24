@@ -1,6 +1,6 @@
-/* eslint-disable no-param-reassign */
 import { defaults } from 'chart.js/auto';
 import { Doughnut } from 'react-chartjs-2';
+import Image from 'next/image';
 import { SumByCategory } from '@/types';
 import CAT_COLOR_MAP from '@/utils/categoryColors';
 
@@ -65,8 +65,10 @@ export default function CategoryChart({ dataByCategory, loading }: Props) {
                   key={cat.categoryName}
                 >
                   <div className=' flex items-center w-[40px] min-w-[40px] h-[40px] min-h-[40px] max-[1220px]:w-[30px] min-w-[30px] h-[30px] min-h-[30px] '>
-                    <img
+                    <Image
                       className='w-full'
+                      width={50}
+                      height={50}
                       src={`${cat.categoryName.toLocaleLowerCase()}.svg`}
                       alt={cat.categoryName}
                     />

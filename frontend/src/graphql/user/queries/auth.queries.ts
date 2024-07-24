@@ -23,3 +23,24 @@ export const LOGOUT = gql`
     }
   }
 `;
+
+export const GET_USER_BY_ID = gql`
+  query GetUserById($id: String!) {
+    userById(id: $id) {
+      id
+      name
+      email
+      activityEntries {
+        id
+        name
+        input
+        category {
+          id
+          name
+        }
+        createdAt
+        spendedAt
+      }
+    }
+  }
+`;
