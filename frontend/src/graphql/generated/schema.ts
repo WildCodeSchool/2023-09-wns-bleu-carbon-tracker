@@ -187,6 +187,7 @@ export type Query = {
   getPot: Scalars['Int'];
   getSumByCategory: Array<SumByCategory>;
   getSumByMonth: Array<SumByMonth>;
+  getUserPosts: Array<Post>;
   login: Message;
   logout: Message;
   tags: Array<Book>;
@@ -229,6 +230,10 @@ export type QueryGetSumByCategoryArgs = {
 
 export type QueryGetSumByMonthArgs = {
   userId?: InputMaybe<Scalars['String']>;
+};
+
+export type QueryGetUserPostsArgs = {
+  userId: Scalars['String'];
 };
 
 export type QueryLoginArgs = {
@@ -470,6 +475,7 @@ export type GetAllPostsQuery = {
     title: string;
     content: string;
     createdAt: any;
+    updatedAt: any;
     user: {
       __typename?: 'User';
       id: string;
@@ -499,6 +505,28 @@ export type GetPostByIdQuery = {
       picture?: string | null;
     };
   } | null;
+};
+
+export type GetUserPostsQueryVariables = Exact<{
+  userId: Scalars['String'];
+}>;
+
+export type GetUserPostsQuery = {
+  __typename?: 'Query';
+  getUserPosts: Array<{
+    __typename?: 'Post';
+    id: number;
+    title: string;
+    content: string;
+    createdAt: any;
+    updatedAt: any;
+    user: {
+      __typename?: 'User';
+      id: string;
+      name?: string | null;
+      picture?: string | null;
+    };
+  }>;
 };
 
 export type GetBooksQueryVariables = Exact<{ [key: string]: never }>;
@@ -1379,6 +1407,7 @@ export const GetAllPostsDocument = gql`
       title
       content
       createdAt
+      updatedAt
       user {
         id
         name
@@ -1499,6 +1528,73 @@ export type GetPostByIdLazyQueryHookResult = ReturnType<
 export type GetPostByIdQueryResult = Apollo.QueryResult<
   GetPostByIdQuery,
   GetPostByIdQueryVariables
+>;
+export const GetUserPostsDocument = gql`
+  query GetUserPosts($userId: String!) {
+    getUserPosts(userId: $userId) {
+      id
+      title
+      content
+      createdAt
+      updatedAt
+      user {
+        id
+        name
+        picture
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetUserPostsQuery__
+ *
+ * To run a query within a React component, call `useGetUserPostsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserPostsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserPostsQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useGetUserPostsQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetUserPostsQuery,
+    GetUserPostsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetUserPostsQuery, GetUserPostsQueryVariables>(
+    GetUserPostsDocument,
+    options,
+  );
+}
+export function useGetUserPostsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetUserPostsQuery,
+    GetUserPostsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetUserPostsQuery, GetUserPostsQueryVariables>(
+    GetUserPostsDocument,
+    options,
+  );
+}
+export type GetUserPostsQueryHookResult = ReturnType<
+  typeof useGetUserPostsQuery
+>;
+export type GetUserPostsLazyQueryHookResult = ReturnType<
+  typeof useGetUserPostsLazyQuery
+>;
+export type GetUserPostsQueryResult = Apollo.QueryResult<
+  GetUserPostsQuery,
+  GetUserPostsQueryVariables
 >;
 export const GetBooksDocument = gql`
   query GetBooks {

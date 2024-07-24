@@ -3,6 +3,7 @@ import {
   useGetSumByCategoryQuery,
   useGetSumByMonthQuery,
   useGetUserByNameQuery,
+  useGetUserPostsQuery,
 } from '@/graphql/generated/schema';
 import Layout from '@/components/layout';
 import CategoryChart from '@/components/dashboard/dataViz/CategoryChart';
@@ -17,6 +18,10 @@ const ProfileStats = ({ userId }: { userId: string }) => {
     });
 
   const { data: sumsByMonth, loading: loadingByMonth } = useGetSumByMonthQuery({
+    variables: { userId },
+  });
+
+  const { data, refetch: handleRefetchPosts } = useGetUserPostsQuery({
     variables: { userId },
   });
 
@@ -70,7 +75,15 @@ const ProfileStats = ({ userId }: { userId: string }) => {
           />
         </div>
       </div>
-      <div className='h-[28%]  p-3'>{<LastPostWidget readOnly />}</div>
+      <div className='h-[28%]  p-3'>
+        {
+          <LastPostWidget
+            posts={data?.getUserPosts ?? []}
+            handleRefetchPosts={handleRefetchPosts}
+            readOnly
+          />
+        }
+      </div>
     </div>
   );
 };
