@@ -91,7 +91,9 @@ export default function UpdateActivityModal({ entryData, onClose }: Props) {
             name='input'
             label='Dépense carbone (en kg/CO2e)'
             placeholder='10'
-            type='text'
+            min={0}
+            step={0.01}
+            type='number'
             sizes='xl'
             autoComplete='input'
             required
