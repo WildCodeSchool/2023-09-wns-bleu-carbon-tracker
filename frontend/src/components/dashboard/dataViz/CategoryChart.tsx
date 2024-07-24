@@ -1,6 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { defaults } from 'chart.js/auto';
 import { Doughnut } from 'react-chartjs-2';
+import Image from 'next/image';
 import { SumByCategory } from '@/types';
 import CAT_COLOR_MAP from '@/utils/categoryColors';
 
