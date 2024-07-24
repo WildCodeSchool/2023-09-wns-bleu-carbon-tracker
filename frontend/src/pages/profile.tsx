@@ -132,7 +132,6 @@ export default function Profile() {
         <h1 className='mt-3 font-poppins text-xl font-bold pb-2 text-black'>
           Mon profil
         </h1>
-        <p>ceci est un test</p>
         <p className='mb-5 text-sm font-medium leading-6 text-gray-900'>
           éditer, modifier mon profil
         </p>
