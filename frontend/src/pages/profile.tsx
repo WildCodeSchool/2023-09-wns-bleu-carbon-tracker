@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable no-restricted-syntax */
 
-import axios from 'axios';
 import { useState } from 'react';
 import { useUser } from '../contexts/UserContext';
 import Layout from '@/components/layout';
