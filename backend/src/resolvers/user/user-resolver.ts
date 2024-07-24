@@ -14,6 +14,7 @@ import Message from '../../entities/user/message';
 import InputLogin from '../../entities/user/input-login';
 import { MyContext } from '../..';
 import UserService from '../../services/user-service';
+import InputUpdateUserName from '../../entities/user/input-update-name';
 
 @Resolver(User)
 export default class UserResolver {

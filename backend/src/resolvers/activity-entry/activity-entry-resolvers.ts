@@ -102,6 +102,7 @@ export default class ActivityEntryResolver {
 
     const userIdToUse = userId ?? ctx.user!.id;
 
+
     const sumByCategory = await ActivityEntry.createQueryBuilder(
       'activityEntry',
     )
@@ -125,12 +126,14 @@ export default class ActivityEntryResolver {
     @Ctx() ctx: MyContext,
     @Arg('userId', { nullable: true }) userId?: string,
   ) {
+
     if (!ctx.user && !userId) {
       throw new Error('You must be authenticated to access this information.');
     }
     const currentDate = new Date();
 
     const userIdToUse = userId ?? ctx.user!.id;
+
 
     const twelveMonthsAgo = new Date(currentDate);
     twelveMonthsAgo.setFullYear(currentDate.getFullYear() - 1);
