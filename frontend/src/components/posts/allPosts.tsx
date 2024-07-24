@@ -9,13 +9,13 @@ const Posts = () => {
     GET_ALL_POSTS,
   );
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      refetch();
-    });
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     refetch();
+  //   });
 
-    return () => clearInterval(interval);
-  }, [refetch]);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
