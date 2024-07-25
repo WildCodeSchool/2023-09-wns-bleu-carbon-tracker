@@ -3,22 +3,21 @@ import { useEffect, useState } from 'react';
 import PostsList from './PostsList';
 import { useGetPaginatedPostsQuery } from '@/graphql/generated/schema';
 import { useUser } from '@/contexts/UserContext';
-import CreatePost from './CreatePost';
+import CreateNewPost from './CreateNewPost';
 
 export default function PostGlobalContainer() {
   const { user } = useUser();
   const [skip, setSkip] = useState(0);
   const [currentUserPosts, setCurrentUserPosts] = useState(false);
   const take = 15;
-  const { data, loading, fetchMore, refetch, error } =
-    useGetPaginatedPostsQuery({
-      variables: {
-        skip,
-        take,
-        userId: currentUserPosts === true ? user?.id : undefined,
-      },
-      fetchPolicy: 'network-only',
-    });
+  const { data, loading, fetchMore, refetch } = useGetPaginatedPostsQuery({
+    variables: {
+      skip,
+      take,
+      userId: currentUserPosts === true ? user?.id : undefined,
+    },
+    fetchPolicy: 'network-only',
+  });
 
   const [paginatedPosts, setPaginatedPosts] = useState(data?.getPaginatedPosts);
 
@@ -58,7 +57,7 @@ export default function PostGlobalContainer() {
     data?.getPaginatedPosts.length < take;
   return (
     <div>
-      <CreatePost
+      <CreateNewPost
         handleRefetch={async () => {
           await refetch();
         }}

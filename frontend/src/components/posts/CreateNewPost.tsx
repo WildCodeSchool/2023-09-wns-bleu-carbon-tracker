@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, FormEvent } from 'react';
+import { useState, ChangeEvent, FormEvent } from 'react';
 import { useMutation } from '@apollo/client';
 import { CREATE_POST } from '@/graphql/posts/mutations/post.mutations';
 import { GET_PAGINATED_POSTS } from '@/graphql/posts/queries/post.queries';
@@ -8,7 +8,7 @@ import { useUser } from '@/contexts/UserContext';
 type Props = {
   handleRefetch: () => void;
 };
-const CreatePost = ({ handleRefetch }: Props) => {
+const CreateNewPost = ({ handleRefetch }: Props) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const { user } = useUser();
@@ -94,4 +94,4 @@ const CreatePost = ({ handleRefetch }: Props) => {
   );
 };
 
-export default CreatePost;
+export default CreateNewPost;
