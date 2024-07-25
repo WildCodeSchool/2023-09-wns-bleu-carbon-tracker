@@ -36,7 +36,7 @@ export default function DashboardLayout() {
   const copyToClipboard = () => {
     const userId = user?.id;
     navigator.clipboard.writeText(
-      `${process.env.NEXT_PUBLIC_APP_URL}/profile/${userId}`,
+      `https://develop.carbon-tracker.0923-bleu-1.wns.wilders.dev/profile/${userId}`,
     );
     showAlert('Copier dans le presse-papier !', 'success');
   };
