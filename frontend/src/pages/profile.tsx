@@ -167,7 +167,7 @@ export default function Profile() {
                   </p>
                   <Button
                     onClick={() => setIsModalOpen(true)}
-                    className='mt-2 bg-lime-700 w-2/5'
+                    className='mt-2 bg-lime-700 w-1/3'
                   >
                     Modifier le nom
                   </Button>
@@ -177,7 +177,7 @@ export default function Profile() {
                   <p>Veuillez saisir votre Nom</p>
                   <Button
                     onClick={() => setIsModalOpen(true)}
-                    className='mt-2 bg-blue-500 w-2/5'
+                    className='mt-2 bg-blue-500 w-1/3'
                   >
                     Ajouter un nom
                   </Button>
@@ -185,13 +185,13 @@ export default function Profile() {
               )}
               <Button
                 onClick={() => setIsPasswordModalOpen(true)}
-                className='mt-2 bg-lime-700 w-2/5'
+                className='mt-2 bg-lime-700 w-1/3'
               >
                 Modifier mon mot de passe
               </Button>
               <Button
                 onClick={() => setIsDeleteModalOpen(true)}
-                className='mt-2 bg-red-600 w-2/5'
+                className='mt-2 bg-red-600 w-1/3'
               >
                 Supprimer mon compte
               </Button>
