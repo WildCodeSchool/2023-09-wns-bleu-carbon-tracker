@@ -21,34 +21,41 @@ export default function DonationForm({
   };
 
   return (
-    <section className='dashboardWidget'>
-      <Typography variant='heading'>Faire un don</Typography>
-      <Typography className='pt-4 w-2/3'>
-        Le lorem ipsum est, en imprimerie, une suite de mots sans signification
-        utilisée à titre provisoire pour calibrer une mise en page, le texte
-        définitif venant remplacer le faux-texte dès qu&apos;il est prêt ou que
-        la mise en page est achevée. Généralement, on utilise un texte en faux
-        latin, le Lorem ipsum ou Lipsum.
-      </Typography>
-      <div className='flex pt-4 items-center'>
-        <InputLabel
-          name='Montant'
-          label='montant'
-          type='number'
-          sizes='xl'
-          value={amount}
-          onChange={handleAmountChange}
-          required
-        />
+    <div>
+      <div className='dashboardWidget h-[15vh] max-h-[128px] flex justify-between items-center mb-2'>
+        <Typography customClass='text-4xl font-bold text-dark_green max-lg:text-3xl'>
+          Faire un don
+        </Typography>
       </div>
-      <InputCheckbox
-        id='anonymous-donation'
-        label='rendre mon don anonyme'
-        className='pt-4'
-      />
-      <Button className='mt-4' onClick={handleButtonClick}>
-        Soumettre mon don
-      </Button>
-    </section>
+
+      <section className='dashboardWidget'>
+        <Typography className='pt-4 w-2/3'>
+          Le lorem ipsum est, en imprimerie, une suite de mots sans
+          signification utilisée à titre provisoire pour calibrer une mise en
+          page, le texte définitif venant remplacer le faux-texte dès qu&apos;il
+          est prêt ou que la mise en page est achevée. Généralement, on utilise
+          un texte en faux latin, le Lorem ipsum ou Lipsum.
+        </Typography>
+        <div className='flex pt-4 items-center'>
+          <InputLabel
+            name='Montant'
+            label='montant'
+            type='number'
+            sizes='xl'
+            value={amount}
+            onChange={handleAmountChange}
+            required
+          />
+        </div>
+        <InputCheckbox
+          id='anonymous-donation'
+          label='rendre mon don anonyme'
+          className='pt-4'
+        />
+        <Button className='mt-4' onClick={handleButtonClick}>
+          Soumettre mon don
+        </Button>
+      </section>
+    </div>
   );
 }
