@@ -60,7 +60,9 @@ export default function LastPostsWidget({
           <LastPostItem
             key={post.id}
             profilImg={
-              user?.picture != null ? user.picture : '/icons/avatar.svg'
+              post?.user.picture != null
+                ? post?.user.picture
+                : '/icons/avatar.svg'
             }
             postTitle={post.title}
             postContent={post.content}
