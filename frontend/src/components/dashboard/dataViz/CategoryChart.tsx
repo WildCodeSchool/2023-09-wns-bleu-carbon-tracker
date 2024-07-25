@@ -69,7 +69,7 @@ export default function CategoryChart({ dataByCategory, loading }: Props) {
                       className='w-full'
                       width={50}
                       height={50}
-                      src={`${cat.categoryName.toLocaleLowerCase()}.svg`}
+                      src={`/${cat.categoryName.toLocaleLowerCase()}.svg`}
                       alt={cat.categoryName}
                     />
                   </div>
