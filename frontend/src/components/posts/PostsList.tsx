@@ -19,8 +19,6 @@ const PostsList = ({
   handleToggleCurrentUserPosts,
   handleLoadMore,
 }: Props) => {
-  // if (loading) return <p>Loading...</p>;
-  // if (error) return <p>Error: {error.message}</p>;
   const { user } = useUser();
 
   return (
@@ -39,7 +37,6 @@ const PostsList = ({
       <ul className='list-none max-h-96 overflow-y-auto'>
         {(paginatedPosts ?? []).map((post) => (
           <>
-            {/* <Link legacyBehavior href={`/posts/${post.id}`} key={post.id}> */}
             <a className='block'>
               <li className='bg-white shadow-md rounded-md p-6 mb-4 flex flex-col md:flex-row cursor-pointer hover:bg-gray-100 transition'>
                 <div className='flex-shrink-0 mb-4 mr-8 md:mb-0 md:w-1/4 md:pr-6'>
@@ -80,7 +77,6 @@ const PostsList = ({
                 </div>
               </li>
             </a>
-            {/* </Link> */}
           </>
         ))}
         {!hideLoadMoreButton && (
