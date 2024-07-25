@@ -43,11 +43,11 @@ const PostsList = ({
                   <img
                     src={post?.user.picture ?? '/icons/avatar.svg'}
                     alt='Profile picture'
-                    className='w-14 rounded-full mr-4'
+                    className='w-14 h-14 rounded-full mr-4'
                   />
                   <div className='flex flex-col'>
                     <h4 className='text-lg font-bold'>
-                      {post.user.name || 'Anonymous'}
+                      {post.user.name ?? 'Anonyme'}
                     </h4>
                     <p className='text-gray-600 text-sm'>
                       Publié le{' '}
@@ -66,13 +66,15 @@ const PostsList = ({
                     ))}
                   </p>
                   {user?.id === post.user.id && (
-                    <Link
-                      legacyBehavior
-                      href={`/posts/${post.id}`}
-                      key={post.id}
-                    >
-                      <Button>Modifier</Button>
-                    </Link>
+                    <div className='flex justify-end mt-4'>
+                      <Link
+                        legacyBehavior
+                        href={`/posts/${post.id}`}
+                        key={post.id}
+                      >
+                        <Button className='w-1/5'>Modifier</Button>
+                      </Link>
+                    </div>
                   )}
                 </div>
               </li>
