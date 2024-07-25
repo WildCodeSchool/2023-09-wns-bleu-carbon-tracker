@@ -92,7 +92,7 @@ const PostDetail = () => {
               <img
                 src={post?.user.picture ?? '/icons/avatar.svg'}
                 alt='Profile picture'
-                className='w-20 h-20 rounded-full mr-4'
+                className='w-20 h-20 rounded-full object-cover mr-4'
               />
               <div className='flex flex-col'>
                 <h4 className='text-lg font-bold'>
@@ -130,19 +130,19 @@ const PostDetail = () => {
                     />
                   </div>
                   <div className='flex justify-end'>
-                    <button
+                    <Button
                       type='submit'
-                      className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg'
+                      className='text-white px-4 py-2 rounded-md mr-2'
                     >
                       Sauvegarder
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       type='button'
-                      className='bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg ml-2'
+                      className='bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-600'
                       onClick={() => setIsEditing(false)}
                     >
                       Annuler
-                    </button>
+                    </Button>
                   </div>
                 </form>
               ) : (

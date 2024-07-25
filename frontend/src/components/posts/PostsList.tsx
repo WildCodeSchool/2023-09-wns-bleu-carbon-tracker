@@ -43,7 +43,7 @@ const PostsList = ({
                   <img
                     src={post?.user.picture ?? '/icons/avatar.svg'}
                     alt='Profile picture'
-                    className='w-14 h-14 rounded-full mr-4'
+                    className='w-14 h-14 rounded-full object-cover mr-4'
                   />
                   <div className='flex flex-col'>
                     <h4 className='text-lg font-bold'>
