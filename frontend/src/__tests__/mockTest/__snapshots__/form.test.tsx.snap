@@ -83,10 +83,12 @@ exports[`AddActivityModal renders the form fields correctly 1`] = `
                 autocomplete="input"
                 class="block w-full rounded-xl px-2 border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 py-2.5"
                 id="input"
+                min="0"
                 name="input"
                 placeholder="10"
                 required=""
-                type="text"
+                step="0.01"
+                type="number"
               />
             </div>
           </div>

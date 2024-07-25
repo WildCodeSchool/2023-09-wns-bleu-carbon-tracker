@@ -198,7 +198,6 @@ export type Query = {
   tags: Array<Book>;
   userByEmail?: Maybe<User>;
   userById?: Maybe<User>;
-  userByName?: Maybe<User>;
   users: Array<User>;
 };
 
@@ -268,7 +267,6 @@ export type QueryUserByEmailArgs = {
 export type QueryUserByIdArgs = {
   id: Scalars['String'];
 };
-
 
 export type QueryUserByNameArgs = {
   name: Scalars['String'];
@@ -485,13 +483,29 @@ export type LogoutQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type LogoutQuery = { __typename?: 'Query', logout: { __typename?: 'Message', message: string, success: boolean } };
 
-export type GetUserByNameQueryVariables = Exact<{
-  name: Scalars['String'];
+export type GetUserByIdQueryVariables = Exact<{
+  id: Scalars['String'];
 }>;
 
 
-export type GetUserByNameQuery = { __typename?: 'Query', userByName?: { __typename?: 'User', id: string, name?: string | null, email: string, activityEntries?: Array<{ __typename?: 'ActivityEntry', id: number, name: string, input: number, createdAt: any, spendedAt: any, category: { __typename?: 'Category', id: number, name: string } }> | null } | null };
-
+export type GetUserByNameQuery = {
+  __typename?: 'Query';
+  userByName?: {
+    __typename?: 'User';
+    id: string;
+    name?: string | null;
+    email: string;
+    activityEntries?: Array<{
+      __typename?: 'ActivityEntry';
+      id: number;
+      name: string;
+      input: number;
+      createdAt: any;
+      spendedAt: any;
+      category: { __typename?: 'Category'; id: number; name: string };
+    }> | null;
+  } | null;
+};
 
 export const CreateActivityEntryDocument = gql`
     mutation CreateActivityEntry($data: InputCreate!) {
@@ -1432,52 +1446,78 @@ export function useLogoutLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Log
         }
 export type LogoutQueryHookResult = ReturnType<typeof useLogoutQuery>;
 export type LogoutLazyQueryHookResult = ReturnType<typeof useLogoutLazyQuery>;
-export type LogoutQueryResult = Apollo.QueryResult<LogoutQuery, LogoutQueryVariables>;
+export type LogoutQueryResult = Apollo.QueryResult<
+  LogoutQuery,
+  LogoutQueryVariables
+>;
 export const GetUserByNameDocument = gql`
-    query GetUserByName($name: String!) {
-  userByName(name: $name) {
-    id
-    name
-    email
-    activityEntries {
+  query GetUserByName($name: String!) {
+    userByName(name: $name) {
       id
       name
-      input
-      category {
+      email
+      activityEntries {
         id
         name
+        input
+        category {
+          id
+          name
+        }
+        createdAt
+        spendedAt
       }
-      createdAt
-      spendedAt
     }
   }
-}
-    `;
+`;
 
 /**
- * __useGetUserByNameQuery__
+ * __useGetUserByIdQuery__
  *
- * To run a query within a React component, call `useGetUserByNameQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetUserByNameQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetUserByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetUserByNameQuery({
+ * const { data, loading, error } = useGetUserByIdQuery({
  *   variables: {
- *      name: // value for 'name'
+ *      id: // value for 'id'
  *   },
  * });
  */
-export function useGetUserByNameQuery(baseOptions: Apollo.QueryHookOptions<GetUserByNameQuery, GetUserByNameQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetUserByNameQuery, GetUserByNameQueryVariables>(GetUserByNameDocument, options);
-      }
-export function useGetUserByNameLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserByNameQuery, GetUserByNameQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetUserByNameQuery, GetUserByNameQueryVariables>(GetUserByNameDocument, options);
-        }
-export type GetUserByNameQueryHookResult = ReturnType<typeof useGetUserByNameQuery>;
-export type GetUserByNameLazyQueryHookResult = ReturnType<typeof useGetUserByNameLazyQuery>;
-export type GetUserByNameQueryResult = Apollo.QueryResult<GetUserByNameQuery, GetUserByNameQueryVariables>;
+export function useGetUserByNameQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetUserByNameQuery,
+    GetUserByNameQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetUserByNameQuery, GetUserByNameQueryVariables>(
+    GetUserByNameDocument,
+    options,
+  );
+}
+export function useGetUserByNameLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetUserByNameQuery,
+    GetUserByNameQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetUserByNameQuery, GetUserByNameQueryVariables>(
+    GetUserByNameDocument,
+    options,
+  );
+}
+export type GetUserByNameQueryHookResult = ReturnType<
+  typeof useGetUserByNameQuery
+>;
+export type GetUserByNameLazyQueryHookResult = ReturnType<
+  typeof useGetUserByNameLazyQuery
+>;
+export type GetUserByNameQueryResult = Apollo.QueryResult<
+  GetUserByNameQuery,
+  GetUserByNameQueryVariables
+>;
