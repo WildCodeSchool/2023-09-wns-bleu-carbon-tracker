@@ -11,10 +11,7 @@ import {
 } from '@/graphql/generated/schema';
 import Button from '@/components/commons/buttons/Button';
 import GenericFormModal from '@/components/modal/GenericFormModal';
-<<<<<<< HEAD
-=======
 import Typography from '@/components/commons/typography/Typography';
->>>>>>> 8c28229d7406917d13bad7fc74f80a21ae962fcb
 import uploadImage from '@/uploadImage';
 
 export default function Profile() {
