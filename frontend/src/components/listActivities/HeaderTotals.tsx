@@ -10,7 +10,7 @@ export default function HeaderTotals({ totalEmissions }: Props) {
     ((totalEmissions ?? 0) / RECOMMENDED_CO2_EMISSION) * 100,
   );
   return (
-    <div className='dashboardWidget h-[15vh] max-h-[128px] flex justify-between items-center'>
+    <div className='dashboardWidget h-[15vh] max-h-[128px] flex justify-between items-center mb-2'>
       <Typography customClass='text-4xl font-bold text-dark_green max-lg:text-3xl'>
         Mes dépenses
       </Typography>
