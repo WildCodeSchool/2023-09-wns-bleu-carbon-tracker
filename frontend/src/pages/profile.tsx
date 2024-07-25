@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable no-restricted-syntax */
 
-import axios from 'axios';
 import { useState } from 'react';
 import { useUser } from '../contexts/UserContext';
 import Layout from '@/components/layout';
@@ -12,6 +11,7 @@ import {
 } from '@/graphql/generated/schema';
 import Button from '@/components/commons/buttons/Button';
 import GenericFormModal from '@/components/modal/GenericFormModal';
+import uploadImage from '@/uploadImage';
 
 export default function Profile() {
   const { user, setUser } = useUser();
@@ -36,13 +36,9 @@ export default function Profile() {
     if (file) {
       form.append('file', file);
       try {
-        const res = await axios.post('http://localhost:8000/uploads', form, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
-
-        const imageUrl: string = res.data.url;
+        const res = await uploadImage(file);
+        let imageUrl = '';
+        if (res) imageUrl = res.data.url;
         const updatedUser = await updateUser({
           variables: {
             picture: imageUrl,
