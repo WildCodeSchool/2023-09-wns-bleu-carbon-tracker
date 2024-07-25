@@ -13,6 +13,14 @@ services:
     volumes:
     - developDB:/var/lib/postgresql/data
 
+  upload-service:
+    environment:
+      - HOST=/
+    stop_grace_period: 0s
+    build: file-upload-service
+    volumes:
+      - developUploads:/app/files
+
   backend:
     environment:
       DB_HOST: db
@@ -44,3 +52,4 @@ services:
 
 volumes:
   developDB:
+  developUploads:
