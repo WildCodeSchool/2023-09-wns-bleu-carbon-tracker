@@ -17,7 +17,7 @@ services:
     environment:
       - HOST=/
     stop_grace_period: 0s
-    build: file-upload-service
+    image: scrip/file-upload-service
     volumes:
       - developUploads:/app/files
 
