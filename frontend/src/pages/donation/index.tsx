@@ -40,7 +40,7 @@ export default function DonationSection() {
   };
 
   return (
-    <Layout title='Liste des activités'>
+    <Layout title='Faire un don'>
       <main className='w-full flex flex-col p-10 pb-0 max-[1710px]:p-2'>
         <DonationForm handleSubmitNewDonation={handleSubmitNewDonation} />
         <DonationSummary

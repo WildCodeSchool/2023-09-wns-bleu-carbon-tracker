@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 import { ChangeEvent, useState } from 'react';
 import Button from '../commons/buttons/Button';
 import InputCheckbox from '../commons/inputs/InputCheckbox';
@@ -9,15 +10,15 @@ export default function DonationForm({
 }: {
   handleSubmitNewDonation: (amount: number) => Promise<void>;
 }) {
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState<number | null>(null);
 
   const handleAmountChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setAmount(Number(event.target.value));
+    Number(event.target.value) >= 0 && setAmount(Number(event.target.value));
   };
 
   const handleButtonClick = async () => {
-    await handleSubmitNewDonation(amount);
-    setAmount(0);
+    amount !== null && (await handleSubmitNewDonation(amount));
+    setAmount(null);
   };
 
   return (
@@ -30,26 +31,36 @@ export default function DonationForm({
 
       <section className='dashboardWidget'>
         <Typography className='pt-4 w-2/3'>
-          Le lorem ipsum est, en imprimerie, une suite de mots sans
-          signification utilisée à titre provisoire pour calibrer une mise en
-          page, le texte définitif venant remplacer le faux-texte dès qu&apos;il
-          est prêt ou que la mise en page est achevée. Généralement, on utilise
-          un texte en faux latin, le Lorem ipsum ou Lipsum.
+          Bienvenue sur la page de dons de Carbon-tracker! Notre application
+          innovante vous aide à suivre et réduire votre empreinte carbone au
+          quotidien.
+        </Typography>
+        <Typography className='pt-4 w-2/3'>
+          En contribuant financièrement, vous soutenez un projet essentiel qui
+          vise à sensibiliser et à agir contre le changement climatique. Chaque
+          don, petit ou grand, permet de développer de nouvelles fonctionnalités
+          et d'atteindre plus d'utilisateurs.
+        </Typography>
+        <Typography className='pt-4 w-2/3'>
+          Ensemble, faisons un pas de plus vers un avenir durable!
         </Typography>
         <div className='flex pt-4 items-center'>
           <InputLabel
             name='Montant'
-            label='montant'
+            label='Montant'
             type='number'
             sizes='xl'
-            value={amount}
+            placeholder='€'
+            min={0}
+            step={0.01}
+            value={amount ?? ''}
             onChange={handleAmountChange}
             required
           />
         </div>
         <InputCheckbox
           id='anonymous-donation'
-          label='rendre mon don anonyme'
+          label='Rendre mon don anonyme'
           className='pt-4'
         />
         <Button className='mt-4' onClick={handleButtonClick}>
