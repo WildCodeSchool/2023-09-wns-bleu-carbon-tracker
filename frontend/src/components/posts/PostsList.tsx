@@ -1,41 +1,50 @@
 import React from 'react';
 import Link from 'next/link';
-import { useQuery } from '@apollo/client';
-import { GET_ALL_POSTS } from '@/graphql/posts/queries/post.queries';
-import { Post } from '@/graphql/generated/schema';
 import { useUser } from '@/contexts/UserContext';
+import Button from '../commons/buttons/Button';
+import InputCheckbox from '../commons/inputs/InputCheckbox';
+import { Post } from '@/types';
 
-const Posts = () => {
-  const { loading, error, data } = useQuery<{ getAllPosts: Post[] }>(
-    GET_ALL_POSTS,
-  );
+type Props = {
+  handleToggleCurrentUserPosts: (value: boolean) => void;
+  handleLoadMore: () => void;
+  currentUserPosts: boolean;
+  paginatedPosts: Post[];
+  hideLoadMoreButton: boolean;
+};
+const PostsList = ({
+  currentUserPosts,
+  paginatedPosts,
+  hideLoadMoreButton,
+  handleToggleCurrentUserPosts,
+  handleLoadMore,
+}: Props) => {
+  // if (loading) return <p>Loading...</p>;
+  // if (error) return <p>Error: {error.message}</p>;
   const { user } = useUser();
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
-
-  const sortedPosts = data?.getAllPosts
-    .slice()
-    .sort(
-      (a, b) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-    );
 
   return (
     <div className='container mx-auto mt-8 w-3/4'>
       <h2 className='flex justify-center text-2xl font-bold pb-6'>
         Publications des usagers
       </h2>
+      <div>
+        <InputCheckbox
+          label='Afficher uniquement mes posts'
+          id='togglePost'
+          checked={currentUserPosts}
+          onChange={() => handleToggleCurrentUserPosts(!currentUserPosts)}
+        />
+      </div>
       <ul className='list-none max-h-96 overflow-y-auto'>
-        {sortedPosts?.map((post) => (
-          <Link legacyBehavior href={`/posts/${post.id}`} key={post.id}>
+        {(paginatedPosts ?? []).map((post) => (
+          <>
+            {/* <Link legacyBehavior href={`/posts/${post.id}`} key={post.id}> */}
             <a className='block'>
               <li className='bg-white shadow-md rounded-md p-6 mb-4 flex flex-col md:flex-row cursor-pointer hover:bg-gray-100 transition'>
                 <div className='flex-shrink-0 mb-4 mr-8 md:mb-0 md:w-1/4 md:pr-6'>
                   <img
-                    src={
-                      user?.picture != null ? user.picture : '/icons/avatar.svg'
-                    }
+                    src={post?.user.picture ?? '/icons/avatar.svg'}
                     alt='Profile picture'
                     className='w-14 rounded-full mr-4'
                   />
@@ -59,14 +68,29 @@ const Posts = () => {
                       </React.Fragment>
                     ))}
                   </p>
+                  {user?.id === post.user.id && (
+                    <Link
+                      legacyBehavior
+                      href={`/posts/${post.id}`}
+                      key={post.id}
+                    >
+                      <Button>Modifier</Button>
+                    </Link>
+                  )}
                 </div>
               </li>
             </a>
-          </Link>
+            {/* </Link> */}
+          </>
         ))}
+        {!hideLoadMoreButton && (
+          <div className='m-2 flex justify-center'>
+            <Button onClick={() => handleLoadMore()}>Voir plus</Button>
+          </div>
+        )}
       </ul>
     </div>
   );
 };
 
-export default Posts;
+export default PostsList;

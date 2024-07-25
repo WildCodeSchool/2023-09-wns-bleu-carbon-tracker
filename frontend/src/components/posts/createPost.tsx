@@ -1,16 +1,19 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import { useMutation } from '@apollo/client';
 import { CREATE_POST } from '@/graphql/posts/mutations/post.mutations';
-import { GET_ALL_POSTS } from '@/graphql/posts/queries/post.queries';
+import { GET_PAGINATED_POSTS } from '@/graphql/posts/queries/post.queries';
 import Button from '../commons/buttons/Button';
 import { useUser } from '@/contexts/UserContext';
 
-const CreatePost = () => {
+type Props = {
+  handleRefetch: () => void;
+};
+const CreatePost = ({ handleRefetch }: Props) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const { user } = useUser();
   const [createPost] = useMutation(CREATE_POST, {
-    refetchQueries: [{ query: GET_ALL_POSTS }],
+    refetchQueries: [{ query: GET_PAGINATED_POSTS }],
   });
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -19,6 +22,7 @@ const CreatePost = () => {
       await createPost({ variables: { data: { title, content } } });
       setTitle('');
       setContent('');
+      handleRefetch();
     } catch (err) {
       console.error('Erreur lors de la création du post:', err);
     }

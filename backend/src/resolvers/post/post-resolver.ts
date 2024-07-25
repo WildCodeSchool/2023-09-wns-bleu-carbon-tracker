@@ -1,11 +1,51 @@
-import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
+import {
+  Arg,
+  Authorized,
+  Ctx,
+  Mutation,
+  Query,
+  Resolver,
+  Int,
+} from 'type-graphql';
 import { GraphQLError } from 'graphql';
 import Post from '../../entities/post/post';
 import { MyContext } from '../..';
 import InputCreatePost from '../../entities/post/input-create';
 
+export interface PostWhereConditions {
+  user?: {
+    id: string;
+  };
+}
 @Resolver(Post)
 export default class PostResolver {
+  @Query(() => [Post])
+  async getPaginatedPosts(
+    @Ctx() ctx: MyContext,
+    @Arg('userId', { nullable: true }) userId?: string,
+    @Arg('skip', () => Int, { defaultValue: 0 }) skip = 0,
+    @Arg('take', () => Int, { defaultValue: 15 }) take = 15,
+  ): Promise<Post[]> {
+    // if (!ctx.user) {
+    //   throw new Error('You must be authenticated to access activities.');
+    // }
+
+    let whereConditions: PostWhereConditions = {};
+    if (userId) {
+      whereConditions = {
+        user: { id: userId },
+      };
+    }
+
+    return Post.find({
+      relations: ['user'],
+      where: whereConditions,
+      order: { createdAt: 'DESC' },
+      skip,
+      take,
+    });
+  }
+
   @Authorized()
   @Query(() => [Post])
   async getAllPosts() {

@@ -1,7 +1,6 @@
 import Typography from '@/components/commons/typography/Typography';
 import Layout from '@/components/layout';
-import Posts from '@/components/posts/allPosts';
-import CreatePost from '@/components/posts/createPost';
+import PostGlobalContainer from '@/components/posts/PostGlobalContainer';
 
 function App() {
   return (
@@ -13,8 +12,7 @@ function App() {
               Mes bons blans
             </Typography>
           </div>
-          <CreatePost />
-          <Posts />
+          <PostGlobalContainer />
         </div>
       </Layout>
     </div>
