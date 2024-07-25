@@ -27,10 +27,14 @@ const LastPostItem: React.FC<LastPostItemProps> = ({
     <div className='flex flex-col w-1/3 mt-2 mr-5 dashboardWidget'>
       <div className='flex flex-col justify-between align-center'>
         <div className='flex flex-row items-center border-b border-black pb-1'>
-          <div className='min-w-12 max-w-12 mb-1 rounded-full'>
-            <img src={profilImg} alt='profil picture' />
+          <div className='flex-shrink-0 w-12 h-12 mb-1 rounded-full overflow-hidden'>
+            <img
+              src={profilImg}
+              alt='profil picture'
+              className='w-full h-full object-cover'
+            />
           </div>
-          <div className='ml-4'>
+          <div className='ml-4 flex-1'>
             <p className='font-bold line-clamp-2'>{postTitle}</p>
           </div>
         </div>
