@@ -38,6 +38,7 @@ services:
   frontend:
     environment:
       SECRET_KEY: ${SECRET_KEY:-changeme}
+      NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-https://develop.carbon-tracker.0923-bleu-1.wns.wilders.dev}
     stop_grace_period: 0s
     image: carbontracker/carbon-tracker-client
 
