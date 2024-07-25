@@ -188,6 +188,7 @@ export type Query = {
   getActivityEntryById: ActivityEntry;
   getAllPosts: Array<Post>;
   getLastDonations: Array<Donation>;
+  getPaginatedPosts: Array<Post>;
   getPostById?: Maybe<Post>;
   getPot: Scalars['Int'];
   getSumByCategory: Array<SumByCategory>;
@@ -229,6 +230,13 @@ export type QueryGetActivityEntryByIdArgs = {
 };
 
 
+export type QueryGetPaginatedPostsArgs = {
+  skip?: Scalars['Int'];
+  take?: Scalars['Int'];
+  userId?: InputMaybe<Scalars['String']>;
+};
+
+
 export type QueryGetPostByIdArgs = {
   postId: Scalars['Float'];
 };
@@ -266,10 +274,6 @@ export type QueryUserByEmailArgs = {
 
 export type QueryUserByIdArgs = {
   id: Scalars['String'];
-};
-
-export type QueryUserByNameArgs = {
-  name: Scalars['String'];
 };
 
 export type SumByCategory = {
@@ -422,6 +426,15 @@ export type GetUserPostsQueryVariables = Exact<{
 
 export type GetUserPostsQuery = { __typename?: 'Query', getUserPosts: Array<{ __typename?: 'Post', id: number, title: string, content: string, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: string, name?: string | null, picture?: string | null } }> };
 
+export type GetPaginatedPostsQueryVariables = Exact<{
+  skip: Scalars['Int'];
+  take: Scalars['Int'];
+  userId?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type GetPaginatedPostsQuery = { __typename?: 'Query', getPaginatedPosts: Array<{ __typename?: 'Post', content: string, id: number, createdAt: any, title: string, user: { __typename?: 'User', id: string, email: string, name?: string | null, picture?: string | null } }> };
+
 export type GetBooksQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -488,24 +501,8 @@ export type GetUserByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetUserByNameQuery = {
-  __typename?: 'Query';
-  userByName?: {
-    __typename?: 'User';
-    id: string;
-    name?: string | null;
-    email: string;
-    activityEntries?: Array<{
-      __typename?: 'ActivityEntry';
-      id: number;
-      name: string;
-      input: number;
-      createdAt: any;
-      spendedAt: any;
-      category: { __typename?: 'Category'; id: number; name: string };
-    }> | null;
-  } | null;
-};
+export type GetUserByIdQuery = { __typename?: 'Query', userById?: { __typename?: 'User', id: string, name?: string | null, email: string, activityEntries?: Array<{ __typename?: 'ActivityEntry', id: number, name: string, input: number, createdAt: any, spendedAt: any, category: { __typename?: 'Category', id: number, name: string } }> | null } | null };
+
 
 export const CreateActivityEntryDocument = gql`
     mutation CreateActivityEntry($data: InputCreate!) {
@@ -1125,6 +1122,52 @@ export function useGetUserPostsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type GetUserPostsQueryHookResult = ReturnType<typeof useGetUserPostsQuery>;
 export type GetUserPostsLazyQueryHookResult = ReturnType<typeof useGetUserPostsLazyQuery>;
 export type GetUserPostsQueryResult = Apollo.QueryResult<GetUserPostsQuery, GetUserPostsQueryVariables>;
+export const GetPaginatedPostsDocument = gql`
+    query GetPaginatedPosts($skip: Int!, $take: Int!, $userId: String) {
+  getPaginatedPosts(skip: $skip, take: $take, userId: $userId) {
+    content
+    id
+    createdAt
+    title
+    user {
+      id
+      email
+      name
+      picture
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetPaginatedPostsQuery__
+ *
+ * To run a query within a React component, call `useGetPaginatedPostsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPaginatedPostsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPaginatedPostsQuery({
+ *   variables: {
+ *      skip: // value for 'skip'
+ *      take: // value for 'take'
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useGetPaginatedPostsQuery(baseOptions: Apollo.QueryHookOptions<GetPaginatedPostsQuery, GetPaginatedPostsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetPaginatedPostsQuery, GetPaginatedPostsQueryVariables>(GetPaginatedPostsDocument, options);
+      }
+export function useGetPaginatedPostsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPaginatedPostsQuery, GetPaginatedPostsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetPaginatedPostsQuery, GetPaginatedPostsQueryVariables>(GetPaginatedPostsDocument, options);
+        }
+export type GetPaginatedPostsQueryHookResult = ReturnType<typeof useGetPaginatedPostsQuery>;
+export type GetPaginatedPostsLazyQueryHookResult = ReturnType<typeof useGetPaginatedPostsLazyQuery>;
+export type GetPaginatedPostsQueryResult = Apollo.QueryResult<GetPaginatedPostsQuery, GetPaginatedPostsQueryVariables>;
 export const GetBooksDocument = gql`
     query GetBooks {
   tags {
@@ -1446,30 +1489,27 @@ export function useLogoutLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Log
         }
 export type LogoutQueryHookResult = ReturnType<typeof useLogoutQuery>;
 export type LogoutLazyQueryHookResult = ReturnType<typeof useLogoutLazyQuery>;
-export type LogoutQueryResult = Apollo.QueryResult<
-  LogoutQuery,
-  LogoutQueryVariables
->;
-export const GetUserByNameDocument = gql`
-  query GetUserByName($name: String!) {
-    userByName(name: $name) {
+export type LogoutQueryResult = Apollo.QueryResult<LogoutQuery, LogoutQueryVariables>;
+export const GetUserByIdDocument = gql`
+    query GetUserById($id: String!) {
+  userById(id: $id) {
+    id
+    name
+    email
+    activityEntries {
       id
       name
-      email
-      activityEntries {
+      input
+      category {
         id
         name
-        input
-        category {
-          id
-          name
-        }
-        createdAt
-        spendedAt
       }
+      createdAt
+      spendedAt
     }
   }
-`;
+}
+    `;
 
 /**
  * __useGetUserByIdQuery__
@@ -1487,37 +1527,14 @@ export const GetUserByNameDocument = gql`
  *   },
  * });
  */
-export function useGetUserByNameQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    GetUserByNameQuery,
-    GetUserByNameQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetUserByNameQuery, GetUserByNameQueryVariables>(
-    GetUserByNameDocument,
-    options,
-  );
-}
-export function useGetUserByNameLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetUserByNameQuery,
-    GetUserByNameQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<GetUserByNameQuery, GetUserByNameQueryVariables>(
-    GetUserByNameDocument,
-    options,
-  );
-}
-export type GetUserByNameQueryHookResult = ReturnType<
-  typeof useGetUserByNameQuery
->;
-export type GetUserByNameLazyQueryHookResult = ReturnType<
-  typeof useGetUserByNameLazyQuery
->;
-export type GetUserByNameQueryResult = Apollo.QueryResult<
-  GetUserByNameQuery,
-  GetUserByNameQueryVariables
->;
+export function useGetUserByIdQuery(baseOptions: Apollo.QueryHookOptions<GetUserByIdQuery, GetUserByIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUserByIdQuery, GetUserByIdQueryVariables>(GetUserByIdDocument, options);
+      }
+export function useGetUserByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserByIdQuery, GetUserByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserByIdQuery, GetUserByIdQueryVariables>(GetUserByIdDocument, options);
+        }
+export type GetUserByIdQueryHookResult = ReturnType<typeof useGetUserByIdQuery>;
+export type GetUserByIdLazyQueryHookResult = ReturnType<typeof useGetUserByIdLazyQuery>;
+export type GetUserByIdQueryResult = Apollo.QueryResult<GetUserByIdQuery, GetUserByIdQueryVariables>;

@@ -50,3 +50,20 @@ export const GET_USER_POSTS = gql`
     }
   }
 `;
+
+export const GET_PAGINATED_POSTS = gql`
+  query GetPaginatedPosts($skip: Int!, $take: Int!, $userId: String) {
+    getPaginatedPosts(skip: $skip, take: $take, userId: $userId) {
+      content
+      id
+      createdAt
+      title
+      user {
+        id
+        email
+        name
+        picture
+      }
+    }
+  }
+`;
