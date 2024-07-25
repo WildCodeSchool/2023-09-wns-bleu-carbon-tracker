@@ -41,11 +41,11 @@ const CreateNewPost = ({ handleRefetch }: Props) => {
       <div className='bg-gray-100 shadow-md rounded-lg p-6'>
         <div className='flex flex-col gap-4'>
           <div className='flex flex-row justify-between'>
-            <div className='flex flex-col items-center'>
+            <div className='flex flex-col items-center mx-8'>
               <img
                 src={user?.picture != null ? user.picture : '/icons/avatar.svg'}
                 alt='Profile picture'
-                className='w-2/4 rounded-full'
+                className='w-24 h-28 rounded-full'
               />
               <div className='flex flex-col'>
                 <h4 className='text-lg font-bold'>
