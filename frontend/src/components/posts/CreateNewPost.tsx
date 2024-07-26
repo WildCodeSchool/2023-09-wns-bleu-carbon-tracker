@@ -41,19 +41,24 @@ const CreateNewPost = ({ handleRefetch }: Props) => {
       <div className='bg-gray-100 shadow-md rounded-lg p-6'>
         <div className='flex flex-col gap-4'>
           <div className='flex flex-row justify-between'>
-            <div className='flex flex-col items-center'>
-              <img
-                src={user?.picture != null ? user.picture : '/icons/avatar.svg'}
-                alt='Profile picture'
-                className='w-2/4 rounded-full'
-              />
+            <div className='flex flex-col items-center mx-8'>
+              <div className='w-32 h-32 overflow-hidden rounded-full'>
+                <img
+                  src={
+                    user?.picture != null ? user.picture : '/icons/avatar.svg'
+                  }
+                  alt='Profile picture'
+                  className='w-full h-full object-cover'
+                />
+              </div>
               <div className='flex flex-col'>
                 <h4 className='text-lg font-bold'>
                   {user?.name || 'Anonymous'}
                 </h4>
               </div>
             </div>
-            <div className='w-11/12'>
+
+            <div className='w-11/12 mx-8'>
               <div className='flex flex-col p-1'>
                 <input
                   id='title'

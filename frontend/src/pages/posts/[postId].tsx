@@ -8,6 +8,7 @@ import {
   UPDATE_POST,
   DELETE_POST,
 } from '@/graphql/posts/mutations/post.mutations';
+import Button from '@/components/commons/buttons/Button';
 
 const PostDetail = () => {
   const router = useRouter();
@@ -87,15 +88,15 @@ const PostDetail = () => {
             className='bg-white shadow-md rounded-md p-6 mb-4 flex cursor-pointer hover:bg-gray-100 transition flex-col md:flex-row'
             key={post.id}
           >
-            <div className='flex items-center mb-4 md:mb-0 md:pr-6 md:w-1/4'>
+            <div className='flex items-center mr-6 mb-4 md:mb-0 md:pr-6 md:w-1/4'>
               <img
-                src={post.user?.picture || 'https://picsum.photos/50'}
+                src={post?.user.picture ?? '/icons/avatar.svg'}
                 alt='Profile picture'
-                className='w-14 rounded-full mr-2'
+                className='w-20 h-20 rounded-full object-cover mr-4'
               />
               <div className='flex flex-col'>
                 <h4 className='text-lg font-bold'>
-                  {post.user?.name || 'Anonymous'}
+                  {post.user?.name ?? 'Anonyme'}
                 </h4>
                 <p className='text-gray-600 text-sm'>
                   Publié le{' '}
@@ -104,7 +105,7 @@ const PostDetail = () => {
               </div>
             </div>
 
-            <div className='flex-grow pl-0 md:pl-8'>
+            <div className='flex-grow ml-8 pl-0 md:pl-8'>
               {isEditing ? (
                 <form onSubmit={handleSubmit}>
                   <div className='mb-4'>
@@ -129,38 +130,38 @@ const PostDetail = () => {
                     />
                   </div>
                   <div className='flex justify-end'>
-                    <button
+                    <Button
                       type='submit'
-                      className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg'
+                      className='text-white px-4 py-2 rounded-md mr-2'
                     >
                       Sauvegarder
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       type='button'
-                      className='bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg ml-2'
+                      className='bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-600'
                       onClick={() => setIsEditing(false)}
                     >
                       Annuler
-                    </button>
+                    </Button>
                   </div>
                 </form>
               ) : (
                 <>
                   <h3 className='pb-2 text-lg'>{post.title}</h3>
                   <p>{post.content}</p>
-                  <div className='flex items-center mt-4'>
-                    <button
-                      className='bg-blue-500 text-white px-4 py-2 rounded-md mr-2 hover:bg-blue-600'
+                  <div className='flex justify-end mt-4'>
+                    <Button
+                      className='text-white px-4 py-2 rounded-md mr-2'
                       onClick={() => setIsEditing(true)}
                     >
                       Modifier
-                    </button>
-                    <button
-                      className='bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600'
+                    </Button>
+                    <Button
+                      className='bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-600'
                       onClick={handleDeleteClick}
                     >
                       Supprimer
-                    </button>
+                    </Button>
                   </div>
                 </>
               )}

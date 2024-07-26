@@ -3,6 +3,7 @@ import Typography from '@/components/commons/typography/Typography';
 import LastPostItem from './LastPostItem';
 import AddPostModal from '@/components/modal/AddPostModal';
 import { useUser } from '@/contexts/UserContext';
+import useWindowSize from '@/utils/useWindowSize';
 
 type PartialPost = {
   id: number;
@@ -32,18 +33,24 @@ export default function LastPostsWidget({
 }: Props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { user } = useUser();
+  const { width } = useWindowSize();
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
 
-  // Trier les posts par date de création (du plus récent au plus ancien)
   const sortedPosts = [...posts].sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
   );
 
-  // Obtenir les trois derniers posts
-  const lastPosts = sortedPosts.slice(0, 3);
+  const getNumberOfPostsToShow = () => {
+    if (width > 1440) return 3;
+    if (width > 767) return 2;
+    return 1;
+  };
+
+  const numberOfPostsToShow = getNumberOfPostsToShow();
+  const lastPosts = sortedPosts.slice(0, numberOfPostsToShow);
 
   return (
     <div className='h-full'>
@@ -53,18 +60,18 @@ export default function LastPostsWidget({
           <LastPostItem
             key={post.id}
             profilImg={
-              user?.picture != null ? user.picture : '/icons/avatar.svg'
+              post?.user.picture != null
+                ? post?.user.picture
+                : '/icons/avatar.svg'
             }
+            postTitle={post.title}
             postContent={post.content}
           />
         ))}
         {!readOnly ? (
           <div className='flex flex-col justify-center w-[200px] mt-2 dashboardWidget align-center'>
             <div className='flex justify-center m-5'>
-              <button
-                onClick={toggleModal}
-                className='flex justify-center w-7/12'
-              >
+              <button onClick={toggleModal} className='flex justify-center'>
                 <img src='/icons/cross.png' alt='new-post' />
               </button>
             </div>
