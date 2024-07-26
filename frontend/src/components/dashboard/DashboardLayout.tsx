@@ -1,5 +1,6 @@
 import {
   useGetAllPostsQuery,
+  useGetPaginatedPostsQuery,
   useGetSumByCategoryQuery,
   useGetSumByMonthQuery,
 } from '@/graphql/generated/schema';
@@ -29,7 +30,8 @@ export default function DashboardLayout() {
   refetchTotalsByMonth();
   refetchTotalsByCategories();
 
-  const { data, refetch: handleRefetchPosts } = useGetAllPostsQuery();
+  const { data: lastPosts, refetch: refetchLastPosts } =
+    useGetPaginatedPostsQuery({ variables: { take: 5, skip: 0 } });
 
   const userHasName = user?.name != null;
 
@@ -75,8 +77,8 @@ export default function DashboardLayout() {
         </div>
         <div className='h-[28%]  p-3'>
           <LastPostWidget
-            posts={data?.getAllPosts ?? []}
-            handleRefetchPosts={handleRefetchPosts}
+            posts={lastPosts?.getPaginatedPosts ?? []}
+            handleRefetchPosts={refetchLastPosts}
           />
         </div>
       </div>
