@@ -49,7 +49,6 @@ export default function PostGlobalContainer() {
         },
       });
       setSkip(newSkip);
-      setPaginatedPosts(data?.getPaginatedPosts ?? []);
     }
   };
   const hideLoadMoreButton =

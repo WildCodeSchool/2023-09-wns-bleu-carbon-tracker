@@ -106,7 +106,6 @@ export default function ListActivities() {
         },
       });
       setSkip(newSkip);
-      setActivityEntries(filteredResults?.filteredActivityEntries ?? []);
     }
   };
   const hideLoadMoreButton =
