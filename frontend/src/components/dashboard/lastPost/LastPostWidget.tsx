@@ -2,7 +2,6 @@ import { useState } from 'react';
 import Typography from '@/components/commons/typography/Typography';
 import LastPostItem from './LastPostItem';
 import AddPostModal from '@/components/modal/AddPostModal';
-import { useUser } from '@/contexts/UserContext';
 import useWindowSize from '@/utils/useWindowSize';
 
 type PartialPost = {
@@ -32,7 +31,6 @@ export default function LastPostsWidget({
   readOnly,
 }: Props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { user } = useUser();
   const { width } = useWindowSize();
 
   const toggleModal = () => {
